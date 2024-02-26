@@ -1,5 +1,6 @@
 package cn.insectmk.chatbotweb.mapper;
 
+import cn.insectmk.chatbotweb.entity.ChatSession;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -8,5 +9,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @Date 2024/2/25 16:39
  * @Version 1.0
  */
-public interface ChatSessionMapper extends BaseMapper<ChatSessionMapper> {
+public interface ChatSessionMapper extends BaseMapper<ChatSession> {
 }
