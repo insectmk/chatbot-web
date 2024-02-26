@@ -1,20 +1,23 @@
 # 应用服务 WEB 访问端口
 server:
   port: 8080
-spring:
-  datasource:
-    url: jdbc:mysql://127.0.0.1:3307/chatbot?useSSL=false
-    username: manager
-    password: mk123456
-    driver-class-name: com.mysql.jdbc.Driver
 
-#这是mybatis所使用的配置
+# Spring相关配置
+spring:
+  # 配置文件选择
+  profiles:
+    active: dev
+  jackson:
+    time-zone: GMT+8
+
+# 这是MyBatis所使用的配置
 mybatis:
   # 告诉mybatis对应的实体类位置
   type-aliases-package: cn.insectmk.chatbotweb.entity
   # 告诉mybatisSQL的映射文件在这里
   mapper-locations: classpath*:mapper/*.xml
 
+# 这是MyBatisPlus的配置
 mybatis-plus:
   global-config:
     db-config:
@@ -27,5 +30,3 @@ mybatis-plus:
     map-underscore-to-camel-case: true
     # 日志
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-
-
