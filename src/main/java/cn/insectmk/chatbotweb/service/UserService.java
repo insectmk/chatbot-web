@@ -10,4 +10,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @Version 1.0
  */
 public interface UserService extends IService<User> {
+    /**
+     * 用户登录
+     * @param email 邮箱地址
+     * @param password 登陆密码
+     * @return JWT字符串
+     */
+    String login(String email, String password);
 }

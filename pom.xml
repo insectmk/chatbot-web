@@ -15,6 +15,12 @@
     </properties>
 
     <dependencies>
+        <dependency><!--跨域身份验证解决⽅案 Json web token-->
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.7.0</version>
+        </dependency>
+
         <dependency><!-- 发送WebSocket请求 -->
             <groupId>org.java-websocket</groupId>
             <artifactId>Java-WebSocket</artifactId>

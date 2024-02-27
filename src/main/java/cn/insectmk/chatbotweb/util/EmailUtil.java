@@ -1,11 +1,9 @@
-package cn.insectmk.chatbotweb.service.impl;
+package cn.insectmk.chatbotweb.util;
 
-import cn.insectmk.chatbotweb.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.stereotype.Service;
 
 /**
  * @Description 邮件发送接口实现类
@@ -13,8 +11,7 @@ import org.springframework.stereotype.Service;
  * @Date 2024/2/26 17:37
  * @Version 1.0
  */
-@Service
-public class EmailServiceImpl implements EmailService {
+public class EmailUtil {
     @Value("${spring.mail.username}")
     private String username;
 
