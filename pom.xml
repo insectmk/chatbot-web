@@ -15,6 +15,18 @@
     </properties>
 
     <dependencies>
+        <dependency><!-- 发送WebSocket请求 -->
+            <groupId>org.java-websocket</groupId>
+            <artifactId>Java-WebSocket</artifactId>
+            <version>1.5.1</version>
+        </dependency>
+
+        <dependency><!-- 发送HTTP请求 -->
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.1</version>
+        </dependency>
+
         <dependency><!--发送邮件-->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>

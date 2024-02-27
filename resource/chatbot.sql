@@ -1,14 +1,6 @@
 CREATE
 DATABASE chatbot CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- 删除表
-DROP TABLE IF EXISTS t_model_version;
-DROP TABLE IF EXISTS t_log;
-DROP TABLE IF EXISTS t_chat_message;
-DROP TABLE IF EXISTS t_chat_session;
-DROP TABLE IF EXISTS t_user;
-
-
 -- 创建用户表
 CREATE TABLE t_user
 (
