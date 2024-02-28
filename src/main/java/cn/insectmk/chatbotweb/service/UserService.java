@@ -11,6 +11,13 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface UserService extends IService<User> {
     /**
+     * 判断token是否有效
+     * @param token
+     * @return
+     */
+    boolean isTokenEffective(String token);
+
+    /**
      * 用户登录
      * @param email 邮箱地址
      * @param password 登陆密码

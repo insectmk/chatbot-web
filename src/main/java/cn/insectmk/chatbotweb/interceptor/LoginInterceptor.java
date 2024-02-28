@@ -47,8 +47,7 @@ public class LoginInterceptor implements HandlerInterceptor {
                     sendJsonMsg(response, Result.buildFail("登录失败，请重新登录！"));
                     return false;
                 } else {
-                    int id = Integer.parseInt(claims.get("id").toString());
-                    request.setAttribute("userId", id);
+                    request.setAttribute("userId", claims.get("id"));
                     return true;
                 }
             }

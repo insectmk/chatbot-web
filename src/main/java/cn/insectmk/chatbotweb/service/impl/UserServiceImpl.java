@@ -7,6 +7,7 @@ import cn.insectmk.chatbotweb.util.AESUtil;
 import cn.insectmk.chatbotweb.util.JWTUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private AESUtil aesUtil;
     @Autowired
     private JWTUtil jwtUtil;
+
+    @Override
+    public boolean isTokenEffective(String token) {
+        return !Objects.isNull(jwtUtil.checkJWT(token));
+    }
 
     @Override
     public String login(String email, String password) {
