@@ -27,6 +27,24 @@ public class AESUtil {
 	private String key;
 
 	/**
+	 * 以默认密钥生成加密字符串
+	 * @param content
+	 * @return
+	 */
+	public String encrypt(String content) {
+		return encrypt(content, key);
+	}
+
+	/**
+	 * 以默认密钥解密加密字符串
+	 * @param content
+	 * @return
+	 */
+	public  String decrypt(String content) {
+		return decrypt(content, key);
+	}
+
+	/**
 	 * 随机生成密钥
 	 * @return
 	 */
@@ -115,7 +133,7 @@ public class AESUtil {
 	 * @param bytes
 	 * @return
 	 */
-	public static String byte2Base64(byte[] bytes) {
+	public String byte2Base64(byte[] bytes) {
 		BASE64Encoder encoder = new BASE64Encoder();
 		return encoder.encode(bytes);
 	}
@@ -127,7 +145,7 @@ public class AESUtil {
 	 * @return
 	 * @throws IOException
 	 */
-	public static byte[] base642Byte(String base64Key) throws IOException {
+	public byte[] base642Byte(String base64Key) throws IOException {
 		BASE64Decoder decoder = new BASE64Decoder();
 		return decoder.decodeBuffer(base64Key);
 	}
