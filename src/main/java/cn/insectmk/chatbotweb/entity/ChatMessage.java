@@ -31,8 +31,8 @@ public class ChatMessage {
         }
     }
 
-    private Integer id;
-    private Integer sessionId;
+    private String id;
+    private String sessionId;
     private SenderType senderType;
     private Timestamp sentTime;
 }

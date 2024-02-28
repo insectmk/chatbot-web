@@ -16,9 +16,9 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @Data
 public class ChatSession {
-    private Integer id;
-    private Integer userId;
-    private Integer modelVersionId;
+    private String id;
+    private String userId;
+    private String modelVersionId;
     private Timestamp startTime;
     private Timestamp endTime;
 }

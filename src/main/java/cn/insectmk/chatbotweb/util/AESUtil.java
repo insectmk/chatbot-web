@@ -42,7 +42,7 @@ public class AESUtil {
 	 * @param key     加密密钥
 	 * @return 返回Base64转码后的加密数据
 	 */
-	public String encrypt(String content, String key) throws Exception {
+	public String encrypt(String content, String key) {
 		if (StringUtils.isBlank(key)) key = this.key;
 		try {
 			// 创建密码器

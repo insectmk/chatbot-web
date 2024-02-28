@@ -4,7 +4,7 @@ DATABASE chatbot CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 -- 创建用户表
 CREATE TABLE t_user
 (
-    id                INT AUTO_INCREMENT PRIMARY KEY,
+    id                VARCHAR(32)  PRIMARY KEY,
     username          VARCHAR(255) NOT NULL UNIQUE,
     password          VARCHAR(255) NOT NULL,
     email             VARCHAR(255) NOT NULL UNIQUE,
@@ -15,7 +15,7 @@ CREATE TABLE t_user
 -- 创建模型版本表
 CREATE TABLE t_model_version
 (
-    id              INT AUTO_INCREMENT PRIMARY KEY,
+    id              VARCHAR(32)  PRIMARY KEY,
     name            VARCHAR(255) NOT NULL,
     version_number  VARCHAR(255) NOT NULL,
     deployment_time TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -25,9 +25,9 @@ CREATE TABLE t_model_version
 -- 创建聊天会话表
 CREATE TABLE t_chat_session
 (
-    id               INT AUTO_INCREMENT PRIMARY KEY,
-    user_id          INT       NOT NULL,
-    model_version_id INT,                                          -- 新增的字段
+    id               VARCHAR(32)  PRIMARY KEY,
+    user_id          VARCHAR(32)       NOT NULL,
+    model_version_id VARCHAR(32),                                          -- 新增的字段
     start_time       TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     end_time         TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES t_user (id),
@@ -37,8 +37,8 @@ CREATE TABLE t_chat_session
 -- 创建聊天消息表
 CREATE TABLE t_chat_message
 (
-    id              INT AUTO_INCREMENT PRIMARY KEY,
-    session_id      INT       NOT NULL,
+    id              VARCHAR(32)  PRIMARY KEY,
+    session_id      VARCHAR(32)       NOT NULL,
     sender_type     ENUM('用户', '机器人') NOT NULL,
     message_content TEXT      NOT NULL,
     sent_time       TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -48,7 +48,7 @@ CREATE TABLE t_chat_message
 -- 创建日志表
 CREATE TABLE t_system_log
 (
-    id          INT AUTO_INCREMENT PRIMARY KEY,
+    id          VARCHAR(32)  PRIMARY KEY,
     level       ENUM('信息', '警告', '错误') NOT NULL,
     message     TEXT      NOT NULL,
     create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP

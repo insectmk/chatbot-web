@@ -11,7 +11,7 @@ class AESUtilTest {
 
     @Test
     void encrypt() throws Exception {
-        String content = "123456";
+        String content = "3067836615@qq.com";
         String key = "";
         System.out.println("原文=" + content);
         String s1 = aesUtil.encrypt(content, key);
