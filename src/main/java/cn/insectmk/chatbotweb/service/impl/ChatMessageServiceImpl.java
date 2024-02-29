@@ -15,8 +15,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Description 聊天消息服务接口实现
@@ -44,7 +43,7 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper, ChatM
         chatSession.setStatus(ChatSession.STATUS_BUSY);
         chatSessionService.updateById(chatSession);
         // 查询所有的对话
-        ArrayList<String[]> dialogs = chatSessionService.getHistoryMessageBySessionId(chatSession.getId());
+        List<String[]> dialogs = chatSessionService.getHistoryMessageBySessionId(chatSession.getId());
         // 进行对话
         HttpApiResponseVo response = chatGlmService.send(new HttpApiRequestDto(
                 chatMessageDto.getMessageContent(),

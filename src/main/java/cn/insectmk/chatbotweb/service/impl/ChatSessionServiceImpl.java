@@ -4,9 +4,13 @@ import cn.insectmk.chatbotweb.common.Dialog;
 import cn.insectmk.chatbotweb.entity.ChatSession;
 import cn.insectmk.chatbotweb.mapper.ChatSessionMapper;
 import cn.insectmk.chatbotweb.service.ChatSessionService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Description 会话服务接口实现
@@ -15,9 +19,17 @@ import java.util.ArrayList;
  * @Version 1.0
  */
 @Service
+@Transactional
 public class ChatSessionServiceImpl extends ServiceImpl<ChatSessionMapper, ChatSession> implements ChatSessionService {
     @Override
-    public ArrayList<String[]> getHistoryMessageBySessionId(String sessionId) {
+    public List<ChatSession> getAllChatSession(String userId) {
+        return baseMapper.selectList(new LambdaQueryWrapper<ChatSession>()
+                .eq(ChatSession::getUserId, userId)
+                .orderByDesc(ChatSession::getEndTime));
+    }
+
+    @Override
+    public List<String[]> getHistoryMessageBySessionId(String sessionId) {
         // 查询历史对话
         ArrayList<Dialog> dialogs = baseMapper.selectHistoryMessageBySessionId(sessionId);
 

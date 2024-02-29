@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @SpringBootTest
 class ChatSessionServiceImplTest {
@@ -15,7 +16,7 @@ class ChatSessionServiceImplTest {
 
     @Test
     void getHistoryMessageBySessionId() {
-        ArrayList<String[]> dialogs = chatSessionService.getHistoryMessageBySessionId("0c2c9ffead3b018e0ba16a711d1885e4");
+        List<String[]> dialogs = chatSessionService.getHistoryMessageBySessionId("0c2c9ffead3b018e0ba16a711d1885e4");
         for (String[] dialog : dialogs) {
             System.out.println(Arrays.toString(dialog));
         }

@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Description HTTP接口请求数据
@@ -19,5 +20,5 @@ import java.util.ArrayList;
 public class HttpApiRequestDto {
     private String prompt;
     // 历史消息：[["你好","你好👋！我是人工智能助手 ChatGLM2-6B，很高兴见到你，欢迎问我任何问题。"]]
-    private ArrayList<String[]> history;
+    private List<String[]> history;
 }

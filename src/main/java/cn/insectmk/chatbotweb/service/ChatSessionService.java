@@ -2,8 +2,7 @@ package cn.insectmk.chatbotweb.service;
 
 import cn.insectmk.chatbotweb.entity.ChatSession;
 import com.baomidou.mybatisplus.extension.service.IService;
-
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Description 会话服务接口
@@ -13,9 +12,16 @@ import java.util.ArrayList;
  */
 public interface ChatSessionService extends IService<ChatSession> {
     /**
+     * 获取用户所有的聊天
+     * @param userId
+     * @return
+     */
+    List<ChatSession> getAllChatSession(String userId);
+
+    /**
      * 获取历史的对话
      * @param sessionId
      * @return
      */
-    ArrayList<String[]> getHistoryMessageBySessionId(String sessionId);
+    List<String[]> getHistoryMessageBySessionId(String sessionId);
 }

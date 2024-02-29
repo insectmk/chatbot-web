@@ -3,13 +3,13 @@ package cn.insectmk.chatbotweb.controller;
 import cn.insectmk.chatbotweb.common.Result;
 import cn.insectmk.chatbotweb.controller.dto.ChatSessionDto;
 import cn.insectmk.chatbotweb.entity.ChatSession;
+import cn.insectmk.chatbotweb.exception.BizException;
 import cn.insectmk.chatbotweb.service.ChatSessionService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Objects;
 
 /**
  * @Description 会话控制类
@@ -22,6 +22,34 @@ import javax.servlet.http.HttpServletRequest;
 public class ChatSessionController {
     @Autowired
     private ChatSessionService chatSessionService;
+
+    /**
+     * 获取用户所有的会话
+     * @param request
+     * @return
+     */
+    @GetMapping("/all")
+    public Result findAll(HttpServletRequest request) {
+        return Result.buildSuccess(chatSessionService
+                .getAllChatSession(request
+                        .getAttribute("userId")
+                        .toString()));
+    }
+
+    /**
+     * 查询会话所有的历史消息
+     * @param sessionId
+     * @return
+     */
+    @GetMapping
+    public Result findAllMessage(HttpServletRequest request, String sessionId) {
+        if (Objects.isNull(chatSessionService.getOne(new LambdaQueryWrapper<ChatSession>()
+                .eq(ChatSession::getId, sessionId)
+                .eq(ChatSession::getUserId, request.getAttribute("userId").toString())))) {
+            throw new BizException("您无权访问此会话");
+        }
+        return Result.buildSuccess(chatSessionService.getHistoryMessageBySessionId(sessionId));
+    }
 
     /**
      * 创建一个会话
@@ -38,6 +66,7 @@ public class ChatSessionController {
                 null,
                 userId,
                 chatSessionDto.getModelVersionId(),
+                chatSessionDto.getRemark(),
                 null,
                 null,
                 ChatSession.STATUS_FREE
