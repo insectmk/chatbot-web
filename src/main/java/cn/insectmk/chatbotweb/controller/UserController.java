@@ -21,6 +21,16 @@ public class UserController {
     private UserService userService;
 
     /**
+     * 注册用户
+     * @param user
+     * @return
+     */
+    @GetMapping("/register")
+    public Result register(User user) {
+        return null;
+    }
+
+    /**
      * 刷新并获取接口密钥
      * @param request
      * @return
@@ -31,18 +41,5 @@ public class UserController {
                 .getApiKey(request
                         .getAttribute("userId")
                         .toString()));
-    }
-
-    /**
-     * 登录并获取token
-     * @param user
-     * @return
-     */
-    @PostMapping("/login")
-    public Result login(@RequestBody User user) {
-        String token = userService.login(user.getEmail(), user.getPassword());
-        return StringUtils.isNotBlank(token) ?
-                Result.buildSuccess(token) :
-                Result.buildFail("登录失败，邮箱或密码不正确");
     }
 }
