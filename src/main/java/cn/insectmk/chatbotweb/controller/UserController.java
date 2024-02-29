@@ -20,6 +20,18 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    /**
+     * 刷新并获取接口密钥
+     * @param request
+     * @return
+     */
+    @GetMapping("/apiKey")
+    public Result getApiKey(HttpServletRequest request) {
+        return Result.buildSuccess(userService
+                .getApiKey(request
+                        .getAttribute("userId")
+                        .toString()));
+    }
 
     /**
      * 登录并获取token
@@ -32,10 +44,5 @@ public class UserController {
         return StringUtils.isNotBlank(token) ?
                 Result.buildSuccess(token) :
                 Result.buildFail("登录失败，邮箱或密码不正确");
-    }
-
-    @GetMapping
-    public Result findAll() {
-        return Result.buildSuccess(userService.list());
     }
 }

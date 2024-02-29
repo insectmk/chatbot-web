@@ -24,6 +24,25 @@ public class ChatSessionController {
     private ChatSessionService chatSessionService;
 
     /**
+     * 删除会话
+     * @param request
+     * @param sessionId
+     * @return
+     */
+    @DeleteMapping
+    public Result delete(HttpServletRequest request, String sessionId) {
+        if (Objects.isNull(chatSessionService.getOne(new LambdaQueryWrapper<ChatSession>()
+                .eq(ChatSession::getId, sessionId)
+                .eq(ChatSession::getUserId, request.getAttribute("userId").toString())))) {
+            throw new BizException("您无权访问此会话");
+        }
+        
+        return chatSessionService.deleteById(sessionId) ?
+                Result.buildSuccess() :
+                Result.buildFail();
+    }
+
+    /**
      * 获取用户所有的会话
      * @param request
      * @return

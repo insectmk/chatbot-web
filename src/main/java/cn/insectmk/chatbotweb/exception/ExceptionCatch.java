@@ -7,9 +7,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-//@RestControllerAdvice //控制层通知类
+@RestControllerAdvice //控制层通知类
 @Slf4j
 public class ExceptionCatch {
+    @ExceptionHandler(BizException.class)
+    public Result bizEx(RuntimeException ex, HttpServletRequest request, HttpServletResponse response) {
+        return Result.buildFail(ex.getMessage());
+    }
 
     //运行时异常捕获
     @ExceptionHandler(RuntimeException.class)

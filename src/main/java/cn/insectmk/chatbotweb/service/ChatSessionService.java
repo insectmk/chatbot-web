@@ -11,6 +11,14 @@ import java.util.List;
  * @Version 1.0
  */
 public interface ChatSessionService extends IService<ChatSession> {
+
+    /**
+     * 删除会话
+     * @param sessionId
+     * @return
+     */
+    boolean deleteById(String sessionId);
+
     /**
      * 获取用户所有的聊天
      * @param userId

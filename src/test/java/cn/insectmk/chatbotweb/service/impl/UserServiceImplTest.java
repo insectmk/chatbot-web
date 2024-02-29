@@ -23,6 +23,7 @@ class UserServiceImplTest {
                 aesUtil.encrypt("123456", null),
                 aesUtil.encrypt("3067836615@qq.com", null),
                 null,
+                null,
                 null
         );
         userService.save(user);

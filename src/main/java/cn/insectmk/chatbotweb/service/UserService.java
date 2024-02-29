@@ -11,6 +11,13 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface UserService extends IService<User> {
     /**
+     * 为用户生成APIKey
+     * @param userId
+     * @return
+     */
+    String getApiKey(String userId);
+
+    /**
      * 判断token是否有效
      * @param token
      * @return
