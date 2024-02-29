@@ -58,7 +58,7 @@ public class JWTUtil {
                     // 填入密钥
                     .setSigningKey(secret)
                     // 替换令牌前缀
-                    .parseClaimsJws(token.replace(token,""))
+                    .parseClaimsJws(token.replace(prefix,""))
                     // 获取负载信息
                     .getBody();
         }catch (Exception e){

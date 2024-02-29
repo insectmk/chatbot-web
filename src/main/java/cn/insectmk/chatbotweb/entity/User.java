@@ -16,10 +16,10 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @Data
 public class User {
-    private String id;
-    private String username;
-    private String password;
-    private String email;
-    private Timestamp registrationTime;
-    private Timestamp lastLoginTime;
+    protected String id;
+    protected String username;
+    protected String password;
+    protected String email;
+    protected Timestamp registrationTime;
+    protected Timestamp lastLoginTime;
 }

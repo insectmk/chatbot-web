@@ -1,5 +1,7 @@
 package cn.insectmk.chatbotweb.service;
 
+import cn.insectmk.chatbotweb.controller.dto.ChatMessageDto;
+import cn.insectmk.chatbotweb.controller.vo.HttpApiResponseVo;
 import cn.insectmk.chatbotweb.entity.ChatMessage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -10,4 +12,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @Version 1.0
  */
 public interface ChatMessageService extends IService<ChatMessage> {
+    /**
+     * 发送消息
+     * @param chatMessageDto
+     * @return
+     */
+    HttpApiResponseVo send(ChatMessageDto chatMessageDto);
 }

@@ -5,9 +5,7 @@ import cn.insectmk.chatbotweb.entity.User;
 import cn.insectmk.chatbotweb.service.UserService;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -22,17 +20,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    /**
-     * 判断Token是否有效
-     * @param request
-     * @return
-     */
-    @GetMapping("/isToken")
-    public Result isTokenEffective(HttpServletRequest request) {
-        return userService.isTokenEffective(request.getHeader("token")) ?
-                Result.buildSuccess() :
-                Result.buildFail();
-    }
 
     /**
      * 登录并获取token

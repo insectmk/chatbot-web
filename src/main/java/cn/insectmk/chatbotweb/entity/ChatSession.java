@@ -3,7 +3,6 @@ package cn.insectmk.chatbotweb.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.sql.Timestamp;
 
 /**
@@ -16,9 +15,14 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @Data
 public class ChatSession {
-    private String id;
-    private String userId;
-    private String modelVersionId;
-    private Timestamp startTime;
-    private Timestamp endTime;
+    public static final String STATUS_BUSY = "忙碌";
+    public static final String STATUS_FREE = "闲置";
+
+    protected String id;
+    protected String userId;
+    protected String modelVersionId;
+    protected String remark;
+    protected Timestamp startTime;
+    protected Timestamp endTime;
+    protected String status;
 }

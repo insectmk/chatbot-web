@@ -4,8 +4,10 @@ import cn.insectmk.chatbotweb.util.EmailUtil;
 import cn.insectmk.chatbotweb.util.JWTUtil;
 import cn.insectmk.chatbotweb.util.JsonUtil;
 import cn.insectmk.chatbotweb.util.AESUtil;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * @Description 工具类注册
@@ -15,6 +17,11 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class UtilConfigure {
+    @Bean
+    public RestTemplate restTemplate(RestTemplateBuilder builder) {
+        return builder.build();
+    }
+
     @Bean
     public AESUtil aesUtil() {
         return new AESUtil();

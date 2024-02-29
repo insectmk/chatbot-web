@@ -16,23 +16,13 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @Data
 public class ChatMessage {
-    public enum SenderType {
-        USER("用户"),BOT("机器人");
+    public static final String SENDER_TYPE_USER = "用户";
+    public static final String SENDER_TYPE_BOT = "机器人";
 
-        final String type;
-
-        SenderType(String typeName) {
-            this.type = typeName;
-        }
-
-        @Override
-        public String toString() {
-            return this.type;
-        }
-    }
-
-    private String id;
-    private String sessionId;
-    private SenderType senderType;
-    private Timestamp sentTime;
+    protected String id;
+    protected String sessionId;
+    protected String senderType;
+    protected String messageId;
+    protected String messageContent;
+    protected Timestamp sentTime;
 }

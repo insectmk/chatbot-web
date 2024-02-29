@@ -15,9 +15,9 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @Data
 public class ModelVersion {
-    private String id;
-    private String name;
-    private String versionNumber;
-    private Timestamp deploymentTime;
-    private String remarks;
+    protected String id;
+    protected String name;
+    protected String versionNumber;
+    protected Timestamp deploymentTime;
+    protected String remarks;
 }

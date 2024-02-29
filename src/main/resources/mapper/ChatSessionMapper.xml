@@ -3,5 +3,21 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.insectmk.chatbotweb.mapper.ChatSessionMapper">
-
+    <select id="selectHistoryMessageBySessionId" resultType="cn.insectmk.chatbotweb.common.Dialog">
+        SELECT
+            A.message_content AS userMessage,
+            B.message_content AS botMessage
+        FROM
+            t_chat_message A
+                LEFT JOIN t_chat_message B
+                          ON A.session_id = B.session_id
+                              AND B.message_id = A.id
+        WHERE
+            A.sender_type = '用户'
+          AND B.sender_type = '机器人'
+          AND A.session_id = #{sessionId}
+        ORDER BY
+            A.sent_time ASC,
+            A.id ASC;
+    </select>
 </mapper>

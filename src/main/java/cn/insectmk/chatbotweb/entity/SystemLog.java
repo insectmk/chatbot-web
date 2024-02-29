@@ -31,8 +31,8 @@ public class SystemLog {
         }
     }
 
-    private String id;
-    private Level level;
-    private String message;
-    private Timestamp createTime;
+    protected String id;
+    protected Level level;
+    protected String message;
+    protected Timestamp createTime;
 }

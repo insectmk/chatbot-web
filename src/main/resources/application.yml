@@ -4,10 +4,15 @@ server:
 
 # Spring相关配置
 spring:
+  datasource:
+    hikari:
+      # 解决插入表情报错
+      connection-init-sql: set names utf8mb4
   # 配置文件选择
   profiles:
     active: dev
   jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
 
 # 这是MyBatis所使用的配置
