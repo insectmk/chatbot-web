@@ -23,6 +23,18 @@ public class UserController {
     private UserService userService;
 
     /**
+     * 删除用户
+     * @param request
+     * @return
+     */
+    @DeleteMapping
+    public Result delete(HttpServletRequest request) {
+        return userService.deleteOne(request.getAttribute("userId").toString()) ?
+                Result.buildSuccess("删除成功！") :
+                Result.buildFail("删除失败！");
+    }
+
+    /**
      * 获取用户基本信息
      * @param request
      * @return

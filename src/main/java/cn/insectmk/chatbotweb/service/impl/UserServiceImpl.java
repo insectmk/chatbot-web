@@ -19,7 +19,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @Description 用户服务接口实现
@@ -30,7 +32,7 @@ import java.util.Objects;
 @Service
 @Transactional
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
-    @Value(("${host.ip}"))
+    @Value(("${system.ip}"))
     private String ip;
     @Value("${server.port}")
     private String port;
@@ -45,6 +47,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private ChatSessionService chatSessionService;
     @Autowired
     private EmailUtil emailUtil;
+
+    @Override
+    public boolean deleteOne(String userId) {
+        // 删除所有的会话
+        for(String sessionId : chatSessionService
+                .getAllChatSession(userId)
+                .stream()
+                .map(ChatSession::getId)
+                .collect(Collectors.toList())) {
+            chatSessionService.deleteById(sessionId);
+        }
+        // 删除用户
+        return baseMapper.deleteById(userId) == 1;
+    }
 
     @Override
     public User getUserInfo(String userId) {

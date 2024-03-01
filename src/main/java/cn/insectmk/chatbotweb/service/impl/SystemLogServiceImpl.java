@@ -5,6 +5,7 @@ import cn.insectmk.chatbotweb.mapper.SystemLogMapper;
 import cn.insectmk.chatbotweb.service.SystemLogService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @Description 系统日志服务接口实现
@@ -13,5 +14,6 @@ import org.springframework.stereotype.Service;
  * @Version 1.0
  */
 @Service
+@Transactional
 public class SystemLogServiceImpl extends ServiceImpl<SystemLogMapper, SystemLog> implements SystemLogService {
 }
