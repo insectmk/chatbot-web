@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -116,11 +117,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         User user = baseMapper.selectOne(new LambdaQueryWrapper<User>()
                 .eq(User::getEmail, aesUtil.encrypt(email))
                 .eq(User::getPassword, aesUtil.encrypt(password)));
-
+        // 邮箱与密码是否匹配
         if (Objects.isNull(user)) {
             return null;
         }
-
+        // 更新最后登录时间
+        user.setLastLoginTime(new Date());
+        baseMapper.updateById(user);
+        // 生成JWT
         return jwtUtil.generateJWT(user);
     }
 }
