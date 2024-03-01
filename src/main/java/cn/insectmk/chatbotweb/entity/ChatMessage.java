@@ -3,8 +3,7 @@ package cn.insectmk.chatbotweb.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * @Description 聊天消息
@@ -24,5 +23,5 @@ public class ChatMessage {
     protected String senderType;
     protected String messageId;
     protected String messageContent;
-    protected Timestamp sentTime;
+    protected Date sentTime;
 }

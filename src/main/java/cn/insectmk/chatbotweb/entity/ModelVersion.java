@@ -3,7 +3,7 @@ package cn.insectmk.chatbotweb.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * @Description 模型版本
@@ -18,6 +18,6 @@ public class ModelVersion {
     protected String id;
     protected String name;
     protected String versionNumber;
-    protected Timestamp deploymentTime;
+    protected Date deploymentTime;
     protected String remarks;
 }

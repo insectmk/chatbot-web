@@ -46,6 +46,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private EmailUtil emailUtil;
 
     @Override
+    public User getUserInfo(String userId) {
+        User user = baseMapper.selectById(userId);
+        user.setId(null);
+        user.setUsername(aesUtil.decrypt(user.getUsername()));
+        user.setEmail(aesUtil.decrypt(user.getEmail()));
+        user.setPassword(null);
+        user.setApiKey(aesUtil.decrypt(user.getApiKey()));
+        return user;
+    }
+
+    @Override
     public User register(String key) {
         // 解析key，（用户名+邮箱+密码）
         String[] split = aesUtil.decrypt(key).split("\\\\");

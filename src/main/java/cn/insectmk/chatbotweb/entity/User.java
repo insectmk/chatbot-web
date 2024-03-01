@@ -1,11 +1,9 @@
 package cn.insectmk.chatbotweb.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * @Description 用户
@@ -22,6 +20,6 @@ public class User {
     protected String password;
     protected String email;
     protected String apiKey;
-    protected Timestamp registrationTime;
-    protected Timestamp lastLoginTime;
+    protected Date registrationTime;
+    protected Date lastLoginTime;
 }

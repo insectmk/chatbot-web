@@ -3,8 +3,7 @@ package cn.insectmk.chatbotweb.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.sql.Timestamp;
+import java.sql.Date;
 
 /**
  * @Description 日志
@@ -34,5 +33,5 @@ public class SystemLog {
     protected String id;
     protected Level level;
     protected String message;
-    protected Timestamp createTime;
+    protected Date createTime;
 }

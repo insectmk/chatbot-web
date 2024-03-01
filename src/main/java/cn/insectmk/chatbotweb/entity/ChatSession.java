@@ -3,7 +3,7 @@ package cn.insectmk.chatbotweb.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * @Description 会话
@@ -22,7 +22,7 @@ public class ChatSession {
     protected String userId;
     protected String modelVersionId;
     protected String remark;
-    protected Timestamp startTime;
-    protected Timestamp endTime;
+    protected Date startTime;
+    protected Date endTime;
     protected String status;
 }

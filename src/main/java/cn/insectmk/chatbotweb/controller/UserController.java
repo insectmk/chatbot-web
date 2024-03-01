@@ -23,6 +23,16 @@ public class UserController {
     private UserService userService;
 
     /**
+     * 获取用户基本信息
+     * @param request
+     * @return
+     */
+    @GetMapping
+    public Result info(HttpServletRequest request) {
+        return Result.buildSuccess(userService.getUserInfo(request.getAttribute("userId").toString()));
+    }
+
+    /**
      * 通过注册链接注册用户
      * @param key
      * @return
