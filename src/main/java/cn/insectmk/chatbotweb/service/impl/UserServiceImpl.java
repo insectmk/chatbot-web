@@ -1,5 +1,6 @@
 package cn.insectmk.chatbotweb.service.impl;
 
+import cn.insectmk.chatbotweb.controller.dto.UserDto;
 import cn.insectmk.chatbotweb.entity.ChatSession;
 import cn.insectmk.chatbotweb.entity.User;
 import cn.insectmk.chatbotweb.mapper.ChatSessionMapper;
@@ -7,11 +8,13 @@ import cn.insectmk.chatbotweb.mapper.UserMapper;
 import cn.insectmk.chatbotweb.service.ChatSessionService;
 import cn.insectmk.chatbotweb.service.UserService;
 import cn.insectmk.chatbotweb.util.AESUtil;
+import cn.insectmk.chatbotweb.util.EmailUtil;
 import cn.insectmk.chatbotweb.util.JWTUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +29,11 @@ import java.util.Objects;
 @Service
 @Transactional
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
+    @Value(("${host.ip}"))
+    private String ip;
+    @Value("${server.port}")
+    private String port;
+
     @Autowired
     private AESUtil aesUtil;
     @Autowired
@@ -34,6 +42,32 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private ChatSessionMapper chatSessionMapper;
     @Autowired
     private ChatSessionService chatSessionService;
+    @Autowired
+    private EmailUtil emailUtil;
+
+    @Override
+    public User register(String key) {
+        // 解析key，（用户名+邮箱+密码）
+        String[] split = aesUtil.decrypt(key).split("\\\\");
+        // 创建用户
+        User user = new User();
+        user.setUsername(aesUtil.encrypt(split[0]));
+        user.setEmail(aesUtil.encrypt(split[1]));
+        user.setPassword(aesUtil.encrypt(split[2]));
+        baseMapper.insert(user);
+        return user;
+    }
+
+    @Override
+    public boolean sendRegisterUrl(UserDto userDto) {
+        // 拼接参数（用户名+邮箱+密码）
+        String source = userDto.getUsername() + "\\" + userDto.getEmail() + "\\" + userDto.getPassword();
+        // 加密
+        String url = "http://" + ip + ":" + port + "/user/register" + "?key=" + aesUtil.encrypt(source);
+        // 发送邮件
+        emailUtil.sendMail(userDto.getEmail(), "智能聊天机器人注册链接", url);
+        return true;
+    }
 
     @Override
     public String getApiKey(String userId) {

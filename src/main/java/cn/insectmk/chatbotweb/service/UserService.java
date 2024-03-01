@@ -1,5 +1,6 @@
 package cn.insectmk.chatbotweb.service;
 
+import cn.insectmk.chatbotweb.controller.dto.UserDto;
 import cn.insectmk.chatbotweb.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -10,6 +11,20 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @Version 1.0
  */
 public interface UserService extends IService<User> {
+    /**
+     * 通过注册key注册用户
+     * @param key
+     * @return
+     */
+    User register(String key);
+
+    /**
+     * 生成注册URL
+     * @param userDto
+     * @return
+     */
+    boolean sendRegisterUrl(UserDto userDto);
+
     /**
      * 为用户生成APIKey
      * @param userId

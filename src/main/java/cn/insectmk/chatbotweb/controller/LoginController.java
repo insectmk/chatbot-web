@@ -27,7 +27,7 @@ public class LoginController {
     private UserService userService;
 
     /**
-     * 生成图片验证码
+     * 生成图形验证码
      * @param response
      * @param session
      * @throws IOException

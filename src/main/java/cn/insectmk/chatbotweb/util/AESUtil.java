@@ -86,6 +86,7 @@ public class AESUtil {
 	 * @return
 	 */
 	public  String decrypt(String content, String key) {
+		content = content.replaceAll(" ", "+"); // 修复Web传输参数导致的空格
 		if (StringUtils.isBlank(key)) key = this.key;
 		try {
 			//实例化

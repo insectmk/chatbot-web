@@ -1,5 +1,6 @@
 package cn.insectmk.chatbotweb.service.impl;
 
+import cn.insectmk.chatbotweb.controller.dto.UserDto;
 import cn.insectmk.chatbotweb.entity.User;
 import cn.insectmk.chatbotweb.service.UserService;
 import cn.insectmk.chatbotweb.util.AESUtil;
@@ -14,6 +15,20 @@ class UserServiceImplTest {
     private UserService userService;
     @Autowired
     private AESUtil aesUtil;
+
+    @Test
+    void register() {
+        userService.register("GbSQtTeQyK54Bt1mmjLWpEyrNwzInrN7fzrYDTFPceI=");
+    }
+
+    @Test
+    void sendRegisterUrl() {
+        UserDto userDto = new UserDto();
+        userDto.setEmail("2514378105@qq.com");
+        userDto.setUsername("MaKun");
+        userDto.setPassword("123456");
+        userService.sendRegisterUrl(userDto);
+    }
 
     @Test
     public void saveOne() {

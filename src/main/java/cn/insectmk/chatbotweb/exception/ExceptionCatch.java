@@ -6,13 +6,33 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.sql.SQLException;
 
 @RestControllerAdvice //控制层通知类
 @Slf4j
 public class ExceptionCatch {
+    /**
+     * 数据库异常捕获
+     * @param ex
+     * @param request
+     * @param response
+     * @return
+     */
+    @ExceptionHandler(SQLException.class)
+    public Result sqlException(SQLException ex, HttpServletRequest request, HttpServletResponse response) {
+        return Result.buildFail("数据不符合规范：" + ex.getCause());
+    }
+
+    /**
+     * 业务异常捕获
+     * @param ex
+     * @param request
+     * @param response
+     * @return
+     */
     @ExceptionHandler(BizException.class)
     public Result bizEx(RuntimeException ex, HttpServletRequest request, HttpServletResponse response) {
-        return Result.buildFail(ex.getMessage());
+        return Result.buildFail(ex.getCause().toString());
     }
 
     //运行时异常捕获
@@ -24,7 +44,7 @@ public class ExceptionCatch {
         response.setHeader("Access-Control-Allow-Headers", "*");
 
         log.error("出现了RuntimeException ==> "+ ex);
-        return new Result(false,"服务器繁忙，请稍后重试..." ,null);
+        return Result.buildFail("出错了：" + ex.getCause());
     }
 
     //空指针时异常捕获
@@ -48,6 +68,6 @@ public class ExceptionCatch {
         response.setHeader("Access-Control-Allow-Headers", "*");
 
         log.error("出现了Exception ==> "+ ex);
-        return new Result(false,"服务器超时，请稍后再试..." ,null);
+        return Result.buildFail("服务器出错：" + ex.getCause());
     }
 }
