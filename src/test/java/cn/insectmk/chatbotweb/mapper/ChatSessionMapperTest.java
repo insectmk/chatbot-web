@@ -1,13 +1,13 @@
 package cn.insectmk.chatbotweb.mapper;
 
-import cn.insectmk.chatbotweb.common.Dialog;
 import cn.insectmk.chatbotweb.entity.ChatSession;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.plexpt.chatgpt.entity.chat.Message;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @SpringBootTest
 class ChatSessionMapperTest {
@@ -28,7 +28,7 @@ class ChatSessionMapperTest {
 
     @Test
     void selectHistoryMessageBySessionId() {
-        ArrayList<Dialog> strings = chatSessionMapper.selectHistoryMessageBySessionId("1");
-        System.out.println(strings);
+        List<Message> messages = chatSessionMapper.selectHistoryMsg("1");
+        System.out.println(messages);
     }
 }

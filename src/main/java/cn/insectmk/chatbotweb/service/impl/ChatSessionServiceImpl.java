@@ -1,6 +1,5 @@
 package cn.insectmk.chatbotweb.service.impl;
 
-import cn.insectmk.chatbotweb.common.Dialog;
 import cn.insectmk.chatbotweb.entity.ChatMessage;
 import cn.insectmk.chatbotweb.entity.ChatSession;
 import cn.insectmk.chatbotweb.mapper.ChatMessageMapper;
@@ -12,7 +11,7 @@ import com.plexpt.chatgpt.entity.chat.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.ArrayList;
+
 import java.util.List;
 
 /**

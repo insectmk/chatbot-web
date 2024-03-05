@@ -1,12 +1,10 @@
 package cn.insectmk.chatbotweb.mapper;
 
-import cn.insectmk.chatbotweb.common.Dialog;
 import cn.insectmk.chatbotweb.entity.ChatSession;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.plexpt.chatgpt.entity.chat.Message;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,5 +14,10 @@ import java.util.List;
  * @Version 1.0
  */
 public interface ChatSessionMapper extends BaseMapper<ChatSession> {
+     /**
+      * 查询会话的历史对话
+      * @param sessionId
+      * @return
+      */
      List<Message> selectHistoryMsg(@Param("sessionId") String sessionId);
 }

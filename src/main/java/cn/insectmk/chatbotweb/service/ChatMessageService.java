@@ -1,7 +1,5 @@
 package cn.insectmk.chatbotweb.service;
 
-import cn.insectmk.chatbotweb.controller.dto.ChatMessageDto;
-import cn.insectmk.chatbotweb.controller.vo.HttpApiResponseVo;
 import cn.insectmk.chatbotweb.entity.ChatMessage;
 import com.baomidou.mybatisplus.extension.service.IService;
 

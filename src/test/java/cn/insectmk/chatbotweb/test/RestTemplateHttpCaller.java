@@ -1,7 +1,5 @@
 package cn.insectmk.chatbotweb.test;
 
-import cn.insectmk.chatbotweb.controller.dto.HttpApiRequestDto;
-import cn.insectmk.chatbotweb.controller.vo.HttpApiResponseVo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

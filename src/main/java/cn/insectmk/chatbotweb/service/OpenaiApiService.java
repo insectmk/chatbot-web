@@ -9,5 +9,10 @@ import cn.insectmk.chatbotweb.entity.ChatMessage;
  * @Version 1.0
  */
 public interface OpenaiApiService {
+    /**
+     * 向OpenAI API接口发送消息并得到回复
+     * @param chatMessage
+     * @return
+     */
     String send(ChatMessage chatMessage);
 }
