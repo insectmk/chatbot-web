@@ -15,8 +15,9 @@ import java.util.Date;
 @AllArgsConstructor
 @Data
 public class ChatMessage {
-    public static final String SENDER_TYPE_USER = "用户";
-    public static final String SENDER_TYPE_BOT = "机器人";
+    public static final String SENDER_TYPE_ASSISTANT = "assistant";
+    public static final String SENDER_TYPE_USER = "user";
+    public static final String SENDER_TYPE_SYSTEM = "system";
 
     protected String id;
     protected String sessionId;

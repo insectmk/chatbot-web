@@ -57,7 +57,7 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper, ChatM
         baseMapper.insert(userChatMessage);
         // 存储机器人新对话
         ChatMessage botChatMessage = new ChatMessage(null, chatSession.getId(),
-                ChatMessage.SENDER_TYPE_BOT,
+                ChatMessage.SENDER_TYPE_ASSISTANT,
                 userChatMessage.getId(),
                 response.getResponse(),
                 null);

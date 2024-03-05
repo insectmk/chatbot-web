@@ -15,12 +15,17 @@
     </properties>
 
     <dependencies>
+        <dependency><!-- 用于访问OpenAI格式的API -->
+            <groupId>com.github.plexpt</groupId>
+            <artifactId>chatgpt</artifactId>
+            <version>4.0.7</version>
+        </dependency>
+
         <dependency><!-- 图形验证码 -->
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
             <version>5.8.16</version>
         </dependency>
-
 
         <dependency><!--跨域身份验证解决⽅案 Json web token-->
             <groupId>io.jsonwebtoken</groupId>
