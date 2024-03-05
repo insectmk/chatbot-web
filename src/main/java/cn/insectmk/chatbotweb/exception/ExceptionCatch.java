@@ -31,7 +31,7 @@ public class ExceptionCatch {
      * @return
      */
     @ExceptionHandler(BizException.class)
-    public Result bizEx(RuntimeException ex, HttpServletRequest request, HttpServletResponse response) {
+    public Result bizEx(BizException ex, HttpServletRequest request, HttpServletResponse response) {
         return Result.buildFail(ex.getCause().toString());
     }
 

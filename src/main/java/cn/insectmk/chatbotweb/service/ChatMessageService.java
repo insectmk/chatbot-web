@@ -13,9 +13,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ChatMessageService extends IService<ChatMessage> {
     /**
-     * 发送消息
-     * @param chatMessageDto
+     * 发送消息，RWKV版本
+     * @param chatMessage
      * @return
      */
-    HttpApiResponseVo send(ChatMessageDto chatMessageDto);
+    String send(ChatMessage chatMessage);
 }

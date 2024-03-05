@@ -2,6 +2,8 @@ package cn.insectmk.chatbotweb.service;
 
 import cn.insectmk.chatbotweb.entity.ChatSession;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.plexpt.chatgpt.entity.chat.Message;
+
 import java.util.List;
 
 /**
@@ -11,6 +13,12 @@ import java.util.List;
  * @Version 1.0
  */
 public interface ChatSessionService extends IService<ChatSession> {
+    /**
+     * 获取对话的历史消息
+     * @param sessionId
+     * @return
+     */
+    List<Message> getHistoryMsg(String sessionId);
 
     /**
      * 删除会话
@@ -25,11 +33,4 @@ public interface ChatSessionService extends IService<ChatSession> {
      * @return
      */
     List<ChatSession> getAllChatSession(String userId);
-
-    /**
-     * 获取历史的对话
-     * @param sessionId
-     * @return
-     */
-    List<String[]> getHistoryMessageBySessionId(String sessionId);
 }

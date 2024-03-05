@@ -20,12 +20,14 @@ public class Result implements Serializable{
     private Object data;//返回数据
 
     /**
-     * 快速构建成功消息
-     * @param msg
+     * 构建消息
+     * @param flag
+     * @param message
+     * @param data
      * @return
      */
-    public static Result buildSuccess(String msg) {
-        return new Result(true, msg, null);
+    public static Result build(boolean flag, String message, Object data) {
+        return new Result(flag, message, data);
     }
 
     /**

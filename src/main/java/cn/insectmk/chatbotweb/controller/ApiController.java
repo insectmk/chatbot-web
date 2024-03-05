@@ -40,7 +40,7 @@ public class ApiController {
             throw new BizException("该接口已失效");
         }
 
-        return Result.buildSuccess(chatSessionService.getHistoryMessageBySessionId(sessionId));
+        return Result.buildSuccess(chatSessionService.getHistoryMsg(sessionId));
     }
 
     /**

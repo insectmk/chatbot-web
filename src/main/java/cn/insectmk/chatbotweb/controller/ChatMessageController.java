@@ -2,6 +2,7 @@ package cn.insectmk.chatbotweb.controller;
 
 import cn.insectmk.chatbotweb.common.Result;
 import cn.insectmk.chatbotweb.controller.dto.ChatMessageDto;
+import cn.insectmk.chatbotweb.entity.ChatMessage;
 import cn.insectmk.chatbotweb.service.ChatMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,11 +24,11 @@ public class ChatMessageController {
 
     /**
      * 发送消息
-     * @param chatMessageDto
+     * @param chatMessage
      * @return
      */
     @PostMapping
-    public Result send(@RequestBody ChatMessageDto chatMessageDto) {
-        return Result.buildSuccess(chatMessageService.send(chatMessageDto));
+    public Result send(@RequestBody ChatMessage chatMessage) {
+        return Result.buildSuccess(chatMessageService.send(chatMessage));
     }
 }
