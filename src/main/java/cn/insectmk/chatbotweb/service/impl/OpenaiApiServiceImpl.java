@@ -1,6 +1,5 @@
 package cn.insectmk.chatbotweb.service.impl;
 
-import cn.insectmk.chatbotweb.configure.SseEmitterUTF8;
 import cn.insectmk.chatbotweb.entity.ChatMessage;
 import cn.insectmk.chatbotweb.mapper.ChatSessionMapper;
 import cn.insectmk.chatbotweb.service.OpenaiApiService;
@@ -8,12 +7,9 @@ import com.plexpt.chatgpt.ChatGPT;
 import com.plexpt.chatgpt.entity.chat.ChatCompletion;
 import com.plexpt.chatgpt.entity.chat.ChatCompletionResponse;
 import com.plexpt.chatgpt.entity.chat.Message;
-import com.plexpt.chatgpt.listener.SseStreamListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**

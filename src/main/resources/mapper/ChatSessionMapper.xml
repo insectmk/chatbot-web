@@ -12,6 +12,9 @@
         WHERE
             session_id = #{sessionId}
         ORDER BY
-            sent_time ASC
+            sent_time ASC,
+            sender_type = 'system' DESC,
+            sender_type = 'user' DESC,
+            sender_type = 'assistant' DESC;
     </select>
 </mapper>

@@ -1,6 +1,7 @@
 package cn.insectmk.chatbotweb.controller;
 
 import cn.insectmk.chatbotweb.common.Result;
+import cn.insectmk.chatbotweb.configure.SseEmitterUTF8;
 import cn.insectmk.chatbotweb.controller.dto.ChatMessageDto;
 import cn.insectmk.chatbotweb.entity.ChatMessage;
 import cn.insectmk.chatbotweb.service.ChatMessageService;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 /**
  * @Description 聊天消息控制类
@@ -21,6 +23,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class ChatMessageController {
     @Autowired
     private ChatMessageService chatMessageService;
+
+    /**
+     * 发送消息（流式输出）
+     * @param chatMessage
+     * @return
+     */
+    @PostMapping("/stream")
+    public SseEmitter sendStream(@RequestBody ChatMessage chatMessage) {
+        SseEmitterUTF8 sseEmitterUTF8 = new SseEmitterUTF8(-1L);
+        chatMessageService.sendStream(chatMessage, sseEmitterUTF8);
+        return sseEmitterUTF8;
+    }
 
     /**
      * 发送消息
