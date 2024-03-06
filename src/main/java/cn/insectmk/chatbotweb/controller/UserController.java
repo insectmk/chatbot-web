@@ -63,10 +63,10 @@ public class UserController {
      */
     @PostMapping("/register")
     public Result register(@RequestBody UserDto userDto, HttpSession session) {
-        // 如果验证码对不上就拒绝注册
+        /*// 如果验证码对不上就拒绝注册
         if (!session.getAttribute("captcha").equals(userDto.getCaptcha())) {
             return Result.buildFail("验证码不正确");
-        }
+        }*/
         // 发送注册链接
         userService.sendRegisterUrl(userDto);
         return Result.buildSuccess("请点击邮箱的注册链接完成注册");

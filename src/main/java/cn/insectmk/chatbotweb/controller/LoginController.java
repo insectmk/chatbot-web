@@ -27,6 +27,18 @@ public class LoginController {
     private UserService userService;
 
     /**
+     * 判断令牌是否有效
+     * @param token
+     * @return
+     */
+    @GetMapping("/isToken")
+    public Result isToken(String token) {
+        return userService.isTokenEffective(token) ?
+                Result.build(true, "令牌有效", null) :
+                Result.buildFail("令牌无效");
+    }
+
+    /**
      * 生成图形验证码
      * @param response
      * @param session
@@ -34,6 +46,7 @@ public class LoginController {
      */
     @GetMapping("/captcha")
     public void captcha(HttpServletResponse response, HttpSession session) throws IOException {
+        System.out.println(session.getId());
         // 定义图形验证码的长、宽、验证码字符数、干扰线宽度
         ShearCaptcha captcha = CaptchaUtil.createShearCaptcha(200, 100, 4, 4);
         // 将验证码装到Session中
@@ -50,10 +63,14 @@ public class LoginController {
      */
     @PostMapping
     public Result login(@RequestBody UserDto userDto, HttpSession session) {
+        /*System.out.println(session.getId());
+        String captcha = session.getAttribute("captcha").toString();
         // 如果验证码对不上就拒绝登录
-        if (!session.getAttribute("captcha").equals(userDto.getCaptcha())) {
+        if (StringUtils.isBlank(userDto.getCaptcha()) || StringUtils.isBlank(captcha)) {
+            return Result.buildFail("请输入验证码");
+        } else if (!captcha.equals(userDto.getCaptcha())) {
             return Result.buildFail("验证码不正确");
-        }
+        }*/
         // 登录
         String token = userService.login(userDto.getEmail(), userDto.getPassword());
         return StringUtils.isNotBlank(token) ?
