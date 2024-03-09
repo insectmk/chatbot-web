@@ -19,6 +19,7 @@ public class User {
     protected String username;
     protected String password;
     protected String email;
+    protected String head;
     protected String apiKey;
     protected Date registrationTime;
     protected Date lastLoginTime;

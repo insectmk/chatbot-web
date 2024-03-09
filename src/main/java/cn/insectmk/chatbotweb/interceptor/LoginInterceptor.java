@@ -5,6 +5,7 @@ import cn.insectmk.chatbotweb.util.JWTUtil;
 import cn.insectmk.chatbotweb.util.JsonUtil;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import io.jsonwebtoken.Claims;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -19,6 +20,7 @@ import java.io.PrintWriter;
  * @Date 2024/02/27 19:54
  * @Version 1.0
  */
+@Log4j2
 public class LoginInterceptor implements HandlerInterceptor {
     @Autowired
     private JWTUtil jwtUtil;
@@ -35,6 +37,8 @@ public class LoginInterceptor implements HandlerInterceptor {
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        log.info("SessionId:" + request.getSession().getId());
+
         try {
             String token = request.getHeader("token");
             if (token == null) {
