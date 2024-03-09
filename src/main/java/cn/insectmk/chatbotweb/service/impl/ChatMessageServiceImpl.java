@@ -33,6 +33,8 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper, ChatM
     private String apiHost;
     @Value("${openai.api-key}")
     private String apiKey;
+    @Value("${openai.max-token}")
+    private Integer maxToken;
 
     @Autowired
     private ChatSessionService chatSessionService;
@@ -63,7 +65,7 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper, ChatM
                 .topP(1)
                 .presencePenalty(0)
                 .frequencyPenalty(0)
-                .maxTokens(250)
+                .maxTokens(maxToken)
                 .build();
 
         ChatGPTStream chatGPTStream = ChatGPTStream.builder()

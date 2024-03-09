@@ -24,6 +24,8 @@ public class OpenaiApiServiceImpl implements OpenaiApiService {
     private String apiHost;
     @Value("${openai.api-key}")
     private String apiKey;
+    @Value("${openai.max-token}")
+    private Integer maxToken;
 
     @Autowired
     private ChatSessionMapper chatSessionMapper;
@@ -43,7 +45,7 @@ public class OpenaiApiServiceImpl implements OpenaiApiService {
                 .topP(1)
                 .presencePenalty(0)
                 .frequencyPenalty(0)
-                .maxTokens(250)
+                .maxTokens(maxToken)
                 .build();
 
         ChatGPT chatGPT = ChatGPT.builder()
