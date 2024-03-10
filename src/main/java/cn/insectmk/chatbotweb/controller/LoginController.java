@@ -72,7 +72,7 @@ public class LoginController {
         // 登录
         String token = userService.login(userDto.getEmail(), userDto.getPassword());
         return StringUtils.isNotBlank(token) ?
-                Result.buildSuccess(token) :
+                Result.buildSuccess("登录成功！",token) :
                 Result.buildFail("登录失败，邮箱或密码不正确");
     }
 }

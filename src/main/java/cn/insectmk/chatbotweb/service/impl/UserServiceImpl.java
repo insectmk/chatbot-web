@@ -109,7 +109,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 创建一个会话
         ChatSession chatSession = new ChatSession(
                 null, userId, null,
-                "用户" + aesUtil.decrypt(user.getUsername()) + "的API",
+                "[" + aesUtil.decrypt(user.getUsername()) + "]的API",
                 null, null, ChatSession.STATUS_FREE
         );
         chatSessionMapper.insert(chatSession);

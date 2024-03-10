@@ -48,6 +48,16 @@ public class Result implements Serializable{
     }
 
     /**
+     * 快速构建带提示信息与数据的成功消息
+     * @param message
+     * @param data
+     * @return
+     */
+    public static Result buildSuccess(String message, Object data) {
+        return new Result(true, message, data);
+    }
+
+    /**
      * 快速构建不带返回数据的成功消息
      * @return
      */
