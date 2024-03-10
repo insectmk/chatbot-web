@@ -46,12 +46,12 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper, ChatM
         // 判断当前会话是否在生成
         ChatSession chatSession = chatSessionService.getOne(new LambdaQueryWrapper<ChatSession>()
                 .eq(ChatSession::getId, chatMessage.getSessionId()));
-        if (chatSession.getStatus().equals(ChatSession.STATUS_BUSY)) {
+        /*if (chatSession.getStatus().equals(ChatSession.STATUS_BUSY)) {
             throw new BizException("当前会话正忙");
         }
         // 更换状态
         chatSession.setStatus(ChatSession.STATUS_BUSY);
-        chatSessionService.updateById(chatSession);
+        chatSessionService.updateById(chatSession);*/
         // 进行对话
         // 设置监听器
         SseStreamListener listener = new SseStreamListener(sseEmitter);
@@ -104,12 +104,12 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper, ChatM
         // 判断当前会话是否在生成
         ChatSession chatSession = chatSessionService.getOne(new LambdaQueryWrapper<ChatSession>()
                 .eq(ChatSession::getId, chatMessage.getSessionId()));
-        if (chatSession.getStatus().equals(ChatSession.STATUS_BUSY)) {
+        /*if (chatSession.getStatus().equals(ChatSession.STATUS_BUSY)) {
             throw new BizException("当前会话正忙");
         }
         // 更换状态
         chatSession.setStatus(ChatSession.STATUS_BUSY);
-        chatSessionService.updateById(chatSession);
+        chatSessionService.updateById(chatSession);*/
         // 进行对话
         String response = openaiApiService.send(chatMessage);
         // 存储用户新对话
