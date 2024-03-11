@@ -23,6 +23,19 @@ public class UserController {
     private UserService userService;
 
     /**
+     * 修改用户密码
+     * @param user
+     * @param request
+     * @return
+     */
+    @PutMapping("/password")
+    public Result password(@RequestBody User user, HttpServletRequest request) {
+        return userService.updatePassword(request.getAttribute("userId").toString(), user.getPassword()) ?
+                Result.buildSuccess("密码更新成功！",null) :
+                Result.buildFail("密码更新失败！");
+    }
+
+    /**
      * 删除用户
      * @param request
      * @return

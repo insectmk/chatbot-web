@@ -3,6 +3,7 @@ package cn.insectmk.chatbotweb.service.impl;
 import cn.insectmk.chatbotweb.controller.dto.UserDto;
 import cn.insectmk.chatbotweb.entity.ChatSession;
 import cn.insectmk.chatbotweb.entity.User;
+import cn.insectmk.chatbotweb.exception.BizException;
 import cn.insectmk.chatbotweb.mapper.ChatSessionMapper;
 import cn.insectmk.chatbotweb.mapper.UserMapper;
 import cn.insectmk.chatbotweb.service.ChatSessionService;
@@ -30,7 +31,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
-    @Value(("${system.ip}"))
+    @Value(("${server.address}"))
     private String ip;
     @Value("${server.port}")
     private String port;
@@ -45,6 +46,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private ChatSessionService chatSessionService;
     @Autowired
     private EmailUtil emailUtil;
+
+    @Override
+    public boolean updatePassword(String userId, String password) {
+        User user = baseMapper.selectById(userId);
+        if (aesUtil.decrypt(user.getPassword()).equals(password)) {
+            // 如果重复则报错
+            throw new BizException("新密码不能与旧密码相同");
+        }
+        user.setPassword(aesUtil.encrypt(password));
+        return 1 == baseMapper.updateById(user);
+    }
 
     @Override
     public boolean deleteOne(String userId) {
