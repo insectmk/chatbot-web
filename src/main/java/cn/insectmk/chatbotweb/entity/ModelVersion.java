@@ -19,5 +19,5 @@ public class ModelVersion {
     protected String name;
     protected String versionNumber;
     protected Date deploymentTime;
-    protected String remarks;
+    protected String remark;
 }
