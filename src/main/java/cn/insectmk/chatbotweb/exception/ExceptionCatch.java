@@ -37,7 +37,7 @@ public class ExceptionCatch {
         setHeader(request, response);
 
         log.error("出现了业务异常 ==> "+ ex);
-        return Result.buildFail("出错了：" + ex.getMessage());
+        return Result.buildFail("原因：" + ex.getMessage());
     }
 
     //运行时异常捕获
@@ -64,7 +64,7 @@ public class ExceptionCatch {
         setHeader(request, response);
 
         log.error("出现了Exception ==> "+ ex);
-        return Result.buildFail("服务器出错：" + ex.getCause());
+        return Result.buildFail("服务器出错：" + ex.getMessage());
     }
 
 

@@ -1,5 +1,6 @@
 package cn.insectmk.chatbotweb.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,8 +16,10 @@ import java.util.Date;
 @AllArgsConstructor
 @Data
 public class User {
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     protected String id;
     protected String username;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     protected String password;
     protected String email;
     protected String head;

@@ -3,6 +3,7 @@ package cn.insectmk.chatbotweb.service.impl;
 import cn.insectmk.chatbotweb.controller.dto.UserDto;
 import cn.insectmk.chatbotweb.entity.ChatSession;
 import cn.insectmk.chatbotweb.entity.User;
+import cn.insectmk.chatbotweb.exception.BizException;
 import cn.insectmk.chatbotweb.mapper.ChatSessionMapper;
 import cn.insectmk.chatbotweb.mapper.UserMapper;
 import cn.insectmk.chatbotweb.service.ChatSessionService;
@@ -30,7 +31,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
-    @Value(("${system.ip}"))
+    @Value(("${server.address}"))
     private String ip;
     @Value("${server.port}")
     private String port;
@@ -45,6 +46,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private ChatSessionService chatSessionService;
     @Autowired
     private EmailUtil emailUtil;
+
+    @Override
+    public boolean updatePassword(String userId, String password) {
+        User user = baseMapper.selectById(userId);
+        if (aesUtil.decrypt(user.getPassword()).equals(password)) {
+            // 如果重复则报错
+            throw new BizException("新密码不能与旧密码相同");
+        }
+        user.setPassword(aesUtil.encrypt(password));
+        return 1 == baseMapper.updateById(user);
+    }
 
     @Override
     public boolean deleteOne(String userId) {
@@ -67,27 +79,34 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setUsername(aesUtil.decrypt(user.getUsername()));
         user.setEmail(aesUtil.decrypt(user.getEmail()));
         user.setPassword(null);
-        user.setApiKey(aesUtil.decrypt(user.getApiKey()));
+        user.setApiKey(user.getApiKey());
         return user;
     }
 
     @Override
     public User register(String key) {
-        // 解析key，（用户名+邮箱+密码）
+        // 解析key，（用户名+邮箱+密码+失效时间）
         String[] split = aesUtil.decrypt(key).split("\\\\");
+        // 判断是否失效
+        if (System.currentTimeMillis() > Long.parseLong(split[3])) {
+            throw new BizException("该注册链接已失效！");
+        }
         // 创建用户
         User user = new User();
+        user.setHead("https://insectmk.cn/static/img/head/insectmk.png");
         user.setUsername(aesUtil.encrypt(split[0]));
         user.setEmail(aesUtil.encrypt(split[1]));
         user.setPassword(aesUtil.encrypt(split[2]));
         baseMapper.insert(user);
+        // 生成注册链接
+        this.getApiKey(user.getId());
         return user;
     }
 
     @Override
     public boolean sendRegisterUrl(UserDto userDto) {
-        // 拼接参数（用户名+邮箱+密码）
-        String source = userDto.getUsername() + "\\" + userDto.getEmail() + "\\" + userDto.getPassword();
+        // 拼接参数（用户名+邮箱+密码+失效时间）
+        String source = userDto.getUsername() + "\\" + userDto.getEmail() + "\\" + userDto.getPassword() + "\\" + (System.currentTimeMillis() + (5 * 60 * 1000));
         // 加密
         String url = "http://" + ip + ":" + port + "/user/register" + "?key=" + aesUtil.encrypt(source);
         // 发送邮件
