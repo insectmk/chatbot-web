@@ -89,6 +89,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String[] split = aesUtil.decrypt(key).split("\\\\");
         // 创建用户
         User user = new User();
+        user.setHead("https://insectmk.cn/static/img/head/insectmk.png");
         user.setUsername(aesUtil.encrypt(split[0]));
         user.setEmail(aesUtil.encrypt(split[1]));
         user.setPassword(aesUtil.encrypt(split[2]));
