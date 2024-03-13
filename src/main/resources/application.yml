@@ -1,0 +1,42 @@
+# 应用服务 WEB 访问端口
+server:
+  port: 9001
+  #address: 127.0.0.1
+  servlet:
+    session:
+      cookie:
+        secure: true
+# Spring相关配置
+spring:
+  datasource:
+    hikari:
+      # 解决插入表情报错
+      connection-init-sql: set names utf8mb4
+  # 配置文件选择
+  profiles:
+    active: dev
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+# 这是MyBatis所使用的配置
+mybatis:
+  # 告诉mybatis对应的实体类位置
+  type-aliases-package: cn.insectmk.chatbotweb.entity
+  # 告诉mybatisSQL的映射文件在这里
+  mapper-locations: classpath*:mapper/*.xml
+
+# 这是MyBatisPlus的配置
+mybatis-plus:
+  global-config:
+    db-config:
+      # 表名前缀
+      table-prefix: t_
+      # id生成策略
+      id-type: assign_uuid
+  configuration:
+    # 下划线转驼峰
+    map-underscore-to-camel-case: true
+    # 日志
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
