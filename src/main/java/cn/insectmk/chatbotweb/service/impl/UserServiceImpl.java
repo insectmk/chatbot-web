@@ -85,8 +85,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public User register(String key) {
-        // 解析key，（用户名+邮箱+密码）
+        // 解析key，（用户名+邮箱+密码+失效时间）
         String[] split = aesUtil.decrypt(key).split("\\\\");
+        // 判断是否失效
+        if (System.currentTimeMillis() > Long.parseLong(split[3])) {
+            throw new BizException("该注册链接已失效！");
+        }
         // 创建用户
         User user = new User();
         user.setHead("https://insectmk.cn/static/img/head/insectmk.png");
@@ -94,13 +98,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setEmail(aesUtil.encrypt(split[1]));
         user.setPassword(aesUtil.encrypt(split[2]));
         baseMapper.insert(user);
+        // 生成注册链接
+        this.getApiKey(user.getId());
         return user;
     }
 
     @Override
     public boolean sendRegisterUrl(UserDto userDto) {
-        // 拼接参数（用户名+邮箱+密码）
-        String source = userDto.getUsername() + "\\" + userDto.getEmail() + "\\" + userDto.getPassword();
+        // 拼接参数（用户名+邮箱+密码+失效时间）
+        String source = userDto.getUsername() + "\\" + userDto.getEmail() + "\\" + userDto.getPassword() + "\\" + (System.currentTimeMillis() + (5 * 60 * 1000));
         // 加密
         String url = "http://" + ip + ":" + port + "/user/register" + "?key=" + aesUtil.encrypt(source);
         // 发送邮件

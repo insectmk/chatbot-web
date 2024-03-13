@@ -43,7 +43,7 @@ public class UserController {
     @DeleteMapping
     public Result delete(HttpServletRequest request) {
         return userService.deleteOne(request.getAttribute("userId").toString()) ?
-                Result.buildSuccess("删除成功！") :
+                Result.buildSuccess("删除成功！", null) :
                 Result.buildFail("删除失败！");
     }
 
@@ -66,7 +66,7 @@ public class UserController {
     public Result register(String key) {
         User user = userService.register(key);
         return Objects.isNull(user) ? Result.buildFail("注册失败") :
-                Result.buildSuccess("请返回登录界面完成登录");
+                Result.buildSuccess("请返回登录界面完成登录", null);
     }
 
     /**
@@ -82,7 +82,7 @@ public class UserController {
         }
         // 发送注册链接
         userService.sendRegisterUrl(userDto);
-        return Result.buildSuccess("请点击邮箱的注册链接完成注册");
+        return Result.buildSuccess("请在[5分钟内]点击邮箱的注册链接完成注册", null);
     }
 
     /**
