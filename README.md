@@ -8,6 +8,12 @@
 
 前端见[智能聊天机器人前端页面](https://gitee.com/makuning/chatbot-web-ui)。
 
+## 项目演示
+
+**前端页面**
+
+![image-20240313162656724](README.assets/image-20240313162656724.png)
+
 ## 安装教程
 
 1. 查看[本机搭建RWKV语言模型（最低只需2G显存）](https://insectmk.cn/2024/03/04/tutorial/rwkv-build/)，部署RWKV轻量语言模型。
