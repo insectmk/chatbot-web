@@ -79,7 +79,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setUsername(aesUtil.decrypt(user.getUsername()));
         user.setEmail(aesUtil.decrypt(user.getEmail()));
         user.setPassword(null);
-        user.setApiKey(aesUtil.decrypt(user.getApiKey()));
+        user.setApiKey(user.getApiKey());
         return user;
     }
 
