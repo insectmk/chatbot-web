@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 /**
@@ -20,6 +21,7 @@ public class User {
     protected String id;
     protected String username;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Pattern(regexp = "^(?=.*\\d)(?=.*[a-zA-Z])(?=.*[\\W_]).{6,24}$", message = "密码格式不正确")
     protected String password;
     protected String email;
     protected String head;

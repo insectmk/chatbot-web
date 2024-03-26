@@ -12,6 +12,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.io.IOException;
 
 /**
@@ -61,7 +62,7 @@ public class LoginController {
      * @return
      */
     @PostMapping
-    public Result login(@RequestBody UserDto userDto, HttpSession session) {
+    public Result login(@Valid @RequestBody UserDto userDto, HttpSession session) {
         String captcha = session.getAttribute("captcha").toString();
         // 如果验证码对不上就拒绝登录
         if (StringUtils.isBlank(userDto.getCaptcha()) || StringUtils.isBlank(captcha)) {

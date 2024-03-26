@@ -37,6 +37,7 @@ class UserServiceImplTest {
                 aesUtil.encrypt("InsectMk", null),
                 aesUtil.encrypt("123456", null),
                 aesUtil.encrypt("3067836615@qq.com", null),
+                "https://insectmk.cn/static/img/head/insectmk.png",
                 null,
                 null,
                 null

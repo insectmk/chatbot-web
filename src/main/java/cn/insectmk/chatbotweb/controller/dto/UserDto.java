@@ -6,6 +6,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 /**
  * @Description 用户传输对象
  * @Author makun
@@ -17,5 +20,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class UserDto extends User {
+    @NotNull(message = "请输入验证码")
+    @NotBlank(message = "请输入验证码")
     private String captcha;
 }

@@ -2,15 +2,36 @@ package cn.insectmk.chatbotweb.exception;
 
 import cn.insectmk.chatbotweb.common.Result;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice //控制层通知类
 @Slf4j
 public class ExceptionCatch {
+    /**
+     * 数据校验异常捕获
+     * @param ex
+     * @param request
+     * @param response
+     * @return
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Result sqlException(MethodArgumentNotValidException ex, HttpServletRequest request, HttpServletResponse response) {
+        setHeader(request, response);
+
+        return Result.buildFail("数据校验失败：" + ex.getBindingResult()
+                .getAllErrors()
+                .stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.joining(";")));
+    }
+
     /**
      * 数据库异常捕获
      * @param ex
