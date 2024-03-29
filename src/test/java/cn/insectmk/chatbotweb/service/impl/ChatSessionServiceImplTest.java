@@ -1,6 +1,7 @@
 package cn.insectmk.chatbotweb.service.impl;
 
 import cn.insectmk.chatbotweb.service.ChatSessionService;
+import com.plexpt.chatgpt.entity.chat.Message;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,9 +17,10 @@ class ChatSessionServiceImplTest {
 
     @Test
     void getHistoryMessageBySessionId() {
-        List<String[]> dialogs = chatSessionService.getHistoryMessageBySessionId("0c2c9ffead3b018e0ba16a711d1885e4");
-        for (String[] dialog : dialogs) {
-            System.out.println(Arrays.toString(dialog));
+        List<Message> historyMsg = chatSessionService.getHistoryMsg("0c2c9ffead3b018e0ba16a711d1885e4");
+
+        for (Message message : historyMsg) {
+            System.out.println(message);
         }
     }
 }

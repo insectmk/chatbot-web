@@ -1,10 +1,12 @@
 package cn.insectmk.chatbotweb.service.impl;
 
+import cn.hutool.core.lang.Assert;
 import cn.insectmk.chatbotweb.controller.dto.UserDto;
 import cn.insectmk.chatbotweb.entity.User;
 import cn.insectmk.chatbotweb.service.UserService;
 import cn.insectmk.chatbotweb.util.AESUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -46,5 +48,12 @@ class UserServiceImplTest {
 
         System.out.println(userService.getOne(new LambdaQueryWrapper<User>()
                 .eq(User::getId, user.getId())));
+    }
+
+    @Test
+    void deleteOne() {
+        Assertions.assertTrue(userService.deleteOne("18ce1152a25675a8f4d76b2b000caa5f"));
+        Assertions.assertTrue(userService.deleteOne("2486c503cc22b4af6bbd8456176c0442"));
+        Assertions.assertTrue(userService.deleteOne("57941a8788854c4146d247160113684b"));
     }
 }

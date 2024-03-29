@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.util.Objects;
 
 /**
@@ -75,7 +76,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/register")
-    public Result register(@RequestBody UserDto userDto, HttpSession session) {
+    public Result register(@Valid @RequestBody UserDto userDto, HttpSession session) {
         // 如果验证码对不上就拒绝注册
         if (!session.getAttribute("captcha").equals(userDto.getCaptcha())) {
             return Result.buildFail("验证码不正确");
