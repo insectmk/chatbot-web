@@ -56,4 +56,13 @@ class UserServiceImplTest {
         Assertions.assertTrue(userService.deleteOne("2486c503cc22b4af6bbd8456176c0442"));
         Assertions.assertTrue(userService.deleteOne("57941a8788854c4146d247160113684b"));
     }
+
+    @Test
+    void testSendRegisterUrl() {
+        UserDto userDto = new UserDto();
+        userDto.setUsername("马某人");
+        userDto.setPassword("$123456InsectMk");
+        userDto.setEmail("2514378105@qq.com");
+        Assertions.assertTrue(userService.sendRegisterUrl(userDto));
+    }
 }

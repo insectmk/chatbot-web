@@ -110,7 +110,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 加密
         String url = "http://" + ip + ":" + port + "/user/register" + "?key=" + aesUtil.encrypt(source);
         // 发送邮件
-        emailUtil.sendMail(userDto.getEmail(), "智能聊天机器人注册链接", url);
+        emailUtil.sendHtmlMail(userDto.getEmail(),
+                "智能聊天机器人注册链接",
+                "【智能聊天机器人】:</br>" +
+                        "感谢您选择InsectMk的智能聊天机器人，请在【5分钟】内<a href ='" + url + "'>点击此链接</a>完成注册");
         return true;
     }
 
