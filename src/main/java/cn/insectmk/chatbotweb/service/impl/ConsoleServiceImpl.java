@@ -27,13 +27,19 @@ public class ConsoleServiceImpl implements ConsoleService {
 
     @Override
     public IPage<User> findUsers(QueryPageBean<User> userQueryPageBean) {
-        return userMapper.selectPage(
+        Page<User> userPage = userMapper.selectPage(
                 new Page<>(userQueryPageBean.getCurrentPage(), userQueryPageBean.getPageSize()),
                 new LambdaQueryWrapper<User>()
                         // 判断用户名是否等于
                         .eq(StringUtils.isNotBlank(userQueryPageBean.getQueryEntity().getUsername()), User::getUsername, aesUtil.encrypt(userQueryPageBean.getQueryEntity().getUsername()))
                         // 判断邮箱是否等于
                         .eq(StringUtils.isNotBlank(userQueryPageBean.getQueryEntity().getEmail()), User::getEmail, aesUtil.encrypt(userQueryPageBean.getQueryEntity().getEmail())));
+        // 解密数据
+        userPage.getRecords().forEach(user -> {
+            user.setEmail(aesUtil.decrypt(user.getEmail()));
+            user.setUsername(aesUtil.decrypt(user.getUsername()));
+        });
+        return userPage;
     }
 
     private String processUsername(String username) {
