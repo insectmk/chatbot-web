@@ -1,9 +1,16 @@
 package cn.insectmk.chatbotweb.service.impl;
 
+import cn.insectmk.chatbotweb.common.QueryPageBean;
 import cn.insectmk.chatbotweb.entity.SystemLog;
 import cn.insectmk.chatbotweb.mapper.SystemLogMapper;
 import cn.insectmk.chatbotweb.service.SystemLogService;
+import cn.insectmk.chatbotweb.util.AESUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,5 +23,24 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class SystemLogServiceImpl extends ServiceImpl<SystemLogMapper, SystemLog> implements SystemLogService {
+    @Autowired
+    private AESUtil aesUtil;
 
+    @Override
+    public IPage<SystemLog> findUsersPage(QueryPageBean queryPageBean) {
+        String queryString = queryPageBean.getQueryString();
+
+        Page<SystemLog> userPage = baseMapper.selectPage(
+                new Page<>(queryPageBean.getCurrentPage(), queryPageBean.getPageSize()),
+                new LambdaQueryWrapper<SystemLog>()
+                        // 模糊查询日志等级
+                        .like(StringUtils.isNotBlank(queryString), SystemLog::getLevel, aesUtil.encrypt(queryString))
+                        .or()
+                        // 模糊查询日志信息
+                        .like(StringUtils.isNotBlank(queryString), SystemLog::getMessage, aesUtil.encrypt(queryString))
+                        .or()
+                        // 模糊查询操作人邮箱
+                        .like(StringUtils.isNotBlank(queryString), SystemLog::getOpEmail, aesUtil.encrypt(queryString)));
+        return userPage;
+    }
 }

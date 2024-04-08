@@ -6,6 +6,7 @@ import cn.insectmk.chatbotweb.configure.CustomerSystemConfigValue;
 import cn.insectmk.chatbotweb.entity.User;
 import cn.insectmk.chatbotweb.exception.BizException;
 import cn.insectmk.chatbotweb.service.ConsoleService;
+import cn.insectmk.chatbotweb.service.SystemLogService;
 import cn.insectmk.chatbotweb.service.UserService;
 import cn.insectmk.chatbotweb.util.AESUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,15 +33,28 @@ public class ConsoleController {
     private AESUtil aesUtil;
     @Autowired
     private CustomerSystemConfigValue customerSystemConfigValue;
+    @Autowired
+    private SystemLogService systemLogService;
+
+    /**
+     * 查询日志列表
+     * @param queryPageBean
+     * @return
+     */
+    @GetMapping("/systemLog")
+    public Result findSystemLogs(QueryPageBean queryPageBean) {
+        if (isRoot()) return Result.buildSuccess(systemLogService.findUsersPage(queryPageBean));
+        throw new BizException("您不是root用户");
+    }
 
     /**
      * 分页查询用户
-     * @param userQueryPageBean
+     * @param queryPageBean
      * @return
      */
-    @PostMapping("/find/user")
-    public Result findUsers(@RequestBody QueryPageBean userQueryPageBean) {
-        if (isRoot()) return Result.buildSuccess(consoleService.findUsers(userQueryPageBean));
+    @GetMapping("/user")
+    public Result findUsers(QueryPageBean queryPageBean) {
+        if (isRoot()) return Result.buildSuccess(userService.findUsersPage(queryPageBean));
         throw new BizException("您不是root用户");
     }
 

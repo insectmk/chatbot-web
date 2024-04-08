@@ -1,5 +1,6 @@
 package cn.insectmk.chatbotweb.service.impl;
 
+import cn.insectmk.chatbotweb.common.QueryPageBean;
 import cn.insectmk.chatbotweb.controller.dto.UserDto;
 import cn.insectmk.chatbotweb.entity.ChatSession;
 import cn.insectmk.chatbotweb.entity.User;
@@ -12,7 +13,9 @@ import cn.insectmk.chatbotweb.util.AESUtil;
 import cn.insectmk.chatbotweb.util.EmailUtil;
 import cn.insectmk.chatbotweb.util.JWTUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -162,5 +165,25 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         baseMapper.updateById(user);
         // 生成JWT
         return jwtUtil.generateJWT(user);
+    }
+
+    @Override
+    public IPage<User> findUsersPage(QueryPageBean userQueryPageBean) {
+        String queryString = userQueryPageBean.getQueryString();
+
+        Page<User> userPage = baseMapper.selectPage(
+                new Page<>(userQueryPageBean.getCurrentPage(), userQueryPageBean.getPageSize()),
+                new LambdaQueryWrapper<User>()
+                        // 判断用户名是否等于
+                        .eq(StringUtils.isNotBlank(queryString), User::getUsername, aesUtil.encrypt(queryString))
+                        .or()
+                        // 判断邮箱是否等于
+                        .eq(StringUtils.isNotBlank(queryString), User::getEmail, aesUtil.encrypt(queryString)));
+        // 解密数据
+        userPage.getRecords().forEach(user -> {
+            user.setEmail(aesUtil.decrypt(user.getEmail()));
+            user.setUsername(aesUtil.decrypt(user.getUsername()));
+        });
+        return userPage;
     }
 }

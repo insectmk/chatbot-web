@@ -1,7 +1,9 @@
 package cn.insectmk.chatbotweb.service;
 
+import cn.insectmk.chatbotweb.common.QueryPageBean;
 import cn.insectmk.chatbotweb.controller.dto.UserDto;
 import cn.insectmk.chatbotweb.entity.User;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -68,4 +70,11 @@ public interface UserService extends IService<User> {
      * @return JWT字符串
      */
     String login(String email, String password);
+
+    /**
+     * 条件分页查询用户
+     * @param userQueryPageBean
+     * @return
+     */
+    IPage<User> findUsersPage(QueryPageBean userQueryPageBean);
 }
