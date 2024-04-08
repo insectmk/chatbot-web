@@ -1,14 +1,15 @@
 package cn.insectmk.chatbotweb.controller;
 
+import cn.insectmk.chatbotweb.common.Result;
 import cn.insectmk.chatbotweb.configure.SseEmitterUTF8;
 import com.plexpt.chatgpt.ChatGPTStream;
 import com.plexpt.chatgpt.entity.chat.ChatCompletion;
 import com.plexpt.chatgpt.entity.chat.Message;
 import com.plexpt.chatgpt.listener.SseStreamListener;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import javax.annotation.security.PermitAll;
 import java.util.Arrays;
@@ -19,11 +20,15 @@ import java.util.Arrays;
  * @Date 2024/3/5 10:07
  * @Version 1.0
  */
-@Controller
-@RequestMapping("/test")
+@RestController
+@RequestMapping("/pri/test")
 public class TestController {
     private static final String OPENAI_API_HOST = "http://127.0.0.1:8000/";
 
+    @GetMapping("/hello")
+    public Result helloWorld() {
+        return Result.buildSuccess("你好", null);
+    }
 
     @GetMapping(value = "/v1/stream")
     @PermitAll
