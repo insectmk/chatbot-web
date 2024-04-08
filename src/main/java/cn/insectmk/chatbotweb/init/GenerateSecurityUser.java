@@ -35,8 +35,8 @@ public class GenerateSecurityUser implements CommandLineRunner {
             User user = userMapper.selectOne(new LambdaQueryWrapper<User>()
                     .eq(User::getEmail, aesUtil.encrypt(email)));
             // 添加Admin用户
-            inMemoryUserDetailsManager.createUser(org.springframework.security.core.userdetails.User.withUsername(user.getEmail())
-                    .password(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode(user.getPassword()))
+            inMemoryUserDetailsManager.createUser(org.springframework.security.core.userdetails.User.withUsername(aesUtil.decrypt(user.getEmail()))
+                    .password(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode(aesUtil.decrypt(user.getPassword())))
                     .authorities(WebSecurityConfig.ACCOUNT_CLIENT_AUTHORITY).build());
         }
     }

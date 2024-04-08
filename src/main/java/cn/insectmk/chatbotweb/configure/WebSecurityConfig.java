@@ -31,7 +31,7 @@ public class WebSecurityConfig {
                         "/login/**",
                         "/modelVersion/**",
                         "/user/**").permitAll()
-                .antMatchers("/pri/**").hasAuthority(ACCOUNT_CLIENT_AUTHORITY).anyRequest().authenticated()
+                .antMatchers("/console/**").hasAuthority(ACCOUNT_CLIENT_AUTHORITY).anyRequest().authenticated()
                 .and()
                 .httpBasic()
                 .and()

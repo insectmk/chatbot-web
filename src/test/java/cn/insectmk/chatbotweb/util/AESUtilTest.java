@@ -21,7 +21,7 @@ class AESUtilTest {
 
     @Test
     void decrypt() {
-        String content = "Ksid7UvKEJgngAbAbz/sSw==";
+        String content = "my/bnohoTSX+w4CNocpXCqHXu6gOYSwqEXHBxTZnnQQ=";
         System.out.println(aesUtil.decrypt(content));
     }
 }
