@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class QueryPageBean<E> {
+public class QueryPageBean {
     private Integer currentPage;//页码
     private Integer pageSize;//每页记录数
-    private E queryEntity;//查询条件
+    private String queryString;//查询条件
 }

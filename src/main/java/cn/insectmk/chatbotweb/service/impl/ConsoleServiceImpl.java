@@ -26,14 +26,17 @@ public class ConsoleServiceImpl implements ConsoleService {
     private AESUtil aesUtil;
 
     @Override
-    public IPage<User> findUsers(QueryPageBean<User> userQueryPageBean) {
+    public IPage<User> findUsers(QueryPageBean userQueryPageBean) {
+        String queryString = userQueryPageBean.getQueryString();
+
         Page<User> userPage = userMapper.selectPage(
                 new Page<>(userQueryPageBean.getCurrentPage(), userQueryPageBean.getPageSize()),
                 new LambdaQueryWrapper<User>()
                         // 判断用户名是否等于
-                        .eq(StringUtils.isNotBlank(userQueryPageBean.getQueryEntity().getUsername()), User::getUsername, aesUtil.encrypt(userQueryPageBean.getQueryEntity().getUsername()))
+                        .eq(StringUtils.isNotBlank(queryString), User::getUsername, aesUtil.encrypt(queryString))
+                        .or()
                         // 判断邮箱是否等于
-                        .eq(StringUtils.isNotBlank(userQueryPageBean.getQueryEntity().getEmail()), User::getEmail, aesUtil.encrypt(userQueryPageBean.getQueryEntity().getEmail())));
+                        .eq(StringUtils.isNotBlank(queryString), User::getEmail, aesUtil.encrypt(queryString)));
         // 解密数据
         userPage.getRecords().forEach(user -> {
             user.setEmail(aesUtil.decrypt(user.getEmail()));

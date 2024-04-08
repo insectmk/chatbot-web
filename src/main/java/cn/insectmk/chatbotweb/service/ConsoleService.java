@@ -18,5 +18,5 @@ public interface ConsoleService {
      * @param userQueryPageBean
      * @return
      */
-    IPage<User> findUsers(QueryPageBean<User> userQueryPageBean);
+    IPage<User> findUsers(QueryPageBean userQueryPageBean);
 }
