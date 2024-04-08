@@ -15,6 +15,11 @@
     </properties>
 
     <dependencies>
+        <dependency><!-- 引入aop支持 -->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
         <dependency><!-- 权限管理 -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>

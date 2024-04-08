@@ -1,7 +1,9 @@
 package cn.insectmk.chatbotweb.controller;
 
 import cn.insectmk.chatbotweb.common.Result;
+import cn.insectmk.chatbotweb.common.annotation.BizLog;
 import cn.insectmk.chatbotweb.controller.dto.UserDto;
+import cn.insectmk.chatbotweb.entity.SystemLog;
 import cn.insectmk.chatbotweb.entity.User;
 import cn.insectmk.chatbotweb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +56,7 @@ public class UserController {
      * @return
      */
     @GetMapping
+    @BizLog(level = SystemLog.LEVEL_INFO, message = "获取用户信息")
     public Result info(HttpServletRequest request) {
         return Result.buildSuccess(userService.getUserInfo(request.getAttribute("userId").toString()));
     }

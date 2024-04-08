@@ -16,4 +16,5 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class SystemLogServiceImpl extends ServiceImpl<SystemLogMapper, SystemLog> implements SystemLogService {
+
 }
