@@ -6,11 +6,15 @@ import cn.insectmk.chatbotweb.common.annotation.BizLog;
 import cn.insectmk.chatbotweb.controller.dto.ModelVersionDto;
 import cn.insectmk.chatbotweb.controller.dto.UserDto;
 import cn.insectmk.chatbotweb.entity.SystemLog;
+import cn.insectmk.chatbotweb.service.ConsoleService;
 import cn.insectmk.chatbotweb.service.ModelVersionService;
 import cn.insectmk.chatbotweb.service.SystemLogService;
 import cn.insectmk.chatbotweb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Description 后台功能控制
@@ -27,6 +31,18 @@ public class ConsoleController {
     private SystemLogService systemLogService;
     @Autowired
     private ModelVersionService modelVersionService;
+    @Autowired
+    private ConsoleService consoleService;
+
+    /**
+     * 获取模型使用率统计
+     * @return
+     */
+    @GetMapping("/statistic/modelUsage")
+    public Result statisticModelUsage() {
+        Map<String, List<?>> result = consoleService.getModelUsageStatistic();
+        return Result.buildSuccess(result);
+    }
 
     /**
      * 删除模型
