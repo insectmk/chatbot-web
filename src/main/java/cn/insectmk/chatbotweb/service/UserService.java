@@ -14,6 +14,13 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface UserService extends IService<User> {
     /**
+     * 更新用户
+     * @param userDto
+     * @return
+     */
+    boolean updateOne(UserDto userDto);
+
+    /**
      * 添加一个用户
      * @param userDto
      * @return

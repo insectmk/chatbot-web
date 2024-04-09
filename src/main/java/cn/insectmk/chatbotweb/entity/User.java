@@ -23,7 +23,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Data
 public class User {
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     protected String id;
     @Pattern(regexp = RegularUtil.USERNAME, message = "用户名格式不正确")
     protected String username;

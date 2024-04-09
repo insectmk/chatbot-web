@@ -52,6 +52,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private EmailUtil emailUtil;
 
     @Override
+    public boolean updateOne(UserDto userDto) {
+        if (StringUtils.isNotBlank(userDto.getEmail())) {
+            userDto.setEmail(aesUtil.encrypt(userDto.getEmail()));
+        }
+        if (StringUtils.isNotBlank(userDto.getUsername())) {
+            userDto.setUsername(aesUtil.encrypt(userDto.getUsername()));
+        }
+        if (StringUtils.isNotBlank(userDto.getPassword())) {
+            userDto.setPassword(aesUtil.encrypt(userDto.getPassword()));
+        }
+        return baseMapper.updateById(userDto) == 1;
+    }
+
+    @Override
     public boolean addOne(UserDto userDto) {
         // 创建用户
         userDto.setUsername(aesUtil.encrypt(userDto.getUsername()));

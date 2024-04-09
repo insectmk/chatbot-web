@@ -28,6 +28,18 @@ public class ConsoleController {
     private SystemLogService systemLogService;
 
     /**
+     * 更新用户
+     * @param userDto
+     * @return
+     */
+    @PutMapping("/user")
+    public Result updateUser(@RequestBody UserDto userDto) {
+        return userService.updateOne(userDto) ?
+                Result.buildSuccess("更新成功！", null) :
+                Result.buildFail("更新失败！");
+    }
+
+    /**
      * 添加用户
      * @param userDto
      * @return
