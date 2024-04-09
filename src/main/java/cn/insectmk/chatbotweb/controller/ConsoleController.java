@@ -3,14 +3,13 @@ package cn.insectmk.chatbotweb.controller;
 import cn.insectmk.chatbotweb.common.QueryPageBean;
 import cn.insectmk.chatbotweb.common.Result;
 import cn.insectmk.chatbotweb.configure.CustomerSystemConfigValue;
+import cn.insectmk.chatbotweb.controller.dto.UserDto;
 import cn.insectmk.chatbotweb.service.ConsoleService;
 import cn.insectmk.chatbotweb.service.SystemLogService;
 import cn.insectmk.chatbotweb.service.UserService;
 import cn.insectmk.chatbotweb.util.AESUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -27,6 +26,18 @@ public class ConsoleController {
     private UserService userService;
     @Autowired
     private SystemLogService systemLogService;
+
+    /**
+     * 添加用户
+     * @param userDto
+     * @return
+     */
+    @PostMapping("/user")
+    public Result addUser(@RequestBody UserDto userDto) {
+        return userService.addOne(userDto) ?
+                Result.buildSuccess("新增成功！", null) :
+                Result.buildFail("新增失败！");
+    }
 
     /**
      * 查询日志列表

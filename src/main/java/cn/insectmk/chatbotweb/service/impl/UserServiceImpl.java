@@ -52,6 +52,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private EmailUtil emailUtil;
 
     @Override
+    public boolean addOne(UserDto userDto) {
+        // 创建用户
+        userDto.setUsername(aesUtil.encrypt(userDto.getUsername()));
+        userDto.setEmail(aesUtil.encrypt(userDto.getEmail()));
+        userDto.setPassword(aesUtil.encrypt(userDto.getPassword()));
+        baseMapper.insert(userDto);
+        // 生成APIKey
+        this.getApiKey(userDto.getId());
+        return true;
+    }
+
+    @Override
     public boolean updatePassword(String userId, String password) {
         User user = baseMapper.selectById(userId);
         if (aesUtil.decrypt(user.getPassword()).equals(password)) {
@@ -102,7 +114,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setEmail(aesUtil.encrypt(split[1]));
         user.setPassword(aesUtil.encrypt(split[2]));
         baseMapper.insert(user);
-        // 生成注册链接
+        // 生成APIKey
         this.getApiKey(user.getId());
         return user;
     }
