@@ -13,6 +13,7 @@ import cn.insectmk.chatbotweb.util.AESUtil;
 import cn.insectmk.chatbotweb.util.EmailUtil;
 import cn.insectmk.chatbotweb.util.JWTUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -170,15 +171,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public IPage<User> findUsersPage(QueryPageBean userQueryPageBean) {
         String queryString = userQueryPageBean.getQueryString();
-
+        LambdaQueryWrapper<User> userQueryWrapper = null;
+        // 查询条件
+        if (StringUtils.isNotBlank(queryString)) {
+            userQueryWrapper = new LambdaQueryWrapper<User>()
+                    // 判断用户名是否等于
+                    .eq(StringUtils.isNotBlank(queryString), User::getUsername, aesUtil.encrypt(queryString))
+                    .or()
+                    // 判断邮箱是否等于
+                    .eq(StringUtils.isNotBlank(queryString), User::getEmail, aesUtil.encrypt(queryString));
+        }
+        // 查询
         Page<User> userPage = baseMapper.selectPage(
                 new Page<>(userQueryPageBean.getCurrentPage(), userQueryPageBean.getPageSize()),
-                new LambdaQueryWrapper<User>()
-                        // 判断用户名是否等于
-                        .eq(StringUtils.isNotBlank(queryString), User::getUsername, aesUtil.encrypt(queryString))
-                        .or()
-                        // 判断邮箱是否等于
-                        .eq(StringUtils.isNotBlank(queryString), User::getEmail, aesUtil.encrypt(queryString)));
+                userQueryWrapper);
         // 解密数据
         userPage.getRecords().forEach(user -> {
             user.setEmail(aesUtil.decrypt(user.getEmail()));
