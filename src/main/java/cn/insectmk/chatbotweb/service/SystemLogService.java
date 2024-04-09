@@ -13,6 +13,13 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface SystemLogService extends IService<SystemLog> {
     /**
+     * 添加一条日志
+     * @param systemLog
+     * @return
+     */
+    boolean addOne(SystemLog systemLog);
+
+    /**
      * 条件分页查询日志
      * @param queryPageBean
      * @return

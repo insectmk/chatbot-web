@@ -2,16 +2,11 @@ package cn.insectmk.chatbotweb.controller;
 
 import cn.insectmk.chatbotweb.common.QueryPageBean;
 import cn.insectmk.chatbotweb.common.Result;
-import cn.insectmk.chatbotweb.configure.CustomerSystemConfigValue;
 import cn.insectmk.chatbotweb.controller.dto.UserDto;
-import cn.insectmk.chatbotweb.service.ConsoleService;
 import cn.insectmk.chatbotweb.service.SystemLogService;
 import cn.insectmk.chatbotweb.service.UserService;
-import cn.insectmk.chatbotweb.util.AESUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @Description 后台功能控制

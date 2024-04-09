@@ -18,6 +18,7 @@ public class SystemLog {
     public static final String LEVEL_INFO = "信息";
     public static final String LEVEL_WARNING = "警告";
     public static final String LEVEL_ERROR = "错误";
+    public static final String LEVEL_SUCCESS = "成功";
 
     protected String id;
     private String opEmail;

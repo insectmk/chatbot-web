@@ -3,6 +3,7 @@ package cn.insectmk.chatbotweb.service.impl;
 import cn.insectmk.chatbotweb.common.QueryPageBean;
 import cn.insectmk.chatbotweb.entity.SystemLog;
 import cn.insectmk.chatbotweb.mapper.SystemLogMapper;
+import cn.insectmk.chatbotweb.mapper.UserMapper;
 import cn.insectmk.chatbotweb.service.SystemLogService;
 import cn.insectmk.chatbotweb.util.AESUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -14,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @Description 系统日志服务接口实现
  * @Author makun
@@ -24,7 +27,23 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class SystemLogServiceImpl extends ServiceImpl<SystemLogMapper, SystemLog> implements SystemLogService {
     @Autowired
+    private HttpServletRequest httpServletRequest;
+    @Autowired
+    private UserMapper userMapper;
+    @Autowired
     private AESUtil aesUtil;
+
+    @Override
+    public boolean addOne(SystemLog systemLog) {
+        // 获取用户ID
+        String userId = httpServletRequest.getAttribute("userId").toString();
+        String opEmail = "未知";
+        if (StringUtils.isNotBlank(userId)) {
+            opEmail = aesUtil.decrypt(userMapper.selectById(userId).getEmail());
+        }
+        // 插入日志
+        return baseMapper.insert(systemLog) == 1;
+    }
 
     @Override
     public IPage<SystemLog> findUsersPage(QueryPageBean queryPageBean) {
@@ -34,13 +53,13 @@ public class SystemLogServiceImpl extends ServiceImpl<SystemLogMapper, SystemLog
         if (StringUtils.isNotBlank(queryString)) {
             systemLogLambdaQueryWrapper = new LambdaQueryWrapper<SystemLog>()
                     // 模糊查询日志等级
-                    .like(StringUtils.isNotBlank(queryString), SystemLog::getLevel, aesUtil.encrypt(queryString))
+                    .like(StringUtils.isNotBlank(queryString), SystemLog::getLevel, queryString)
                     .or()
                     // 模糊查询日志信息
-                    .like(StringUtils.isNotBlank(queryString), SystemLog::getMessage, aesUtil.encrypt(queryString))
+                    .like(StringUtils.isNotBlank(queryString), SystemLog::getMessage, queryString)
                     .or()
                     // 模糊查询操作人邮箱
-                    .like(StringUtils.isNotBlank(queryString), SystemLog::getOpEmail, aesUtil.encrypt(queryString));
+                    .like(StringUtils.isNotBlank(queryString), SystemLog::getOpEmail, queryString);
         }
 
         // 查询
