@@ -18,8 +18,6 @@ import javax.validation.constraints.Pattern;
  * @Version 1.0
  */
 @EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
 public class UserDto extends User {
     @NotNull(message = "请输入验证码")

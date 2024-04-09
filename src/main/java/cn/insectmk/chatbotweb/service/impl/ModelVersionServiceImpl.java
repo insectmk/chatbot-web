@@ -1,6 +1,7 @@
 package cn.insectmk.chatbotweb.service.impl;
 
 import cn.insectmk.chatbotweb.common.QueryPageBean;
+import cn.insectmk.chatbotweb.controller.dto.ModelVersionDto;
 import cn.insectmk.chatbotweb.entity.ModelVersion;
 import cn.insectmk.chatbotweb.entity.SystemLog;
 import cn.insectmk.chatbotweb.mapper.ModelVersionMapper;
@@ -46,5 +47,10 @@ public class ModelVersionServiceImpl extends ServiceImpl<ModelVersionMapper, Mod
         return baseMapper.selectPage(
                 new Page<>(queryPageBean.getCurrentPage(), queryPageBean.getPageSize()),
                 systemLogLambdaQueryWrapper);
+    }
+
+    @Override
+    public boolean addOne(ModelVersionDto modelVersionDto) {
+        return save(modelVersionDto);
     }
 }

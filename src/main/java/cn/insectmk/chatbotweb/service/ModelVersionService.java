@@ -1,6 +1,7 @@
 package cn.insectmk.chatbotweb.service;
 
 import cn.insectmk.chatbotweb.common.QueryPageBean;
+import cn.insectmk.chatbotweb.controller.dto.ModelVersionDto;
 import cn.insectmk.chatbotweb.entity.ModelVersion;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -26,4 +27,11 @@ public interface ModelVersionService extends IService<ModelVersion> {
      * @return
      */
     IPage<ModelVersion> findModelsPage(QueryPageBean queryPageBean);
+
+    /**
+     * 添加一个模型
+     * @param modelVersionDto
+     * @return
+     */
+    boolean addOne(ModelVersionDto modelVersionDto);
 }

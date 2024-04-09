@@ -3,6 +3,7 @@ package cn.insectmk.chatbotweb.controller;
 import cn.insectmk.chatbotweb.common.QueryPageBean;
 import cn.insectmk.chatbotweb.common.Result;
 import cn.insectmk.chatbotweb.common.annotation.BizLog;
+import cn.insectmk.chatbotweb.controller.dto.ModelVersionDto;
 import cn.insectmk.chatbotweb.controller.dto.UserDto;
 import cn.insectmk.chatbotweb.entity.SystemLog;
 import cn.insectmk.chatbotweb.service.ModelVersionService;
@@ -26,6 +27,18 @@ public class ConsoleController {
     private SystemLogService systemLogService;
     @Autowired
     private ModelVersionService modelVersionService;
+
+    /**
+     * 添加模型
+     * @param modelVersionDto
+     * @return
+     */
+    @PostMapping("/model")
+    public Result addModel(@RequestBody ModelVersionDto modelVersionDto) {
+        return modelVersionService.addOne(modelVersionDto) ?
+                Result.buildSuccess("新增成功！", null) :
+                Result.buildFail("新增失败！");
+    }
 
     /**
      * 分页条件查询模型数据

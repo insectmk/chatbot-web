@@ -14,8 +14,6 @@ import lombok.NoArgsConstructor;
  * @Version 1.0
  */
 @EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
 public class ChatSessionDto extends ChatSession {
     private ModelVersion modelVersion;
