@@ -28,6 +28,18 @@ public class ConsoleController {
     private SystemLogService systemLogService;
 
     /**
+     * 删除用户
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/user")
+    public Result deleteUser(String id) {
+        return userService.deleteOne(id) ?
+                Result.buildSuccess("删除成功！", null) :
+                Result.buildFail("删除失败！");
+    }
+
+    /**
      * 更新用户
      * @param userDto
      * @return
