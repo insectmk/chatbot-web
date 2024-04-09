@@ -5,6 +5,7 @@ import cn.insectmk.chatbotweb.common.Result;
 import cn.insectmk.chatbotweb.common.annotation.BizLog;
 import cn.insectmk.chatbotweb.controller.dto.UserDto;
 import cn.insectmk.chatbotweb.entity.SystemLog;
+import cn.insectmk.chatbotweb.service.ModelVersionService;
 import cn.insectmk.chatbotweb.service.SystemLogService;
 import cn.insectmk.chatbotweb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,18 @@ public class ConsoleController {
     private UserService userService;
     @Autowired
     private SystemLogService systemLogService;
+    @Autowired
+    private ModelVersionService modelVersionService;
+
+    /**
+     * 分页条件查询模型数据
+     * @param queryPageBean
+     * @return
+     */
+    @GetMapping("/model")
+    public Result findModel(QueryPageBean queryPageBean) {
+        return Result.buildSuccess(modelVersionService.findModelsPage(queryPageBean));
+    }
 
     /**
      * 清空系统日志

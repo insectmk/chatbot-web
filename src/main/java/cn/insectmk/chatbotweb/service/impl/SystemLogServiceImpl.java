@@ -54,13 +54,13 @@ public class SystemLogServiceImpl extends ServiceImpl<SystemLogMapper, SystemLog
         if (StringUtils.isNotBlank(queryString)) {
             systemLogLambdaQueryWrapper = new LambdaQueryWrapper<SystemLog>()
                     // 模糊查询日志等级
-                    .like(StringUtils.isNotBlank(queryString), SystemLog::getLevel, queryString)
+                    .like(SystemLog::getLevel, queryString)
                     .or()
                     // 模糊查询日志信息
-                    .like(StringUtils.isNotBlank(queryString), SystemLog::getMessage, queryString)
+                    .like(SystemLog::getMessage, queryString)
                     .or()
                     // 模糊查询操作人邮箱
-                    .like(StringUtils.isNotBlank(queryString), SystemLog::getOpEmail, queryString);
+                    .like(SystemLog::getOpEmail, queryString);
         }
 
         // 查询

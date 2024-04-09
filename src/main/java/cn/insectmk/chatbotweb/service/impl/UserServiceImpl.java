@@ -202,10 +202,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (StringUtils.isNotBlank(queryString)) {
             userQueryWrapper = new LambdaQueryWrapper<User>()
                     // 判断用户名是否等于
-                    .eq(StringUtils.isNotBlank(queryString), User::getUsername, aesUtil.encrypt(queryString))
+                    .eq(User::getUsername, aesUtil.encrypt(queryString))
                     .or()
                     // 判断邮箱是否等于
-                    .eq(StringUtils.isNotBlank(queryString), User::getEmail, aesUtil.encrypt(queryString));
+                    .eq(User::getEmail, aesUtil.encrypt(queryString));
         }
         // 查询
         Page<User> userPage = baseMapper.selectPage(
