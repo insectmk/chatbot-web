@@ -47,6 +47,8 @@ public class BizLogAspect {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         Method method = methodSignature.getMethod(); // 获取切入点的方法
         User user = userService.getById(httpServletRequest.getAttribute("userId").toString());// 获取登录的用户
+        // 执行被拦截的方法
+        Object result = joinPoint.proceed();
         // 创建日志对象
         cn.insectmk.chatbotweb.entity.SystemLog systemLog = new cn.insectmk.chatbotweb.entity.SystemLog();
         BizLog mBizLog =  method.getAnnotation(BizLog.class); // 获取注解对象
@@ -56,6 +58,6 @@ public class BizLogAspect {
         systemLog.setCreateTime(new Date()); // 设置创建时间
         System.out.println(systemLog);
         systemLogService.save(systemLog); // 保存日志对象
-        return joinPoint.proceed();
+        return result;
     }
 }

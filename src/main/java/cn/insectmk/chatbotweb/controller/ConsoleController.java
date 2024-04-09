@@ -2,7 +2,9 @@ package cn.insectmk.chatbotweb.controller;
 
 import cn.insectmk.chatbotweb.common.QueryPageBean;
 import cn.insectmk.chatbotweb.common.Result;
+import cn.insectmk.chatbotweb.common.annotation.BizLog;
 import cn.insectmk.chatbotweb.controller.dto.UserDto;
+import cn.insectmk.chatbotweb.entity.SystemLog;
 import cn.insectmk.chatbotweb.service.SystemLogService;
 import cn.insectmk.chatbotweb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,18 @@ public class ConsoleController {
     private UserService userService;
     @Autowired
     private SystemLogService systemLogService;
+
+    /**
+     * 清空系统日志
+     * @return
+     */
+    @BizLog(level = SystemLog.LEVEL_INFO, message = "清空系统日志")
+    @DeleteMapping("/systemLog")
+    public Result deleteSystemLog() {
+        return systemLogService.remove(null) ?
+                Result.buildSuccess("清空成功", null) :
+                Result.buildFail("清空失败！");
+    }
 
     /**
      * 删除用户
