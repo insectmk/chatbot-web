@@ -90,6 +90,6 @@ public class ChatSessionController {
                 null
         );
 
-        return chatSessionService.save(chatSession) ? Result.buildSuccess(chatSession) : Result.buildFail();
+        return chatSessionService.addOne(chatSession) ? Result.buildSuccess(chatSession) : Result.buildFail();
     }
 }

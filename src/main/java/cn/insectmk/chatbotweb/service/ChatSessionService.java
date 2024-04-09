@@ -33,4 +33,11 @@ public interface ChatSessionService extends IService<ChatSession> {
      * @return
      */
     List<ChatSession> getAllChatSession(String userId);
+
+    /**
+     * 添加一个会话
+     * @param chatSession
+     * @return
+     */
+    boolean addOne(ChatSession chatSession);
 }
