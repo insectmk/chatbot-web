@@ -8,6 +8,7 @@ import cn.insectmk.chatbotweb.service.ChatMessageService;
 import cn.insectmk.chatbotweb.service.ChatSessionService;
 import cn.insectmk.chatbotweb.util.AESUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import java.util.Objects;
@@ -21,12 +22,35 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/api")
 public class ApiController {
+    @Value(("${server.address}"))
+    private String ip;
+    @Value("${server.port}")
+    private String port;
+
     @Autowired
     private ChatMessageService chatMessageService;
     @Autowired
     private ChatSessionService chatSessionService;
     @Autowired
     private AESUtil aesUtil;
+
+    /**
+     * 获取API说明
+     * @return
+     */
+    @GetMapping("/tips")
+    public Result getApiTips() {
+        String sendUrl = "http://" + ip + ":" + port + "/api/send?key={你的API密钥}";
+        String historyUrl = "http://" + ip + ":" + port + "/api?key={你的API密钥}";
+        StringBuilder sb = new StringBuilder();
+        sb.append("发送消息（GET）：");
+        sb.append(sendUrl);
+        sb.append("\n");
+        sb.append("历史消息（POST）：");
+        sb.append(historyUrl);
+
+        return Result.buildSuccess(sb);
+    }
 
     /**
      * 发送消息
