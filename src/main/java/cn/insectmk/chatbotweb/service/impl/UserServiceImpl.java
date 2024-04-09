@@ -136,7 +136,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         ChatSession chatSession = new ChatSession(
                 null, userId, null,
                 "[" + aesUtil.decrypt(user.getUsername()) + "]的API",
-                null, null, ChatSession.STATUS_FREE
+                null, null
         );
         chatSessionMapper.insert(chatSession);
         // 生成key

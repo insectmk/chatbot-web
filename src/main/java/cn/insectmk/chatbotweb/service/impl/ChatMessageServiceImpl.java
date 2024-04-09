@@ -2,19 +2,19 @@ package cn.insectmk.chatbotweb.service.impl;
 
 import cn.insectmk.chatbotweb.entity.ChatMessage;
 import cn.insectmk.chatbotweb.entity.ChatSession;
-import cn.insectmk.chatbotweb.exception.BizException;
+import cn.insectmk.chatbotweb.entity.ModelVersion;
 import cn.insectmk.chatbotweb.mapper.ChatMessageMapper;
+import cn.insectmk.chatbotweb.mapper.ChatSessionMapper;
+import cn.insectmk.chatbotweb.mapper.ModelVersionMapper;
 import cn.insectmk.chatbotweb.service.ChatMessageService;
 import cn.insectmk.chatbotweb.service.ChatSessionService;
 import cn.insectmk.chatbotweb.service.OpenaiApiService;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.plexpt.chatgpt.ChatGPTStream;
 import com.plexpt.chatgpt.entity.chat.ChatCompletion;
 import com.plexpt.chatgpt.entity.chat.Message;
 import com.plexpt.chatgpt.listener.SseStreamListener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -29,29 +29,20 @@ import java.util.Arrays;
 @Service
 @Transactional
 public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper, ChatMessage> implements ChatMessageService {
-    @Value("${openai.api-host}")
-    private String apiHost;
-    @Value("${openai.api-key}")
-    private String apiKey;
-    @Value("${openai.max-token}")
-    private Integer maxToken;
-
     @Autowired
     private ChatSessionService chatSessionService;
     @Autowired
     private OpenaiApiService openaiApiService;
+    @Autowired
+    private ModelVersionMapper modelVersionMapper;
+    @Autowired
+    private ChatSessionMapper chatSessionMapper;
 
     @Override
     public void sendStream(ChatMessage chatMessage, SseEmitter sseEmitter) {
-        // 判断当前会话是否在生成
-        ChatSession chatSession = chatSessionService.getOne(new LambdaQueryWrapper<ChatSession>()
-                .eq(ChatSession::getId, chatMessage.getSessionId()));
-        /*if (chatSession.getStatus().equals(ChatSession.STATUS_BUSY)) {
-            throw new BizException("当前会话正忙");
-        }
-        // 更换状态
-        chatSession.setStatus(ChatSession.STATUS_BUSY);
-        chatSessionService.updateById(chatSession);*/
+        // 查询模型信息
+        ChatSession chatSession = chatSessionMapper.selectById(chatMessage.getSessionId());
+        ModelVersion modelVersion = modelVersionMapper.selectById(chatSession.getModelVersionId());
         // 进行对话
         // 设置监听器
         SseStreamListener listener = new SseStreamListener(sseEmitter);
@@ -65,13 +56,13 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper, ChatM
                 .topP(1)
                 .presencePenalty(0)
                 .frequencyPenalty(0)
-                .maxTokens(maxToken)
+                .maxTokens(modelVersion.getMaxToken())
                 .build();
 
         ChatGPTStream chatGPTStream = ChatGPTStream.builder()
                 .timeout(600)
-                .apiHost(apiHost)
-                .apiKey(apiKey)
+                .apiHost(modelVersion.getApiHost())
+                .apiKey(modelVersion.getApiKey())
                 .build()
                 .init();
 
@@ -93,23 +84,15 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper, ChatM
                     msg,
                     null);
             baseMapper.insert(botChatMessage);
-            // 更新对话状态
-            chatSession.setStatus(ChatSession.STATUS_FREE);
             chatSessionService.updateById(chatSession);
         });
     }
 
     @Override
     public String send(ChatMessage chatMessage) {
-        // 判断当前会话是否在生成
-        ChatSession chatSession = chatSessionService.getOne(new LambdaQueryWrapper<ChatSession>()
-                .eq(ChatSession::getId, chatMessage.getSessionId()));
-        /*if (chatSession.getStatus().equals(ChatSession.STATUS_BUSY)) {
-            throw new BizException("当前会话正忙");
-        }
-        // 更换状态
-        chatSession.setStatus(ChatSession.STATUS_BUSY);
-        chatSessionService.updateById(chatSession);*/
+        // 查询模型信息
+        ChatSession chatSession = chatSessionMapper.selectById(chatMessage.getSessionId());
+        ModelVersion modelVersion = modelVersionMapper.selectById(chatSession.getModelVersionId());
         // 进行对话
         String response = openaiApiService.send(chatMessage);
         // 存储用户新对话
@@ -125,9 +108,6 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper, ChatM
                 response,
                 null);
         baseMapper.insert(botChatMessage);
-        // 更新对话状态
-        chatSession.setStatus(ChatSession.STATUS_FREE);
-        chatSessionService.updateById(chatSession);
 
         return response;
     }

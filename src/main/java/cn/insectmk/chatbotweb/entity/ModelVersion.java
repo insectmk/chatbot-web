@@ -18,6 +18,9 @@ public class ModelVersion {
     protected String id;
     protected String name;
     protected String versionNumber;
+    protected String apiHost;
+    protected String apiKey;
+    protected Integer maxToken;
     protected Date deploymentTime;
     protected String remark;
 }
