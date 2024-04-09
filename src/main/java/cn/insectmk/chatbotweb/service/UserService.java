@@ -1,7 +1,9 @@
 package cn.insectmk.chatbotweb.service;
 
+import cn.insectmk.chatbotweb.common.QueryPageBean;
 import cn.insectmk.chatbotweb.controller.dto.UserDto;
 import cn.insectmk.chatbotweb.entity.User;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -11,6 +13,20 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @Version 1.0
  */
 public interface UserService extends IService<User> {
+    /**
+     * 更新用户
+     * @param userDto
+     * @return
+     */
+    boolean updateOne(UserDto userDto);
+
+    /**
+     * 添加一个用户
+     * @param userDto
+     * @return
+     */
+    boolean addOne(UserDto userDto);
+
     /**
      * 修改用户密码
      * @param userId
@@ -68,4 +84,11 @@ public interface UserService extends IService<User> {
      * @return JWT字符串
      */
     String login(String email, String password);
+
+    /**
+     * 条件分页查询用户
+     * @param userQueryPageBean
+     * @return
+     */
+    IPage<User> findUsersPage(QueryPageBean userQueryPageBean);
 }

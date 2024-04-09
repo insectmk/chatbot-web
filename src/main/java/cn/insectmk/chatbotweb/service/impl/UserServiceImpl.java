@@ -1,5 +1,6 @@
 package cn.insectmk.chatbotweb.service.impl;
 
+import cn.insectmk.chatbotweb.common.QueryPageBean;
 import cn.insectmk.chatbotweb.controller.dto.UserDto;
 import cn.insectmk.chatbotweb.entity.ChatSession;
 import cn.insectmk.chatbotweb.entity.User;
@@ -12,7 +13,10 @@ import cn.insectmk.chatbotweb.util.AESUtil;
 import cn.insectmk.chatbotweb.util.EmailUtil;
 import cn.insectmk.chatbotweb.util.JWTUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,6 +50,32 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private ChatSessionService chatSessionService;
     @Autowired
     private EmailUtil emailUtil;
+
+    @Override
+    public boolean updateOne(UserDto userDto) {
+        if (StringUtils.isNotBlank(userDto.getEmail())) {
+            userDto.setEmail(aesUtil.encrypt(userDto.getEmail()));
+        }
+        if (StringUtils.isNotBlank(userDto.getUsername())) {
+            userDto.setUsername(aesUtil.encrypt(userDto.getUsername()));
+        }
+        if (StringUtils.isNotBlank(userDto.getPassword())) {
+            userDto.setPassword(aesUtil.encrypt(userDto.getPassword()));
+        }
+        return baseMapper.updateById(userDto) == 1;
+    }
+
+    @Override
+    public boolean addOne(UserDto userDto) {
+        // 创建用户
+        userDto.setUsername(aesUtil.encrypt(userDto.getUsername()));
+        userDto.setEmail(aesUtil.encrypt(userDto.getEmail()));
+        userDto.setPassword(aesUtil.encrypt(userDto.getPassword()));
+        baseMapper.insert(userDto);
+        // 生成APIKey
+        this.getApiKey(userDto.getId());
+        return true;
+    }
 
     @Override
     public boolean updatePassword(String userId, String password) {
@@ -98,7 +128,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setEmail(aesUtil.encrypt(split[1]));
         user.setPassword(aesUtil.encrypt(split[2]));
         baseMapper.insert(user);
-        // 生成注册链接
+        // 生成APIKey
         this.getApiKey(user.getId());
         return user;
     }
@@ -110,7 +140,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 加密
         String url = "http://" + ip + ":" + port + "/user/register" + "?key=" + aesUtil.encrypt(source);
         // 发送邮件
-        emailUtil.sendMail(userDto.getEmail(), "智能聊天机器人注册链接", url);
+        emailUtil.sendHtmlMail(userDto.getEmail(),
+                "智能聊天机器人注册链接",
+                "【智能聊天机器人】:</br>" +
+                        "感谢您选择InsectMk的智能聊天机器人，请在【5分钟】内<a href ='" + url + "'>点击此链接</a>完成注册");
         return true;
     }
 
@@ -129,7 +162,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         ChatSession chatSession = new ChatSession(
                 null, userId, null,
                 "[" + aesUtil.decrypt(user.getUsername()) + "]的API",
-                null, null, ChatSession.STATUS_FREE
+                null, null
         );
         chatSessionMapper.insert(chatSession);
         // 生成key
@@ -159,5 +192,30 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         baseMapper.updateById(user);
         // 生成JWT
         return jwtUtil.generateJWT(user);
+    }
+
+    @Override
+    public IPage<User> findUsersPage(QueryPageBean userQueryPageBean) {
+        String queryString = userQueryPageBean.getQueryString();
+        LambdaQueryWrapper<User> userQueryWrapper = null;
+        // 查询条件
+        if (StringUtils.isNotBlank(queryString)) {
+            userQueryWrapper = new LambdaQueryWrapper<User>()
+                    // 判断用户名是否等于
+                    .eq(User::getUsername, aesUtil.encrypt(queryString))
+                    .or()
+                    // 判断邮箱是否等于
+                    .eq(User::getEmail, aesUtil.encrypt(queryString));
+        }
+        // 查询
+        Page<User> userPage = baseMapper.selectPage(
+                new Page<>(userQueryPageBean.getCurrentPage(), userQueryPageBean.getPageSize()),
+                userQueryWrapper);
+        // 解密数据
+        userPage.getRecords().forEach(user -> {
+            user.setEmail(aesUtil.decrypt(user.getEmail()));
+            user.setUsername(aesUtil.decrypt(user.getUsername()));
+        });
+        return userPage;
     }
 }

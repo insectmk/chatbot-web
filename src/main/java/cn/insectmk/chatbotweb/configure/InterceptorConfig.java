@@ -54,6 +54,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+
         // 跨域拦截规则
         registry.addInterceptor(crossInterceptor())
                 .addPathPatterns("/**");

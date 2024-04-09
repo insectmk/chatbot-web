@@ -1,6 +1,7 @@
 package cn.insectmk.chatbotweb.service;
 
 import cn.insectmk.chatbotweb.entity.ChatMessage;
+import cn.insectmk.chatbotweb.entity.ModelVersion;
 
 /**
  * @Description OpenAI式API服务接口

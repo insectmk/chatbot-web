@@ -1,9 +1,12 @@
 package cn.insectmk.chatbotweb.entity;
 
+import cn.insectmk.chatbotweb.util.RegularUtil;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 /**
@@ -16,14 +19,19 @@ import java.util.Date;
 @AllArgsConstructor
 @Data
 public class User {
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     protected String id;
+    @Pattern(regexp = RegularUtil.USERNAME, message = "用户名格式不正确")
     protected String username;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Pattern(regexp = RegularUtil.PASSWORD, message = "密码格式不正确")
     protected String password;
+    @Email(message = "邮箱格式不正确")
     protected String email;
     protected String head;
     protected String apiKey;
+    protected Long maxSession;
+    protected Long tokens;
     protected Date registrationTime;
     protected Date lastLoginTime;
 }

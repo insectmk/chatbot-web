@@ -3,7 +3,7 @@ package cn.insectmk.chatbotweb.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.sql.Date;
+import java.util.Date;
 
 /**
  * @Description 日志
@@ -15,23 +15,13 @@ import java.sql.Date;
 @AllArgsConstructor
 @Data
 public class SystemLog {
-    public enum Level {
-        INFO("信息"), WARNING("警告"), ERROR("错误");
-
-        final String level;
-
-        Level(String level) {
-            this.level = level;
-        }
-
-        @Override
-        public String toString() {
-            return this.level;
-        }
-    }
+    public static final String LEVEL_INFO = "信息";
+    public static final String LEVEL_WARNING = "警告";
+    public static final String LEVEL_ERROR = "错误";
 
     protected String id;
-    protected Level level;
+    private String opEmail;
+    protected String level;
     protected String message;
     protected Date createTime;
 }

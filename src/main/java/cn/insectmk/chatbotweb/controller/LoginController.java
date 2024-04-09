@@ -3,7 +3,9 @@ package cn.insectmk.chatbotweb.controller;
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.ShearCaptcha;
 import cn.insectmk.chatbotweb.common.Result;
+import cn.insectmk.chatbotweb.common.annotation.BizLog;
 import cn.insectmk.chatbotweb.controller.dto.UserDto;
+import cn.insectmk.chatbotweb.entity.SystemLog;
 import cn.insectmk.chatbotweb.service.UserService;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.io.IOException;
 
 /**
@@ -61,7 +64,7 @@ public class LoginController {
      * @return
      */
     @PostMapping
-    public Result login(@RequestBody UserDto userDto, HttpSession session) {
+    public Result login(@Valid @RequestBody UserDto userDto, HttpSession session) {
         String captcha = session.getAttribute("captcha").toString();
         // 如果验证码对不上就拒绝登录
         if (StringUtils.isBlank(userDto.getCaptcha()) || StringUtils.isBlank(captcha)) {

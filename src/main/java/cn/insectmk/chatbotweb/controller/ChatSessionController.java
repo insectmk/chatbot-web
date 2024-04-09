@@ -87,10 +87,9 @@ public class ChatSessionController {
                 chatSessionDto.getModelVersionId(),
                 chatSessionDto.getRemark(),
                 null,
-                null,
-                ChatSession.STATUS_FREE
+                null
         );
 
-        return chatSessionService.save(chatSession) ? Result.buildSuccess(chatSession) : Result.buildFail();
+        return chatSessionService.addOne(chatSession) ? Result.buildSuccess(chatSession) : Result.buildFail();
     }
 }
