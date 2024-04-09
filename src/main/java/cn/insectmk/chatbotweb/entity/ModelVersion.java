@@ -21,6 +21,7 @@ public class ModelVersion {
     protected String apiHost;
     protected String apiKey;
     protected Integer maxToken;
+    protected Long generateTokens;
     protected Date deploymentTime;
     protected String remark;
 }
