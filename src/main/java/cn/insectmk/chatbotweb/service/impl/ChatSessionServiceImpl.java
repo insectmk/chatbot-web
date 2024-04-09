@@ -14,7 +14,6 @@ import com.plexpt.chatgpt.entity.chat.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 /**
@@ -59,8 +58,8 @@ public class ChatSessionServiceImpl extends ServiceImpl<ChatSessionMapper, ChatS
         // 判断会话是否达到限制
         Integer sessionCnt = baseMapper.selectCount(new LambdaQueryWrapper<ChatSession>()
                 .eq(ChatSession::getUserId, user.getId()));
-        if (user.getMaxSession() >= sessionCnt) {
-            throw new BizException("已达到最大对话数");
+        if (user.getMaxSession() <= sessionCnt) {
+            throw new BizException("已达到最大会话数");
         }
         return save(chatSession);
     }

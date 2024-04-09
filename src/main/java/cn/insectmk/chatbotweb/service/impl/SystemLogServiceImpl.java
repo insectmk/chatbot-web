@@ -41,6 +41,7 @@ public class SystemLogServiceImpl extends ServiceImpl<SystemLogMapper, SystemLog
         if (StringUtils.isNotBlank(userId)) {
             opEmail = aesUtil.decrypt(userMapper.selectById(userId).getEmail());
         }
+        systemLog.setOpEmail(opEmail);
         // 插入日志
         return baseMapper.insert(systemLog) == 1;
     }

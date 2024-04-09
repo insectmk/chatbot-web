@@ -31,7 +31,7 @@ public class User {
     protected String head;
     protected String apiKey;
     protected Long maxSession;
-    protected Long maxToken;
+    protected Long tokens;
     protected Date registrationTime;
     protected Date lastLoginTime;
 }
