@@ -1,10 +1,8 @@
 package cn.insectmk.chatbotweb.controller.dto;
 
 import cn.insectmk.chatbotweb.entity.ModelVersion;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 /**
  * @Description 模型版本传输对象

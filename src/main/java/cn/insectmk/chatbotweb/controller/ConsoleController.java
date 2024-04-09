@@ -29,6 +29,18 @@ public class ConsoleController {
     private ModelVersionService modelVersionService;
 
     /**
+     * 更新模型
+     * @param modelVersionDto
+     * @return
+     */
+    @PutMapping("/model")
+    public Result updateUser(@RequestBody ModelVersionDto modelVersionDto) {
+        return modelVersionService.updateOne(modelVersionDto) ?
+                Result.buildSuccess("更新成功！", null) :
+                Result.buildFail("更新失败！");
+    }
+
+    /**
      * 添加模型
      * @param modelVersionDto
      * @return

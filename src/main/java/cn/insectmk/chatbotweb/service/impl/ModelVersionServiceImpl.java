@@ -53,4 +53,9 @@ public class ModelVersionServiceImpl extends ServiceImpl<ModelVersionMapper, Mod
     public boolean addOne(ModelVersionDto modelVersionDto) {
         return save(modelVersionDto);
     }
+
+    @Override
+    public boolean updateOne(ModelVersionDto modelVersionDto) {
+        return updateById(modelVersionDto);
+    }
 }

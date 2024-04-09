@@ -34,4 +34,11 @@ public interface ModelVersionService extends IService<ModelVersion> {
      * @return
      */
     boolean addOne(ModelVersionDto modelVersionDto);
+
+    /**
+     * 更新模型
+     * @param modelVersionDto
+     * @return
+     */
+    boolean updateOne(ModelVersionDto modelVersionDto);
 }
