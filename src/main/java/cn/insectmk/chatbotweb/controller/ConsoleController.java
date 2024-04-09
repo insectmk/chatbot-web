@@ -29,6 +29,18 @@ public class ConsoleController {
     private ModelVersionService modelVersionService;
 
     /**
+     * 删除模型
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/model")
+    public Result deleteModel(String id) {
+        return modelVersionService.deleteOne(id) ?
+                Result.buildSuccess("删除成功！", null) :
+                Result.buildFail("删除失败！");
+    }
+
+    /**
      * 更新模型
      * @param modelVersionDto
      * @return

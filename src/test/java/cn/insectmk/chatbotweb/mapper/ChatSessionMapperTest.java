@@ -2,6 +2,7 @@ package cn.insectmk.chatbotweb.mapper;
 
 import cn.insectmk.chatbotweb.entity.ChatSession;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.plexpt.chatgpt.entity.chat.Message;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,12 @@ import java.util.List;
 class ChatSessionMapperTest {
     @Autowired
     private ChatSessionMapper chatSessionMapper;
+
+    @Test
+    void selectOne() {
+        ChatSession chatSession = chatSessionMapper.selectOne(new QueryWrapper<ChatSession>().last("LIMIT 1"));
+        System.out.println(chatSession);
+    }
 
     @Test
     void selectHistoryMsg() {

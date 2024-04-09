@@ -42,6 +42,8 @@ class UserServiceImplTest {
                 "https://insectmk.cn/static/img/head/insectmk.png",
                 null,
                 null,
+                null,
+                null,
                 null
         );
         userService.save(user);
