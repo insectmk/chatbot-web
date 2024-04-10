@@ -15,5 +15,6 @@ import java.util.List;
 @Configuration
 @ConfigurationProperties("system")
 public class CustomerSystemConfigValue {
+    private String address;
     private List<String> rootEmail;
 }

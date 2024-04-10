@@ -24,7 +24,7 @@ import java.util.Objects;
 @RequestMapping("/api")
 @RequestLimit(maxCount = 1,second = 5)
 public class ApiController {
-    @Value(("${server.address}"))
+    @Value(("${system.address}"))
     private String ip;
     @Value("${server.port}")
     private String port;

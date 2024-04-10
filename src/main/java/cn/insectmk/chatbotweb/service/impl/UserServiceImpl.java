@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
-    @Value(("${server.address}"))
+    @Value(("${system.address}"))
     private String ip;
     @Value("${server.port}")
     private String port;
