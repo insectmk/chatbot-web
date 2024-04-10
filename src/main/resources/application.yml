@@ -1,11 +1,3 @@
-# 应用服务 WEB 访问端口
-server:
-  port: 9001
-  address:
-  servlet:
-    session:
-      cookie:
-        secure: true
 # Spring相关配置
 spring:
   datasource:

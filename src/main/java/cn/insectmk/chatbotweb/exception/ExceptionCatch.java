@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @RestControllerAdvice //控制层通知类
 @Slf4j
 public class ExceptionCatch {
-    //@Autowired
+    @Autowired
     private SystemLogService systemLogService;
 
     /**
