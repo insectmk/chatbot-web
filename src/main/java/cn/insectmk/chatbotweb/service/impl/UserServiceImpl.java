@@ -89,7 +89,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 systemLog.setMessage("用户旧头像删除失败，可能是不存在");
                 systemLogService.addOne(systemLog);
             }
-            // 获取缓存在Redis中的文件
+            // 获取缓存URL
             String userHeadKey = "user:head:" + httpServletRequest.getAttribute("userId");
             // 上传新头像
             userDto.setHead(FileUrlCatchUtil.get(userHeadKey));
@@ -110,7 +110,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             // 默认密码
             userDto.setPassword(aesUtil.encrypt("&123456InsectMk"));
         }
-
+        // 判断是否上传了头像
+        if (!Objects.isNull(userDto.getIsUploadHead()) && userDto.getIsUploadHead()) {
+            // 获取缓存URL
+            String userHeadKey = "user:head:" + httpServletRequest.getAttribute("userId");
+            // 上传新头像
+            userDto.setHead(FileUrlCatchUtil.get(userHeadKey));
+            FileUrlCatchUtil.delete(userHeadKey); // 删除元素
+        }
         baseMapper.insert(userDto);
         // 生成APIKey
         this.getApiKey(userDto.getId());

@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 import java.util.stream.Collectors;
 
-//@RestControllerAdvice //控制层通知类
+@RestControllerAdvice //控制层通知类
 @Slf4j
 public class ExceptionCatch {
     //@Autowired
