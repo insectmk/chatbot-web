@@ -3,9 +3,8 @@ package cn.insectmk.chatbotweb.controller;
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.ShearCaptcha;
 import cn.insectmk.chatbotweb.common.Result;
-import cn.insectmk.chatbotweb.common.annotation.BizLog;
+import cn.insectmk.chatbotweb.common.annotation.RequestLimit;
 import cn.insectmk.chatbotweb.controller.dto.UserDto;
-import cn.insectmk.chatbotweb.entity.SystemLog;
 import cn.insectmk.chatbotweb.service.UserService;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +24,7 @@ import java.io.IOException;
  */
 @RestController
 @RequestMapping("/login")
+@RequestLimit(maxCount = 10,second = 1)
 public class LoginController {
     @Autowired
     private UserService userService;
