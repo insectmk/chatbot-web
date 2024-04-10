@@ -15,6 +15,11 @@
     </properties>
 
     <dependencies>
+        <dependency><!--spring-boot-redis所需依赖-->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
         <dependency><!-- 引入aop支持 -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
