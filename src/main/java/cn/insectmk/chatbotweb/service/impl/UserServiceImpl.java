@@ -70,7 +70,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 创建用户
         userDto.setUsername(aesUtil.encrypt(userDto.getUsername()));
         userDto.setEmail(aesUtil.encrypt(userDto.getEmail()));
-        userDto.setPassword(aesUtil.encrypt(userDto.getPassword()));
+        // 判断密码是否为空
+        if (StringUtils.isNotBlank(userDto.getPassword())) {
+            userDto.setPassword(aesUtil.encrypt(userDto.getPassword()));
+        } else {
+            // 默认密码
+            userDto.setPassword(aesUtil.encrypt("&123456InsectMk"));
+        }
+
         baseMapper.insert(userDto);
         // 生成APIKey
         this.getApiKey(userDto.getId());

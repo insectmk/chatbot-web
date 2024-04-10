@@ -1,4 +1,4 @@
-package cn.insectmk.chatbotweb.configure;
+package cn.insectmk.chatbotweb.configure.value;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

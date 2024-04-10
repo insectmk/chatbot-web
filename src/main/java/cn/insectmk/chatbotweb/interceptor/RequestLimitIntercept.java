@@ -51,7 +51,7 @@ public class RequestLimitIntercept extends HandlerInterceptorAdapter {
                     // 写入日志
                     SystemLog systemLog = new SystemLog();
                     systemLog.setLevel(SystemLog.LEVEL_WARNING);
-                    systemLog.setMessage("过多请求：" + handlerMethod.getMethod().getName());
+                    systemLog.setMessage("过多请求：" + handlerMethod.getMethod().getDeclaringClass().getName() + "." + handlerMethod.getMethod().getName());
                     systemLogService.addOne(systemLog);
                     // 返回失败数据
                     resonseOut(response, Result.buildFail("请勿多次刷新网页，接口繁忙"));

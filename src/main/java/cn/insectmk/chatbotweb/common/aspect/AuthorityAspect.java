@@ -1,6 +1,6 @@
 package cn.insectmk.chatbotweb.common.aspect;
 
-import cn.insectmk.chatbotweb.configure.CustomerSystemConfigValue;
+import cn.insectmk.chatbotweb.configure.value.CustomerSystemConfigValue;
 import cn.insectmk.chatbotweb.entity.User;
 import cn.insectmk.chatbotweb.exception.BizException;
 import cn.insectmk.chatbotweb.service.UserService;
