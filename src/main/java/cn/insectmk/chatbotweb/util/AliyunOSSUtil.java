@@ -37,6 +37,28 @@ public class AliyunOSSUtil extends AliyunOSSConfigValue {
     }
 
     /**
+     * 上传图片到阿里云OSS
+     * @param fileBytes
+     * @param folderPath
+     * @return
+     */
+    public String upload(byte[] fileBytes, String folderPath){
+        // 创建OSSClient实例。
+        OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
+        // 定义文件名称
+        String fileName = generateFileName("head.jpg");
+        // 上传图片
+        try {
+            ossClient.putObject(getBucketName(), folderPath + fileName, new ByteArrayInputStream(fileBytes));
+        } finally {
+            // 关闭OSSClient。
+            ossClient.shutdown();
+        }
+
+        return  url + folderPath + fileName;
+    }
+
+    /**
      * 通过URL获取文件名
      * @param urlStr
      * @return

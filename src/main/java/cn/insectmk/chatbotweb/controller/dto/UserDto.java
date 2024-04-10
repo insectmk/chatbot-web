@@ -17,4 +17,5 @@ import javax.validation.constraints.Pattern;
 public class UserDto extends User {
     @Pattern(regexp = RegularUtil.CAPTCHA, message = "验证码格式不正确")
     private String captcha;
+    private Boolean isUploadHead;
 }

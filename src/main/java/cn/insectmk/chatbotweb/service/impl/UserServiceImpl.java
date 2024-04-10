@@ -1,27 +1,29 @@
 package cn.insectmk.chatbotweb.service.impl;
 
 import cn.insectmk.chatbotweb.common.QueryPageBean;
+import cn.insectmk.chatbotweb.configure.value.AliyunOSSConfigValue;
 import cn.insectmk.chatbotweb.controller.dto.UserDto;
 import cn.insectmk.chatbotweb.entity.ChatSession;
+import cn.insectmk.chatbotweb.entity.SystemLog;
 import cn.insectmk.chatbotweb.entity.User;
 import cn.insectmk.chatbotweb.exception.BizException;
 import cn.insectmk.chatbotweb.mapper.ChatSessionMapper;
 import cn.insectmk.chatbotweb.mapper.UserMapper;
 import cn.insectmk.chatbotweb.service.ChatSessionService;
+import cn.insectmk.chatbotweb.service.SystemLogService;
 import cn.insectmk.chatbotweb.service.UserService;
-import cn.insectmk.chatbotweb.util.AESUtil;
-import cn.insectmk.chatbotweb.util.EmailUtil;
-import cn.insectmk.chatbotweb.util.JWTUtil;
+import cn.insectmk.chatbotweb.util.*;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -50,9 +52,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private ChatSessionService chatSessionService;
     @Autowired
     private EmailUtil emailUtil;
+    @Autowired
+    private AliyunOSSUtil aliyunOSSUtil;
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
+    @Autowired
+    private AliyunOSSConfigValue aliyunOSSConfigValue;
+    @Autowired
+    private SystemLogService systemLogService;
+    @Autowired
+    private HttpServletRequest httpServletRequest;
 
     @Override
     public boolean updateOne(UserDto userDto) {
+        // 更新信息
         if (StringUtils.isNotBlank(userDto.getEmail())) {
             userDto.setEmail(aesUtil.encrypt(userDto.getEmail()));
         }
@@ -61,6 +74,26 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         if (StringUtils.isNotBlank(userDto.getPassword())) {
             userDto.setPassword(aesUtil.encrypt(userDto.getPassword()));
+        }
+        // 判断是否上传了头像
+        if (!Objects.isNull(userDto.getIsUploadHead()) && userDto.getIsUploadHead()) {
+            // 查询用户旧信息
+            User userOld = baseMapper.selectById(userDto.getId());
+            // 删除旧头像
+            try {
+                aliyunOSSUtil.delete(aliyunOSSConfigValue.getPathUserHead(), aliyunOSSUtil.getFileNameByURL(userOld.getHead()));
+            } catch (Exception ignored) {
+                // 创建日志
+                SystemLog systemLog = new SystemLog();
+                systemLog.setLevel(SystemLog.LEVEL_WARNING);
+                systemLog.setMessage("用户旧头像删除失败，可能是不存在");
+                systemLogService.addOne(systemLog);
+            }
+            // 获取缓存在Redis中的文件
+            String userHeadKey = "user:head:" + httpServletRequest.getAttribute("userId");
+            // 上传新头像
+            userDto.setHead(FileUrlCatchUtil.get(userHeadKey));
+            FileUrlCatchUtil.delete(userHeadKey); // 删除元素
         }
         return baseMapper.updateById(userDto) == 1;
     }

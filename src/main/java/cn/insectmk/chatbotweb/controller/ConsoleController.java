@@ -10,9 +10,12 @@ import cn.insectmk.chatbotweb.service.ConsoleService;
 import cn.insectmk.chatbotweb.service.ModelVersionService;
 import cn.insectmk.chatbotweb.service.SystemLogService;
 import cn.insectmk.chatbotweb.service.UserService;
+import cn.insectmk.chatbotweb.util.AliyunOSSUtil;
+import cn.insectmk.chatbotweb.util.FileUrlCatchUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.multipart.MultipartFile;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +37,27 @@ public class ConsoleController {
     private ModelVersionService modelVersionService;
     @Autowired
     private ConsoleService consoleService;
+    @Autowired
+    private AliyunOSSUtil aliyunOSSUtil;
+
+    /**
+     * 用户头像上传
+     * @param file
+     * @return
+     */
+    @PostMapping("/user/head")
+    public Result userHeadUpload(MultipartFile file, HttpServletRequest httpServletRequest) {
+        String url = aliyunOSSUtil.upload(file, "chatbot-web/user-head/");
+        // 确保文件不为空
+        if (file.isEmpty()) {
+            return Result.buildFail("文件不能为空");
+        }
+        // 创建图片缓存key
+        String userHeadKey = "user:head:" + httpServletRequest.getAttribute("userId");
+        // 将文件字节数组存入缓存
+        FileUrlCatchUtil.set(userHeadKey, url);
+        return Result.buildSuccess("文件缓存成功", null);
+    }
 
     /**
      * 获取模型使用率统计
