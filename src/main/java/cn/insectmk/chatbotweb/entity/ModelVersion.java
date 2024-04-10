@@ -1,8 +1,11 @@
 package cn.insectmk.chatbotweb.entity;
 
+import cn.insectmk.chatbotweb.util.RegularUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 /**
@@ -18,6 +21,7 @@ public class ModelVersion {
     protected String id;
     protected String name;
     protected String versionNumber;
+    @Pattern(regexp = RegularUtil.API_URL, message = "接口格式不正确")
     protected String apiHost;
     protected String apiKey;
     protected Integer maxToken;

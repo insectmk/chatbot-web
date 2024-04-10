@@ -35,6 +35,7 @@ public class LoginController {
      * @return
      */
     @GetMapping("/isToken")
+    @RequestLimit(maxCount = 5,second = 1)
     public Result isToken(String token) {
         return userService.isTokenEffective(token) ?
                 Result.build(true, "令牌有效", null) :
@@ -48,6 +49,7 @@ public class LoginController {
      * @throws IOException
      */
     @GetMapping("/captcha")
+    @RequestLimit(maxCount = 1,second = 1)
     public void captcha(HttpServletResponse response, HttpSession session) throws IOException {
         // 定义图形验证码的长、宽、验证码字符数、干扰线宽度
         ShearCaptcha captcha = CaptchaUtil.createShearCaptcha(200, 100, 4, 4);

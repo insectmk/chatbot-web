@@ -13,6 +13,7 @@ import cn.insectmk.chatbotweb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -74,7 +75,7 @@ public class ConsoleController {
      * @return
      */
     @PostMapping("/model")
-    public Result addModel(@RequestBody ModelVersionDto modelVersionDto) {
+    public Result addModel(@Valid @RequestBody ModelVersionDto modelVersionDto) {
         return modelVersionService.addOne(modelVersionDto) ?
                 Result.buildSuccess("新增成功！", null) :
                 Result.buildFail("新增失败！");
@@ -120,7 +121,7 @@ public class ConsoleController {
      * @return
      */
     @PutMapping("/user")
-    public Result updateUser(@RequestBody UserDto userDto) {
+    public Result updateUser(@Valid @RequestBody UserDto userDto) {
         return userService.updateOne(userDto) ?
                 Result.buildSuccess("更新成功！", null) :
                 Result.buildFail("更新失败！");
