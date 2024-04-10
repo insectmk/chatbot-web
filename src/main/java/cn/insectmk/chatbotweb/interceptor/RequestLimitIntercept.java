@@ -2,6 +2,8 @@ package cn.insectmk.chatbotweb.interceptor;
 
 import cn.insectmk.chatbotweb.common.Result;
 import cn.insectmk.chatbotweb.common.annotation.RequestLimit;
+import cn.insectmk.chatbotweb.entity.SystemLog;
+import cn.insectmk.chatbotweb.service.SystemLogService;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +24,10 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Component
 public class RequestLimitIntercept extends HandlerInterceptorAdapter {
-
     @Autowired
     private RedisTemplate<String,Object> redisTemplate;
+    @Autowired
+    private SystemLogService systemLogService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -45,7 +48,13 @@ public class RequestLimitIntercept extends HandlerInterceptorAdapter {
             RequestLimit requestLimit = methodAnnotation != null?methodAnnotation:classAnnotation;
             if(requestLimit != null){
                 if(isLimit(request,requestLimit)){
-                    resonseOut(response, Result.buildFail("接口繁忙"));
+                    // 写入日志
+                    SystemLog systemLog = new SystemLog();
+                    systemLog.setLevel(SystemLog.LEVEL_WARNING);
+                    systemLog.setMessage("过多请求：" + handlerMethod.getMethod().getName());
+                    systemLogService.addOne(systemLog);
+                    // 返回失败数据
+                    resonseOut(response, Result.buildFail("请勿多次刷新网页，接口繁忙"));
                     return false;
                 }
             }

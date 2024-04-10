@@ -34,6 +34,7 @@ public class UserController {
      * @return
      */
     @PutMapping("/password")
+    @BizLog(level = SystemLog.LEVEL_INFO, message = "修改密码")
     public Result password(@RequestBody User user, HttpServletRequest request) {
         return userService.updatePassword(request.getAttribute("userId").toString(), user.getPassword()) ?
                 Result.buildSuccess("密码更新成功！",null) :
@@ -46,6 +47,7 @@ public class UserController {
      * @return
      */
     @DeleteMapping
+    @BizLog(level = SystemLog.LEVEL_INFO, message = "注销用户")
     public Result delete(HttpServletRequest request) {
         return userService.deleteOne(request.getAttribute("userId").toString()) ?
                 Result.buildSuccess("删除成功！", null) :
@@ -58,7 +60,6 @@ public class UserController {
      * @return
      */
     @GetMapping
-    @BizLog(level = SystemLog.LEVEL_INFO, message = "获取用户信息")
     public Result info(HttpServletRequest request) {
         return Result.buildSuccess(userService.getUserInfo(request.getAttribute("userId").toString()));
     }
@@ -69,6 +70,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/register")
+    @BizLog(level = SystemLog.LEVEL_INFO, message = "用户注册")
     public Result register(String key) {
         User user = userService.register(key);
         return Objects.isNull(user) ? Result.buildFail("注册失败") :

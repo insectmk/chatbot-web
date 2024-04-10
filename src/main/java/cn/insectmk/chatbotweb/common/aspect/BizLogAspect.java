@@ -52,6 +52,7 @@ public class BizLogAspect {
         // 创建日志对象
         cn.insectmk.chatbotweb.entity.SystemLog systemLog = new cn.insectmk.chatbotweb.entity.SystemLog();
         BizLog mBizLog =  method.getAnnotation(BizLog.class); // 获取注解对象
+        systemLog.setIpAddress(httpServletRequest.getRemoteAddr()); // 设置操作人IP地址
         systemLog.setOpEmail(aesUtil.decrypt(user.getEmail())); // 设置操作人邮箱
         systemLog.setLevel(mBizLog.level()); // 设置日志等级
         systemLog.setMessage(mBizLog.message()); // 设置日志消息

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Objects;
 
 /**
  * @Description 系统日志服务接口实现
@@ -36,12 +37,14 @@ public class SystemLogServiceImpl extends ServiceImpl<SystemLogMapper, SystemLog
     @Override
     public boolean addOne(SystemLog systemLog) {
         // 获取用户ID
-        String userId = httpServletRequest.getAttribute("userId").toString();
+        Object userId = httpServletRequest.getAttribute("userId");
         String opEmail = "未知";
-        if (StringUtils.isNotBlank(userId)) {
-            opEmail = aesUtil.decrypt(userMapper.selectById(userId).getEmail());
+        if (!Objects.isNull(userId) && StringUtils.isNotBlank(userId.toString())) {
+            opEmail = aesUtil.decrypt(userMapper.selectById(userId.toString()).getEmail());
         }
         systemLog.setOpEmail(opEmail);
+        // 设置IP地址
+        systemLog.setIpAddress(httpServletRequest.getRemoteAddr());
         // 插入日志
         return baseMapper.insert(systemLog) == 1;
     }
@@ -55,6 +58,9 @@ public class SystemLogServiceImpl extends ServiceImpl<SystemLogMapper, SystemLog
             systemLogLambdaQueryWrapper = new LambdaQueryWrapper<SystemLog>()
                     // 模糊查询日志等级
                     .like(SystemLog::getLevel, queryString)
+                    .or()
+                    // 模糊查询ip地址
+                    .like(SystemLog::getIpAddress, queryString)
                     .or()
                     // 模糊查询日志信息
                     .like(SystemLog::getMessage, queryString)
