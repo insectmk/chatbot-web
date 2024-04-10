@@ -21,7 +21,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
  */
 @RestController
 @RequestMapping("/chatMessage")
-@RequestLimit(maxCount = 5,second = 10)
+@RequestLimit(maxCount = 1,second = 5)
 public class ChatMessageController {
     @Autowired
     private ChatMessageService chatMessageService;

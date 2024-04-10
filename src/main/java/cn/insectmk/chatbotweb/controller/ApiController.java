@@ -1,6 +1,7 @@
 package cn.insectmk.chatbotweb.controller;
 
 import cn.insectmk.chatbotweb.common.Result;
+import cn.insectmk.chatbotweb.common.annotation.RequestLimit;
 import cn.insectmk.chatbotweb.configure.SseEmitterUTF8;
 import cn.insectmk.chatbotweb.entity.ChatMessage;
 import cn.insectmk.chatbotweb.exception.BizException;
@@ -21,6 +22,7 @@ import java.util.Objects;
  */
 @RestController
 @RequestMapping("/api")
+@RequestLimit(maxCount = 1,second = 5)
 public class ApiController {
     @Value(("${server.address}"))
     private String ip;

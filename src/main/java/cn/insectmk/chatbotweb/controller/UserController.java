@@ -2,6 +2,7 @@ package cn.insectmk.chatbotweb.controller;
 
 import cn.insectmk.chatbotweb.common.Result;
 import cn.insectmk.chatbotweb.common.annotation.BizLog;
+import cn.insectmk.chatbotweb.common.annotation.RequestLimit;
 import cn.insectmk.chatbotweb.controller.dto.UserDto;
 import cn.insectmk.chatbotweb.entity.SystemLog;
 import cn.insectmk.chatbotweb.entity.User;
@@ -21,6 +22,7 @@ import java.util.Objects;
  */
 @RestController
 @RequestMapping("/user")
+@RequestLimit(maxCount = 1,second = 1)
 public class UserController {
     @Autowired
     private UserService userService;

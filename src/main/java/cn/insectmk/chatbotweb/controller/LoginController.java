@@ -24,7 +24,7 @@ import java.io.IOException;
  */
 @RestController
 @RequestMapping("/login")
-@RequestLimit(maxCount = 10,second = 1)
+@RequestLimit(maxCount = 1,second = 10)
 public class LoginController {
     @Autowired
     private UserService userService;

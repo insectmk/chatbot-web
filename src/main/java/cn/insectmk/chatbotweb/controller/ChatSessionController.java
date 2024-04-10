@@ -1,6 +1,7 @@
 package cn.insectmk.chatbotweb.controller;
 
 import cn.insectmk.chatbotweb.common.Result;
+import cn.insectmk.chatbotweb.common.annotation.RequestLimit;
 import cn.insectmk.chatbotweb.controller.dto.ChatSessionDto;
 import cn.insectmk.chatbotweb.entity.ChatSession;
 import cn.insectmk.chatbotweb.exception.BizException;
@@ -19,6 +20,7 @@ import java.util.Objects;
  */
 @RestController
 @RequestMapping("/chatSession")
+@RequestLimit(maxCount = 5,second = 1)
 public class ChatSessionController {
     @Autowired
     private ChatSessionService chatSessionService;

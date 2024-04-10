@@ -28,7 +28,7 @@ public class RequestLimitIntercept extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        /**
+        /*
          * isAssignableFrom() 判定此 Class 对象所表示的类或接口与指定的 Class 参数所表示的类或接口是否相同，或是否是其超类或超接口
          * isAssignableFrom()方法是判断是否为某个类的父类
          * instanceof关键字是判断是否某个类的子类
