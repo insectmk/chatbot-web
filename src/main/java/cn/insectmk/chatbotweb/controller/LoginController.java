@@ -34,6 +34,19 @@ public class LoginController {
     private RedisTemplate<String, String> redisTemplate;
 
     /**
+     * 判断是否为root
+     * @param token
+     * @return
+     */
+    @GetMapping("/isRoot")
+    @RequestLimit(maxCount = 5,second = 1)
+    public Result isRoot(String token) {
+        return userService.isTokenRoot(token) ?
+                Result.build(true, "是Root", null) :
+                Result.buildFail("不是Root");
+    }
+
+    /**
      * 判断令牌是否有效
      * @param token
      * @return
@@ -74,7 +87,7 @@ public class LoginController {
     public Result login(@Valid @RequestBody UserDto userDto, HttpServletRequest httpServletRequest) {
         // 如果验证码对不上就拒绝登录
         String ip = redisTemplate.opsForValue().get(userDto.getCaptcha().toUpperCase());
-        if (ip == null || !httpServletRequest.getRemoteAddr().equals(ip)) {
+        if (!httpServletRequest.getRemoteAddr().equals(ip)) {
             return Result.buildFail("验证码不正确");
         }
         // 删除验证码

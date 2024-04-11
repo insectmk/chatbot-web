@@ -2,6 +2,7 @@ package cn.insectmk.chatbotweb.service.impl;
 
 import cn.insectmk.chatbotweb.common.QueryPageBean;
 import cn.insectmk.chatbotweb.configure.value.AliyunOSSConfigValue;
+import cn.insectmk.chatbotweb.configure.value.CustomerSystemConfigValue;
 import cn.insectmk.chatbotweb.controller.dto.UserDto;
 import cn.insectmk.chatbotweb.entity.ChatSession;
 import cn.insectmk.chatbotweb.entity.SystemLog;
@@ -56,13 +57,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Autowired
     private AliyunOSSUtil aliyunOSSUtil;
     @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
-    @Autowired
     private AliyunOSSConfigValue aliyunOSSConfigValue;
     @Autowired
     private SystemLogService systemLogService;
     @Autowired
     private HttpServletRequest httpServletRequest;
+    @Autowired
+    private CustomerSystemConfigValue customerSystemConfigValue;
 
     @Override
     public boolean updateOne(UserDto userDto) {
@@ -269,5 +270,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             user.setUsername(aesUtil.decrypt(user.getUsername()));
         });
         return userPage;
+    }
+
+    @Override
+    public boolean isTokenRoot(String token) {
+        User user = baseMapper.selectById(jwtUtil.checkJWT(token).get("id").toString());
+        return customerSystemConfigValue.getRootEmail().contains(aesUtil.decrypt(user.getEmail()));
     }
 }
