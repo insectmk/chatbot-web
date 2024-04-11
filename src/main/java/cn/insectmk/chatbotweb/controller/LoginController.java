@@ -42,8 +42,8 @@ public class LoginController {
     @RequestLimit(maxCount = 5,second = 1)
     public Result isRoot(String token) {
         return userService.isTokenRoot(token) ?
-                Result.build(true, "是Root", null) :
-                Result.buildFail("不是Root");
+                Result.build(true, "是Root用户", null) :
+                Result.buildFail("不为Root用户");
     }
 
     /**
