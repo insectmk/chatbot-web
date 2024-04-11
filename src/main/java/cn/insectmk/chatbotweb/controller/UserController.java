@@ -8,9 +8,9 @@ import cn.insectmk.chatbotweb.entity.SystemLog;
 import cn.insectmk.chatbotweb.entity.User;
 import cn.insectmk.chatbotweb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.Objects;
 
@@ -26,6 +26,8 @@ import java.util.Objects;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
 
     /**
      * 修改用户密码
@@ -83,11 +85,14 @@ public class UserController {
      * @return
      */
     @PostMapping("/register")
-    public Result register(@Valid @RequestBody UserDto userDto, HttpSession session) {
+    public Result register(@Valid @RequestBody UserDto userDto, HttpServletRequest httpServletRequest) {
         // 如果验证码对不上就拒绝注册
-        if (!session.getAttribute("captcha").equals(userDto.getCaptcha())) {
+        String ip = redisTemplate.opsForValue().get(userDto.getCaptcha().toUpperCase());
+        if (ip == null || !httpServletRequest.getRemoteAddr().equals(ip)) {
             return Result.buildFail("验证码不正确");
         }
+        // 删除验证码
+        redisTemplate.delete(userDto.getCaptcha());
         // 发送注册链接
         userService.sendRegisterUrl(userDto);
         return Result.buildSuccess("请在[5分钟内]点击邮箱的注册链接完成注册", null);

@@ -14,6 +14,7 @@ import cn.insectmk.chatbotweb.service.SystemLogService;
 import cn.insectmk.chatbotweb.service.UserService;
 import cn.insectmk.chatbotweb.util.*;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -182,6 +183,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public boolean sendRegisterUrl(UserDto userDto) {
+        // 查询邮箱是否注册
+        if (!Objects.isNull(baseMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getEmail, aesUtil.encrypt(userDto.getEmail()))))) {
+            throw new BizException("该邮箱已注册，请返回登录！");
+        }
         // 拼接参数（用户名+邮箱+密码+失效时间）
         String source = userDto.getUsername() + "\\" + userDto.getEmail() + "\\" + userDto.getPassword() + "\\" + (System.currentTimeMillis() + (5 * 60 * 1000));
         // 加密

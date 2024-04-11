@@ -8,13 +8,15 @@ import cn.insectmk.chatbotweb.controller.dto.UserDto;
 import cn.insectmk.chatbotweb.service.UserService;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Description 登录控制器
@@ -28,6 +30,8 @@ import java.io.IOException;
 public class LoginController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
 
     /**
      * 判断令牌是否有效
@@ -45,16 +49,17 @@ public class LoginController {
     /**
      * 生成图形验证码
      * @param response
-     * @param session
+     * @param httpServletRequest
      * @throws IOException
      */
     @GetMapping("/captcha")
     @RequestLimit(maxCount = 1,second = 1)
-    public void captcha(HttpServletResponse response, HttpSession session) throws IOException {
+    public void captcha(HttpServletResponse response, HttpServletRequest httpServletRequest) throws IOException {
         // 定义图形验证码的长、宽、验证码字符数、干扰线宽度
         ShearCaptcha captcha = CaptchaUtil.createShearCaptcha(200, 100, 4, 4);
-        // 将验证码装到Session中
-        session.setAttribute("captcha", captcha.getCode());
+        // 将验证码装到Redis中（5分钟失效）
+        redisTemplate.opsForValue().set(captcha.getCode().toUpperCase(), httpServletRequest.getRemoteAddr(), 5, TimeUnit.MINUTES);
+        httpServletRequest.getSession().setAttribute("captcha", captcha.getCode());
         // 将图片装载到输出流中
         ServletOutputStream outputStream = response.getOutputStream();
         ImageIO.write(captcha.getImage(),"JPEG",outputStream);
@@ -66,14 +71,14 @@ public class LoginController {
      * @return
      */
     @PostMapping
-    public Result login(@Valid @RequestBody UserDto userDto, HttpSession session) {
-        String captcha = session.getAttribute("captcha").toString();
+    public Result login(@Valid @RequestBody UserDto userDto, HttpServletRequest httpServletRequest) {
         // 如果验证码对不上就拒绝登录
-        if (StringUtils.isBlank(userDto.getCaptcha()) || StringUtils.isBlank(captcha)) {
-            return Result.buildFail("请输入验证码");
-        } else if (!captcha.equals(userDto.getCaptcha())) {
+        String ip = redisTemplate.opsForValue().get(userDto.getCaptcha().toUpperCase());
+        if (ip == null || !httpServletRequest.getRemoteAddr().equals(ip)) {
             return Result.buildFail("验证码不正确");
         }
+        // 删除验证码
+        redisTemplate.delete(userDto.getCaptcha());
         // 登录
         String token = userService.login(userDto.getEmail(), userDto.getPassword());
         return StringUtils.isNotBlank(token) ?
