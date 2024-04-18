@@ -53,7 +53,7 @@ public class OpenaiApiServiceImpl implements OpenaiApiService {
         messages.add(Message.of(chatMessage.getMessageContent()));
 
         ChatCompletion chatCompletion = ChatCompletion.builder()
-                .model("llama2")
+                .model(ChatCompletion.Model.GPT_3_5_TURBO.getName())
                 .messages(messages)
                 .stream(false)
                 .temperature(1)
@@ -73,7 +73,7 @@ public class OpenaiApiServiceImpl implements OpenaiApiService {
         ChatCompletionResponse chatCompletionResponse = chatGPT.chatCompletion(chatCompletion);
 
         // 减去用户的Tokens存量
-        long completionTokens = modelVersion.getGenerateTokens() + chatCompletionResponse.getUsage().getCompletionTokens();
+        long completionTokens = chatCompletionResponse.getUsage().getCompletionTokens();
         user.setTokens(user.getTokens() - completionTokens);
         userMapper.updateById(user);
         // 增加模型的生成Tokens量

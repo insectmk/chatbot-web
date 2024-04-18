@@ -3,9 +3,12 @@ package cn.insectmk.chatbotweb.service.impl;
 import cn.insectmk.chatbotweb.entity.ChatMessage;
 import cn.insectmk.chatbotweb.entity.ChatSession;
 import cn.insectmk.chatbotweb.entity.ModelVersion;
+import cn.insectmk.chatbotweb.entity.User;
+import cn.insectmk.chatbotweb.exception.BizException;
 import cn.insectmk.chatbotweb.mapper.ChatMessageMapper;
 import cn.insectmk.chatbotweb.mapper.ChatSessionMapper;
 import cn.insectmk.chatbotweb.mapper.ModelVersionMapper;
+import cn.insectmk.chatbotweb.mapper.UserMapper;
 import cn.insectmk.chatbotweb.service.ChatMessageService;
 import cn.insectmk.chatbotweb.service.ChatSessionService;
 import cn.insectmk.chatbotweb.service.OpenaiApiService;
@@ -14,6 +17,7 @@ import com.plexpt.chatgpt.ChatGPTStream;
 import com.plexpt.chatgpt.entity.chat.ChatCompletion;
 import com.plexpt.chatgpt.entity.chat.Message;
 import com.plexpt.chatgpt.listener.SseStreamListener;
+import com.unfbx.chatgpt.utils.TikTokensUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,19 +41,29 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper, ChatM
     private ModelVersionMapper modelVersionMapper;
     @Autowired
     private ChatSessionMapper chatSessionMapper;
+    @Autowired
+    private UserMapper userMapper;
 
     @Override
     public void sendStream(ChatMessage chatMessage, SseEmitter sseEmitter) {
-        // 查询模型信息
+        // 查询会话
         ChatSession chatSession = chatSessionMapper.selectById(chatMessage.getSessionId());
+        // 查询用户信息
+        User user = userMapper.selectById(chatSession.getUserId());
+        // 如果没有Tokens存量了就结束
+        if (user.getTokens() <= 0L) {
+            throw new BizException("Tokens存量不足");
+        }
+        // 查询模型信息
         ModelVersion modelVersion = modelVersionMapper.selectById(chatSession.getModelVersionId());
+
         // 进行对话
         // 设置监听器
         SseStreamListener listener = new SseStreamListener(sseEmitter);
 
         Message message = Message.of(chatMessage.getMessageContent());
         ChatCompletion chatCompletion = ChatCompletion.builder()
-                .model("llama2")
+                .model(ChatCompletion.Model.GPT_3_5_TURBO.getName())
                 .messages(Arrays.asList(message))
                 .stream(true)
                 .temperature(1)
@@ -85,6 +99,15 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper, ChatM
                     null);
             baseMapper.insert(botChatMessage);
             chatSessionService.updateById(chatSession);
+
+            // 计算token值
+            int completionTokens = TikTokensUtil.tokens(chatCompletion.getModel(), msg);
+            // 减去用户的Tokens存量
+            user.setTokens(user.getTokens() - completionTokens);
+            userMapper.updateById(user);
+            // 增加模型的生成Tokens量
+            modelVersion.setGenerateTokens(modelVersion.getGenerateTokens() + completionTokens);
+            modelVersionMapper.updateById(modelVersion);
         });
     }
 

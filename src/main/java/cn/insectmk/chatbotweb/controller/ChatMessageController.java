@@ -31,6 +31,7 @@ public class ChatMessageController {
      * @param chatMessage
      * @return
      */
+    @RequestLimit(maxCount = 1000,second = 1)
     @PostMapping("/stream")
     public SseEmitter sendStream(@RequestBody ChatMessage chatMessage) {
         SseEmitterUTF8 sseEmitterUTF8 = new SseEmitterUTF8(-1L);
