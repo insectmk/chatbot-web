@@ -91,4 +91,11 @@ public interface UserService extends IService<User> {
      * @return
      */
     IPage<User> findUsersPage(QueryPageBean userQueryPageBean);
+
+    /**
+     * 判断是否为root用户
+     * @param token
+     * @return
+     */
+    boolean isTokenRoot(String token);
 }

@@ -17,16 +17,13 @@ import javax.servlet.http.HttpServletResponse;
 public class CrossInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        log.info("SessionId:" + request.getSession().getId());
+        //表示接受任意域名的请求,也可以指定域名
+        response.setHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
 
-        // 表示接受任意域名的请求,也可以指定域名
-        response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
-        // 该字段可选，是个布尔值，表示是否可以携带cookie
+        //该字段可选，是个布尔值，表示是否可以携带cookie
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Allow-Methods", "GET, HEAD, POST, PUT,PATCH, DELETE, OPTIONS");
-        // 允许前端传递的请求头参数（按需手动添加）
-        response.setHeader("Access-Control-Allow-Headers", "Content-Type, X-Requested-With, Accept, Authorization, token, Responsetype");
-        response.setHeader("Access-Control-Max-Age", "3600");
+        response.setHeader("Access-Control-Allow-Headers", "*");
 
         if (HttpMethod.OPTIONS.toString().equals(request.getMethod())) {
             return true;

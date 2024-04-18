@@ -1,6 +1,7 @@
 package cn.insectmk.chatbotweb.controller;
 
 import cn.insectmk.chatbotweb.common.Result;
+import cn.insectmk.chatbotweb.common.annotation.RequestLimit;
 import cn.insectmk.chatbotweb.configure.SseEmitterUTF8;
 import cn.insectmk.chatbotweb.entity.ChatMessage;
 import cn.insectmk.chatbotweb.exception.BizException;
@@ -21,8 +22,9 @@ import java.util.Objects;
  */
 @RestController
 @RequestMapping("/api")
+@RequestLimit(maxCount = 1,second = 5)
 public class ApiController {
-    @Value(("${server.address}"))
+    @Value(("${system.address}"))
     private String ip;
     @Value("${server.port}")
     private String port;
@@ -40,16 +42,35 @@ public class ApiController {
      */
     @GetMapping("/tips")
     public Result getApiTips() {
-        String sendUrl = "http://" + ip + ":" + port + "/api/send?key={你的API密钥}";
-        String historyUrl = "http://" + ip + ":" + port + "/api?key={你的API密钥}";
-        StringBuilder sb = new StringBuilder();
-        sb.append("发送消息（GET）：");
-        sb.append(sendUrl);
-        sb.append("\n");
-        sb.append("历史消息（POST）：");
-        sb.append(historyUrl);
+        StringBuilder markdown = new StringBuilder();
 
-        return Result.buildSuccess(sb);
+        markdown.append("## 发送消息\n\n");
+        markdown.append("### 普通对话\n\n");
+        markdown.append("- 接口地址：`" + "http://").append(ip).append(":").append(port).append("/api/send?key={你的API密钥}`\n");
+        markdown.append("- 请求类型：`POST`\n");
+        markdown.append("- 请求数据格式：\n");
+        markdown.append("  ```json\n");
+        markdown.append("  {\n");
+        markdown.append("      \"messageContent\": \"你好\"\n");
+        markdown.append("  }\n");
+        markdown.append("  ```\n\n");
+        markdown.append("### 流式对话\n\n");
+        markdown.append("- 接口地址：`" + "http://").append(ip).append(":").append(port).append("/api/send/stream?key={你的API密钥}`\n");
+        markdown.append("- 请求类型：`POST`\n");
+        markdown.append("- 请求数据格式：\n");
+        markdown.append("  ```json\n");
+        markdown.append("  {\n");
+        markdown.append("      \"messageContent\": \"你好\"\n");
+        markdown.append("  }\n");
+        markdown.append("  ```\n\n");
+        markdown.append("## 对话历史\n\n");
+        markdown.append("- 接口地址：`" + "http://" + ip + ":" + port + "/api?key={你的API密钥}`\n");
+        markdown.append("- 请求类型：`GET`\n\n");
+        markdown.append("## 注意\n\n");
+        markdown.append("1. 每位用户只能同时拥有一个API密钥\n");
+        markdown.append("2. 重新生成API密钥会导致旧密钥的失效，并且会清除所有对话内容\n");
+
+        return Result.buildSuccess(markdown);
     }
 
     /**

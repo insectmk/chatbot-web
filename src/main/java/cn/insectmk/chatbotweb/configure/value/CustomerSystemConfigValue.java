@@ -1,4 +1,4 @@
-package cn.insectmk.chatbotweb.configure;
+package cn.insectmk.chatbotweb.configure.value;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -15,5 +15,6 @@ import java.util.List;
 @Configuration
 @ConfigurationProperties("system")
 public class CustomerSystemConfigValue {
+    private String address;
     private List<String> rootEmail;
 }

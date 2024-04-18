@@ -20,7 +20,8 @@ public class SystemLog {
     public static final String LEVEL_ERROR = "错误";
 
     protected String id;
-    private String opEmail;
+    protected String ipAddress;
+    protected String opEmail;
     protected String level;
     protected String message;
     protected Date createTime;

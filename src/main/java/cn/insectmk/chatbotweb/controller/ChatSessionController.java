@@ -1,6 +1,7 @@
 package cn.insectmk.chatbotweb.controller;
 
 import cn.insectmk.chatbotweb.common.Result;
+import cn.insectmk.chatbotweb.common.annotation.RequestLimit;
 import cn.insectmk.chatbotweb.controller.dto.ChatSessionDto;
 import cn.insectmk.chatbotweb.entity.ChatSession;
 import cn.insectmk.chatbotweb.exception.BizException;
@@ -19,6 +20,7 @@ import java.util.Objects;
  */
 @RestController
 @RequestMapping("/chatSession")
+@RequestLimit(maxCount = 20,second = 1)
 public class ChatSessionController {
     @Autowired
     private ChatSessionService chatSessionService;
@@ -62,11 +64,11 @@ public class ChatSessionController {
      */
     @GetMapping
     public Result findAllMessage(HttpServletRequest request, String sessionId) {
-        if (Objects.isNull(chatSessionService.getOne(new LambdaQueryWrapper<ChatSession>()
+        /*if (Objects.isNull(chatSessionService.getOne(new LambdaQueryWrapper<ChatSession>()
                 .eq(ChatSession::getId, sessionId)
                 .eq(ChatSession::getUserId, request.getAttribute("userId").toString())))) {
             throw new BizException("您无权访问此会话");
-        }
+        }*/
         return Result.buildSuccess(chatSessionService.getHistoryMsg(sessionId));
     }
 

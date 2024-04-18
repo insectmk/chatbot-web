@@ -49,17 +49,19 @@ public class OpenaiApiServiceImpl implements OpenaiApiService {
         ModelVersion modelVersion = modelVersionMapper.selectById(chatSession.getModelVersionId());
         // 装载历史对话
         List<Message> messages = chatSessionMapper.selectHistoryMsg(chatMessage.getSessionId());
+        // 中文引导（紧急处理方案）
+        //messages.add(Message.ofSystem("你是一个智能聊天机器人，你需要回答用户的所有问题"));
         // 装载新对话
         messages.add(Message.of(chatMessage.getMessageContent()));
 
         ChatCompletion chatCompletion = ChatCompletion.builder()
-                .model("llama2")
+                .model(ChatCompletion.Model.GPT_3_5_TURBO.getName())
                 .messages(messages)
                 .stream(false)
-                .temperature(1)
-                .topP(1)
-                .presencePenalty(0)
-                .frequencyPenalty(0)
+                .temperature(modelVersion.getTemperature())
+                .topP(modelVersion.getTopP())
+                .presencePenalty(modelVersion.getPresencePenalty())
+                .frequencyPenalty(modelVersion.getFrequencyPenalty())
                 .maxTokens(modelVersion.getMaxToken())
                 .build();
 
@@ -73,7 +75,7 @@ public class OpenaiApiServiceImpl implements OpenaiApiService {
         ChatCompletionResponse chatCompletionResponse = chatGPT.chatCompletion(chatCompletion);
 
         // 减去用户的Tokens存量
-        long completionTokens = modelVersion.getGenerateTokens() + chatCompletionResponse.getUsage().getCompletionTokens();
+        long completionTokens = chatCompletionResponse.getUsage().getCompletionTokens();
         user.setTokens(user.getTokens() - completionTokens);
         userMapper.updateById(user);
         // 增加模型的生成Tokens量

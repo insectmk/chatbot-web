@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>cn.insectmk</groupId>
     <artifactId>chatbot-web</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.2.0-SNAPSHOT</version>
     <name>chatbot-web</name>
     <description>chatbot-web</description>
     <properties>
@@ -15,6 +15,23 @@
     </properties>
 
     <dependencies>
+        <dependency><!-- 用于访问OpenAI格式的API（使用其附属功能） -->
+            <groupId>com.unfbx</groupId>
+            <artifactId>chatgpt-java</artifactId>
+            <version>1.1.5</version>
+        </dependency>
+
+        <dependency><!-- 阿里云OSS依赖 -->
+            <groupId>com.aliyun.oss</groupId>
+            <artifactId>aliyun-sdk-oss</artifactId>
+            <version>3.15.1</version>
+        </dependency>
+
+        <dependency><!--spring-boot-redis所需依赖-->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
         <dependency><!-- 引入aop支持 -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>

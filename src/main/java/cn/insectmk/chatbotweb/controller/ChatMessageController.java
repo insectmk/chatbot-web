@@ -1,6 +1,7 @@
 package cn.insectmk.chatbotweb.controller;
 
 import cn.insectmk.chatbotweb.common.Result;
+import cn.insectmk.chatbotweb.common.annotation.RequestLimit;
 import cn.insectmk.chatbotweb.configure.SseEmitterUTF8;
 import cn.insectmk.chatbotweb.controller.dto.ChatMessageDto;
 import cn.insectmk.chatbotweb.entity.ChatMessage;
@@ -20,6 +21,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
  */
 @RestController
 @RequestMapping("/chatMessage")
+@RequestLimit(maxCount = 1,second = 5)
 public class ChatMessageController {
     @Autowired
     private ChatMessageService chatMessageService;
@@ -29,6 +31,7 @@ public class ChatMessageController {
      * @param chatMessage
      * @return
      */
+    @RequestLimit(maxCount = 1000,second = 1)
     @PostMapping("/stream")
     public SseEmitter sendStream(@RequestBody ChatMessage chatMessage) {
         SseEmitterUTF8 sseEmitterUTF8 = new SseEmitterUTF8(-1L);

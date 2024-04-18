@@ -2,14 +2,15 @@ package cn.insectmk.chatbotweb.controller;
 
 import cn.insectmk.chatbotweb.common.Result;
 import cn.insectmk.chatbotweb.common.annotation.BizLog;
+import cn.insectmk.chatbotweb.common.annotation.RequestLimit;
 import cn.insectmk.chatbotweb.controller.dto.UserDto;
 import cn.insectmk.chatbotweb.entity.SystemLog;
 import cn.insectmk.chatbotweb.entity.User;
 import cn.insectmk.chatbotweb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.Objects;
 
@@ -21,9 +22,12 @@ import java.util.Objects;
  */
 @RestController
 @RequestMapping("/user")
+@RequestLimit(maxCount = 1,second = 1)
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
 
     /**
      * 修改用户密码
@@ -32,6 +36,7 @@ public class UserController {
      * @return
      */
     @PutMapping("/password")
+    @BizLog(level = SystemLog.LEVEL_INFO, message = "修改密码")
     public Result password(@RequestBody User user, HttpServletRequest request) {
         return userService.updatePassword(request.getAttribute("userId").toString(), user.getPassword()) ?
                 Result.buildSuccess("密码更新成功！",null) :
@@ -44,6 +49,7 @@ public class UserController {
      * @return
      */
     @DeleteMapping
+    @BizLog(level = SystemLog.LEVEL_INFO, message = "注销用户")
     public Result delete(HttpServletRequest request) {
         return userService.deleteOne(request.getAttribute("userId").toString()) ?
                 Result.buildSuccess("删除成功！", null) :
@@ -56,7 +62,6 @@ public class UserController {
      * @return
      */
     @GetMapping
-    @BizLog(level = SystemLog.LEVEL_INFO, message = "获取用户信息")
     public Result info(HttpServletRequest request) {
         return Result.buildSuccess(userService.getUserInfo(request.getAttribute("userId").toString()));
     }
@@ -67,6 +72,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/register")
+    @BizLog(level = SystemLog.LEVEL_INFO, message = "用户注册")
     public Result register(String key) {
         User user = userService.register(key);
         return Objects.isNull(user) ? Result.buildFail("注册失败") :
@@ -79,11 +85,14 @@ public class UserController {
      * @return
      */
     @PostMapping("/register")
-    public Result register(@Valid @RequestBody UserDto userDto, HttpSession session) {
+    public Result register(@Valid @RequestBody UserDto userDto, HttpServletRequest httpServletRequest) {
         // 如果验证码对不上就拒绝注册
-        if (!session.getAttribute("captcha").equals(userDto.getCaptcha())) {
+        String ip = redisTemplate.opsForValue().get(userDto.getCaptcha().toUpperCase());
+        if (ip == null || !httpServletRequest.getRemoteAddr().equals(ip)) {
             return Result.buildFail("验证码不正确");
         }
+        // 删除验证码
+        redisTemplate.delete(userDto.getCaptcha());
         // 发送注册链接
         userService.sendRegisterUrl(userDto);
         return Result.buildSuccess("请在[5分钟内]点击邮箱的注册链接完成注册", null);

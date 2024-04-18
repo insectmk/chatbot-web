@@ -2,8 +2,10 @@ package cn.insectmk.chatbotweb.configure;
 
 import cn.insectmk.chatbotweb.interceptor.CrossInterceptor;
 import cn.insectmk.chatbotweb.interceptor.LoginInterceptor;
+import cn.insectmk.chatbotweb.interceptor.RequestLimitIntercept;
 import org.apache.tomcat.util.http.Rfc6265CookieProcessor;
 import org.apache.tomcat.util.http.SameSiteCookies;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.embedded.tomcat.TomcatContextCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +20,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 public class InterceptorConfig implements WebMvcConfigurer {
+    @Autowired
+    private RequestLimitIntercept requestLimitIntercept;
+
     /**
      * 设置Cookie的SameSite
      */
@@ -54,6 +59,8 @@ public class InterceptorConfig implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        // 添加接口防刷拦截
+        registry.addInterceptor(requestLimitIntercept);
 
         // 跨域拦截规则
         registry.addInterceptor(crossInterceptor())
