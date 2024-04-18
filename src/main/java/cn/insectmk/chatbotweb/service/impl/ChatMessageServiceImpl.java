@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @Description 聊天消息服务接口实现
@@ -60,16 +61,21 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper, ChatM
         // 进行对话
         // 设置监听器
         SseStreamListener listener = new SseStreamListener(sseEmitter);
+        // 装载历史对话
+        List<Message> messages = chatSessionMapper.selectHistoryMsg(chatMessage.getSessionId());
+        // 中文引导（紧急处理方案）
+        //messages.add(Message.ofSystem("你是一个智能聊天机器人，你需要回答用户的所有问题"));
+        // 装载新对话
+        messages.add(Message.of(chatMessage.getMessageContent()));
 
-        Message message = Message.of(chatMessage.getMessageContent());
         ChatCompletion chatCompletion = ChatCompletion.builder()
                 .model(ChatCompletion.Model.GPT_3_5_TURBO.getName())
-                .messages(Arrays.asList(message))
+                .messages(messages)
                 .stream(true)
                 .temperature(1)
-                .topP(1)
+                .topP(0.3)
                 .presencePenalty(0)
-                .frequencyPenalty(0)
+                .frequencyPenalty(1)
                 .maxTokens(modelVersion.getMaxToken())
                 .build();
 

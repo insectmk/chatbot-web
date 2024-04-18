@@ -49,6 +49,8 @@ public class OpenaiApiServiceImpl implements OpenaiApiService {
         ModelVersion modelVersion = modelVersionMapper.selectById(chatSession.getModelVersionId());
         // 装载历史对话
         List<Message> messages = chatSessionMapper.selectHistoryMsg(chatMessage.getSessionId());
+        // 中文引导（紧急处理方案）
+        //messages.add(Message.ofSystem("你是一个智能聊天机器人，你需要回答用户的所有问题"));
         // 装载新对话
         messages.add(Message.of(chatMessage.getMessageContent()));
 
@@ -57,9 +59,9 @@ public class OpenaiApiServiceImpl implements OpenaiApiService {
                 .messages(messages)
                 .stream(false)
                 .temperature(1)
-                .topP(1)
+                .topP(0.3)
                 .presencePenalty(0)
-                .frequencyPenalty(0)
+                .frequencyPenalty(1)
                 .maxTokens(modelVersion.getMaxToken())
                 .build();
 
