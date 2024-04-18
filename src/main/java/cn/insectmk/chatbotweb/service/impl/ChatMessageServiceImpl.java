@@ -72,10 +72,10 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper, ChatM
                 .model(ChatCompletion.Model.GPT_3_5_TURBO.getName())
                 .messages(messages)
                 .stream(true)
-                .temperature(1)
-                .topP(0.3)
-                .presencePenalty(0)
-                .frequencyPenalty(1)
+                .temperature(modelVersion.getTemperature())
+                .topP(modelVersion.getTopP())
+                .presencePenalty(modelVersion.getPresencePenalty())
+                .frequencyPenalty(modelVersion.getFrequencyPenalty())
                 .maxTokens(modelVersion.getMaxToken())
                 .build();
 

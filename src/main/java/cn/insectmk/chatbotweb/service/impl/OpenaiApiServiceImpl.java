@@ -58,10 +58,10 @@ public class OpenaiApiServiceImpl implements OpenaiApiService {
                 .model(ChatCompletion.Model.GPT_3_5_TURBO.getName())
                 .messages(messages)
                 .stream(false)
-                .temperature(1)
-                .topP(0.3)
-                .presencePenalty(0)
-                .frequencyPenalty(1)
+                .temperature(modelVersion.getTemperature())
+                .topP(modelVersion.getTopP())
+                .presencePenalty(modelVersion.getPresencePenalty())
+                .frequencyPenalty(modelVersion.getFrequencyPenalty())
                 .maxTokens(modelVersion.getMaxToken())
                 .build();
 

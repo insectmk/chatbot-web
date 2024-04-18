@@ -24,6 +24,10 @@ public class ModelVersion {
     @Pattern(regexp = RegularUtil.API_URL, message = "接口格式不正确")
     protected String apiHost;
     protected String apiKey;
+    protected Double temperature;
+    protected Double topP;
+    protected Double presencePenalty;
+    protected Double frequencyPenalty;
     protected Integer maxToken;
     protected Long generateTokens;
     protected Date deploymentTime;
