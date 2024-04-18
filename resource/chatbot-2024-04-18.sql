@@ -11,7 +11,7 @@
  Target Server Version : 50740 (5.7.40-log)
  File Encoding         : 65001
 
- Date: 18/04/2024 15:34:33
+ Date: 18/04/2024 17:01:16
 */
 
 SET NAMES utf8mb4;
@@ -39,15 +39,23 @@ CREATE TABLE `t_chat_message`  (
 INSERT INTO `t_chat_message` VALUES ('1eea6631cfc414d224dc5807aac9c7c9', '39203c8242e538ac4fe8bbfcc9ab7236', 'user', NULL, '请使用Java帮我写一个冒泡排序算法', '2024-04-18 15:32:05');
 INSERT INTO `t_chat_message` VALUES ('3ca70c990bb0e222f9b190acbcd3151f', '39203c8242e538ac4fe8bbfcc9ab7236', 'assistant', '1eea6631cfc414d224dc5807aac9c7c9', ' 好的，以下是冒泡排序算法的Java代码：\n```java\npublic class BubbleSort {\n    public static void main(String[] args) {\n        int[] arr = {10, 5, 8, 3, 7};\n        bubbleSort(arr);\n        System.out.println(\"Sorted array: \");\n        for (int i = 0; i < arr.length; i++) {\n            System.out.print(arr[i] + \" \");\n        }\n    }\n    public static void bubbleSort(int[] arr) {\n        for (int i = 0; i < arr.length - 1; i++) {\n            for (int j = 0; j < arr.length - 1 - i; j++) {\n                if (arr[j] > arr[j+1]) {\n                    // Swap the values at index j and j+1\n                    int temp = arr[j];\n                    arr[j] = arr[j+1];\n                    arr[j+1] = temp;\n                }\n            }\n        }\n    }\n}\n```\n这个代码中，我们首先定义了一个名为`bubbleSort`的方法，它接受一个整数数组作为参数。在这个方法中，我们使用两层循环来遍历整个数组。外层循环控制比较和交换的次数，内层循环则控制每次比较和交换操作。\n在内层循环中，我们使用了两种不同的比较方式：\n* 第一种方式：通过使用嵌套的for循环来遍历整个数组。\n* 第二种方式：通过使用Java提供的内置函数`compareTo()`来进行排序。\n最后一步是将排序后的结果打印出来。在这里，我们将输出结果为 `[3, 5, 7, 8, 10]`。\n希望这可以帮助你理解如何实现冒泡排序算法！\n\n', '2024-04-18 15:32:05');
 INSERT INTO `t_chat_message` VALUES ('3f86ddee1edb210c1c02901c0418c03b', '39203c8242e538ac4fe8bbfcc9ab7236', 'user', NULL, '你好', '2024-04-18 15:31:15');
+INSERT INTO `t_chat_message` VALUES ('5ccb923895670122c12e2596ce031aee', 'c5055cac82a5c90174f8b34440402051', 'assistant', '684c7442c7b4c95f00918b056159806a', ' 我是一个大型语言模型，由OpenAI训练而成。我被设计用于回答各种问题和提供帮助。我的目标是尽可能地提供有用的信息和帮助。\n\n', '2024-04-18 15:46:03');
+INSERT INTO `t_chat_message` VALUES ('644c6a7fb9912e8e6f132b3139bb265d', 'c5055cac82a5c90174f8b34440402051', 'user', NULL, '请帮我写一个快速排序算法', '2024-04-18 15:46:28');
+INSERT INTO `t_chat_message` VALUES ('684c7442c7b4c95f00918b056159806a', 'c5055cac82a5c90174f8b34440402051', 'user', NULL, '你是谁？', '2024-04-18 15:46:03');
 INSERT INTO `t_chat_message` VALUES ('756167a90ec4a2c6b0d52157fa3cb1ed', 'b7ee87c89df8ac171b0447f5a11d569a', 'assistant', 'd4910cbf15d00e450f7abb355fac1dc7', ' 我是由OpenAI训练的大型语言模型，可以进行自然语言处理和生成任务。我可以回答各种问题，回答用户的问题，并与用户进行对话。', '2024-04-18 14:34:10');
 INSERT INTO `t_chat_message` VALUES ('94e413406654b4ea4e7a3f64f5b2a85c', 'b7ee87c89df8ac171b0447f5a11d569a', 'assistant', '953820a43a344f473f98500dc75b47a6', ' Sure, here\'s a fully functional Java program to implement冒泡排序 in JDK 8 and Java SE 7:\n```java\nimport java.util.Arrays;\nimport java.util.CompareTo;\npublic class BubbleSort {\n    \n    public static void main(String[] args) {\n        char[] arr = {\'a\', \'b\', \'c\', \'d\', \'e\', \'f\', \'g\', \'h\', \'i\', \'j\', \'k\', \'l\', \'m\', \'n\'};\n        int minLen = 1; // 所需要的差的最小次数\n        int count = 0; // 累加当前最小比较次数\n        for(int i=0; i<arr.length; i++){\n            for(int j=0; j<arr.length-i-1; j++){\n                if(arr[j] > arr[j+1]){\n                    char temp = arr[j];\n                    arr[j] = arr[j+1];\n                    arr[j+1] = temp;\n                    count++;\n                }\n            }\n        }\n        // 找到最大的差值为反向排序，初始化为全空最小值\n        for(int i=1; i<arr.length; i++){\n            for(int j=0; j<arr.length; j++){\n                if(arr[i-1] > arr[j]){\n                    char temp = arr[j];\n                    arr[j] = arr[j-1];\n                    arr[j-1] = temp;\n                    count++;\n                }\n            }\n        }\n        System.out.println(\"Printed and sorted array: \");\n        for(int i=0; i<arr.length; i++){\n            System.out.print(arr[i] + \" \");\n        }\n    }\n}\n```\n运行后，程序会输出：\n```\nPrinted and sorted array: [8 1 1 0 4]\n```\n这个程序原理就是通过冒泡排序的方法，通过段落的反向遍历，一个个比较相邻的两个元素，将小于级别的元素放入一个新的数组中，跨过大小与元素当前位置左右的元素来完成比较和交换。\n程序中使用了一个for循环来实现相邻的元素比较和交换操作，如果新元素在数组中的位置需要交换的话，就重新加入一个数字到该位置上。\n程序还有两个额外的判断值，一个判断是否为最小值，一个判断为差值，这两个值分别用于判断相邻元素是否需要通过异或或者比较等操作。\n程序同时使用了多重循环来实现许多操作，其中最终是遍历整个数组然后进行反向排序，并全额暂停（false）的循环方式进行。\n\n', '2024-04-18 14:33:03');
 INSERT INTO `t_chat_message` VALUES ('953820a43a344f473f98500dc75b47a6', 'b7ee87c89df8ac171b0447f5a11d569a', 'user', NULL, '请使用Java帮我写一个冒泡排序算法', '2024-04-18 14:33:03');
 INSERT INTO `t_chat_message` VALUES ('95f130bf50c55ab48650c9aeec49e462', '39203c8242e538ac4fe8bbfcc9ab7236', 'assistant', 'b7df96fd93a36b7471f7901eb18598e3', ' 我是一个人工智能语言模型，被训练来回答各种问题和提供帮助。我的目标是尽可能地为用户提供有用的信息和答案。\n\n', '2024-04-18 15:31:23');
 INSERT INTO `t_chat_message` VALUES ('aab4d2f87de15f17798f3a053cb8e67e', 'a73597f23657e010729844ffc7d4134e', 'assistant', 'eaa3ef5ac456ac521ddcc840e941dbb6', ' 我是GPT-3.5，是一名基于GPT-3.5接口的AI机器人。我的主要职责是帮助用户解答各种问题，并且为用户提供更高效、便捷的服务体验。', '2024-03-29 15:57:56');
+INSERT INTO `t_chat_message` VALUES ('b6157d2d0eb575a620ef6cf31ab572d0', '16e8d2285b31e30918f7f55f50b525fc', 'user', NULL, '你好', '2024-04-18 16:12:13');
 INSERT INTO `t_chat_message` VALUES ('b7df96fd93a36b7471f7901eb18598e3', '39203c8242e538ac4fe8bbfcc9ab7236', 'user', NULL, '你是谁？', '2024-04-18 15:31:23');
+INSERT INTO `t_chat_message` VALUES ('b9c03bb7c7d4d92b2af04ac813efe875', '16e8d2285b31e30918f7f55f50b525fc', 'assistant', 'b6157d2d0eb575a620ef6cf31ab572d0', ' 你好！有什么我可以帮助你的吗？\n\n', '2024-04-18 16:12:13');
+INSERT INTO `t_chat_message` VALUES ('c26ff962ad08e2ead2f7053872860529', 'c5055cac82a5c90174f8b34440402051', 'assistant', 'ead93a545b8ebaa2fba989b2c21c565a', ' 你好！有什么我可以帮助你的吗？\n\n', '2024-04-18 15:45:52');
 INSERT INTO `t_chat_message` VALUES ('c4cf6ea5b164ff0c83ea6d25359ef9d2', '39203c8242e538ac4fe8bbfcc9ab7236', 'assistant', '3f86ddee1edb210c1c02901c0418c03b', ' 你好！有什么我可以帮助你的吗？\n\n', '2024-04-18 15:31:15');
 INSERT INTO `t_chat_message` VALUES ('d4910cbf15d00e450f7abb355fac1dc7', 'b7ee87c89df8ac171b0447f5a11d569a', 'user', NULL, '你是谁？', '2024-04-18 14:34:10');
 INSERT INTO `t_chat_message` VALUES ('eaa3ef5ac456ac521ddcc840e941dbb6', 'a73597f23657e010729844ffc7d4134e', 'user', NULL, '你是谁？', '2024-03-29 15:57:56');
+INSERT INTO `t_chat_message` VALUES ('ead93a545b8ebaa2fba989b2c21c565a', 'c5055cac82a5c90174f8b34440402051', 'user', NULL, '你好啊', '2024-04-18 15:45:52');
+INSERT INTO `t_chat_message` VALUES ('fca7e755a999871bb3e5909fdff88eff', 'c5055cac82a5c90174f8b34440402051', 'assistant', '644c6a7fb9912e8e6f132b3139bb265d', ' 好的，以下是快速排序算法的Python代码：\n```python\ndef quick_sort(arr):\n    if len(arr) <= 1:\n        return arr\n    pivot = arr[len(arr) // 2]\n    left = [x for x in arr if x < pivot]\n    middle = [x for x in arr if x == pivot]\n    right = [x for x in arr if x > pivot]\n    return quick_sort(left) + middle + quick_sort(right)\n```\n这个函数接受一个整数列表作为参数，并返回一个排好序的列表。该函数使用两个指针（左右指针）来比较相邻元素的大小，并将较小的元素放在左边，较大的元素放在右边。然后它将这两个子列表分别递归地排序。\n如果你需要更多帮助或有其他问题，请告诉我。\n\n', '2024-04-18 15:46:28');
 
 -- ----------------------------
 -- Table structure for t_chat_session
@@ -70,11 +78,13 @@ CREATE TABLE `t_chat_session`  (
 -- ----------------------------
 -- Records of t_chat_session
 -- ----------------------------
+INSERT INTO `t_chat_session` VALUES ('16e8d2285b31e30918f7f55f50b525fc', '56439f0e310cd4dae5d9ed51f869d51d', '1', '测试', '2024-04-18 16:11:53', '2024-04-18 16:11:53');
 INSERT INTO `t_chat_session` VALUES ('39203c8242e538ac4fe8bbfcc9ab7236', '56439f0e310cd4dae5d9ed51f869d51d', '1', '测试', '2024-04-18 15:31:09', '2024-04-18 15:31:09');
 INSERT INTO `t_chat_session` VALUES ('3c909158b2837d4bb6bc47058e681de3', '092b43dd1b8633b76bbefaf04f0b5800', '1', '[测试用户]的API', '2024-04-10 16:30:08', '2024-04-10 16:30:08');
 INSERT INTO `t_chat_session` VALUES ('a73597f23657e010729844ffc7d4134e', '2cbcb04456e5b0419e4a189cd27d8fc9', '1', '[马某人]的API', '2024-03-29 15:57:23', '2024-03-29 15:57:23');
 INSERT INTO `t_chat_session` VALUES ('b2a2a71016a5f8fb4c2dc411d145c20c', 'a036b08c189facd488d115954ca19f08', '1', '[马昆]的API', '2024-04-09 12:41:40', '2024-04-09 12:41:40');
 INSERT INTO `t_chat_session` VALUES ('b7ee87c89df8ac171b0447f5a11d569a', '56439f0e310cd4dae5d9ed51f869d51d', '1', '测试', '2024-04-18 14:32:19', '2024-04-18 14:32:19');
+INSERT INTO `t_chat_session` VALUES ('c5055cac82a5c90174f8b34440402051', '56439f0e310cd4dae5d9ed51f869d51d', '1', '测试', '2024-04-18 15:45:45', '2024-04-18 15:45:45');
 
 -- ----------------------------
 -- Table structure for t_model_version
@@ -86,10 +96,10 @@ CREATE TABLE `t_model_version`  (
   `version_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '版本号',
   `api_host` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT 'API地址',
   `api_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT 'API密钥',
-  `temperature` double NULL DEFAULT NULL,
-  `top_p` double NULL DEFAULT NULL,
-  `presence_penalty` double NULL DEFAULT NULL,
-  `frequency_penalty` double NULL DEFAULT NULL,
+  `temperature` double NULL DEFAULT 1,
+  `top_p` double NULL DEFAULT 0.3,
+  `presence_penalty` double NULL DEFAULT 0,
+  `frequency_penalty` double NULL DEFAULT 1,
   `max_token` int(11) UNSIGNED ZEROFILL NULL DEFAULT 00000001024 COMMENT '最长上下文Token',
   `generate_tokens` bigint(20) NULL DEFAULT 0 COMMENT '已生成的Token数量',
   `deployment_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '发布时间',
@@ -100,16 +110,17 @@ CREATE TABLE `t_model_version`  (
 -- ----------------------------
 -- Records of t_model_version
 -- ----------------------------
-INSERT INTO `t_model_version` VALUES ('1', 'RWKV', '0.0.1', 'http://127.0.0.1:8000/', '', NULL, NULL, NULL, NULL, 00000001024, 26809, '2024-02-29 09:44:41', '默认模型');
-INSERT INTO `t_model_version` VALUES ('103550eb06ea493723e666207d37d722', 'GPU-4G-7B-CN', '0.0.1', 'http://localhost:8080/', NULL, NULL, NULL, NULL, NULL, 00000001024, 2541, '2024-04-09 16:16:23', 'GPU-4G-7B-CN');
-INSERT INTO `t_model_version` VALUES ('564f41e0d16a309431acd17457bae441', 'GPU-4G-3B-World', '0.0.1', 'http://127.0.0.1:8000/', NULL, NULL, NULL, NULL, NULL, 00000001024, 4513, '2024-04-09 16:15:10', 'GPU-4G-3B-World');
-INSERT INTO `t_model_version` VALUES ('6c8e08ea4324ef0bbcd13bcf651682ce', 'test', 'sadfsadf', 'http://127.0.0.1:8000/', '', NULL, NULL, NULL, NULL, 00000001024, 0, '2024-04-10 11:34:59', 'fdsafsdf');
-INSERT INTO `t_model_version` VALUES ('6f697caf794e5624f660204482bf31e0', 'GPU-2G-3B-World', '0.0.1', 'http://127.0.0.1:8000/', NULL, NULL, NULL, NULL, NULL, 00000001024, 854, '2024-04-09 16:13:41', '2G显存-30亿参数-全世界语言');
-INSERT INTO `t_model_version` VALUES ('8fd398b4ca8418793a3c882e5e4b616e', 'GPU-2G-1B5-World', '0.0.1', 'http://127.0.0.1:8000/', NULL, NULL, NULL, NULL, NULL, 00000001024, 1423, '2024-04-09 16:12:39', '2G显存-15亿参数');
-INSERT INTO `t_model_version` VALUES ('a20ebce361b9fe1e4c3eb34229e2338c', 'GPU-4G-1B5-World', '0.0.1', 'http://127.0.0.1:8000/', NULL, NULL, NULL, NULL, NULL, 00000001024, 154, '2024-04-09 16:14:31', '4G显存-15亿参数-世界语言');
-INSERT INTO `t_model_version` VALUES ('b8e780bd16cc223d01fd78981022d430', 'GPU-4G-3B-CN', '0.0.1', 'http://localhost:8080/', NULL, NULL, NULL, NULL, NULL, 00000001024, 2587, '2024-04-09 16:15:39', 'GPU-4G-3B-CN');
-INSERT INTO `t_model_version` VALUES ('bb0abb2b648faa0956c28f5cf64ebd8f', 'GPU-4G-7B-World', '0.0.1', 'http://localhost:8080/', NULL, NULL, NULL, NULL, NULL, 00000001024, 7843, '2024-04-09 16:15:58', 'GPU-4G-7B-World');
-INSERT INTO `t_model_version` VALUES ('f4fd5c356c23163d5653a8e5cfeb0a71', 'InsectMk\'s LoRA', '0.0.1', 'http://127.0.0.1:8000/', NULL, NULL, NULL, NULL, NULL, 00000001024, 4892, '2024-04-09 13:59:32', 'InsectMk的微调模型');
+INSERT INTO `t_model_version` VALUES ('1', 'RWKV', '0.0.1', 'http://127.0.0.1:8000/', '', 1, 0.3, 0, 1, 00000001024, 27127, '2024-02-29 09:44:41', '默认模型');
+INSERT INTO `t_model_version` VALUES ('103550eb06ea493723e666207d37d722', 'GPU-4G-7B-CN', '0.0.1', 'http://127.0.0.1:8080/', NULL, 1, 0.4, 0, 1, 00000001024, 2541, '2024-04-09 16:16:23', 'GPU-4G-7B-CN');
+INSERT INTO `t_model_version` VALUES ('564f41e0d16a309431acd17457bae441', 'GPU-4G-3B-World', '0.0.1', 'http://127.0.0.1:8000/', NULL, 1, 0.3, 0, 1, 00000001024, 4513, '2024-04-09 16:15:10', 'GPU-4G-3B-World');
+INSERT INTO `t_model_version` VALUES ('6c8e08ea4324ef0bbcd13bcf651682ce', 'test', 'sadfsadf', 'http://127.0.0.1:8000/', '', 1, 0.3, 0, 1, 00000001024, 0, '2024-04-10 11:34:59', 'fdsafsdf');
+INSERT INTO `t_model_version` VALUES ('6f697caf794e5624f660204482bf31e0', 'GPU-2G-3B-World', '0.0.1', 'http://127.0.0.1:8000/', NULL, 1, 0.3, 0, 1, 00000001024, 854, '2024-04-09 16:13:41', '2G显存-30亿参数-全世界语言');
+INSERT INTO `t_model_version` VALUES ('8fd398b4ca8418793a3c882e5e4b616e', 'GPU-2G-1B5-World', '0.0.1', 'http://127.0.0.1:8000/', NULL, 1, 0.3, 0, 1, 00000001024, 1423, '2024-04-09 16:12:39', '2G显存-15亿参数');
+INSERT INTO `t_model_version` VALUES ('a20ebce361b9fe1e4c3eb34229e2338c', 'GPU-4G-1B5-World', '0.0.1', 'http://127.0.0.1:8000/', NULL, 1, 0.3, 0, 1, 00000001024, 154, '2024-04-09 16:14:31', '4G显存-15亿参数-世界语言');
+INSERT INTO `t_model_version` VALUES ('b8e780bd16cc223d01fd78981022d430', 'GPU-4G-3B-CN', '0.0.1', 'http://localhost:8080/', NULL, 1, 0.3, 0, 1, 00000001024, 2587, '2024-04-09 16:15:39', 'GPU-4G-3B-CN');
+INSERT INTO `t_model_version` VALUES ('bb0abb2b648faa0956c28f5cf64ebd8f', 'GPU-4G-7B-World', '0.0.1', 'http://localhost:8080/', NULL, 1, 0.3, 0, 1, 00000001024, 7843, '2024-04-09 16:15:58', 'GPU-4G-7B-World');
+INSERT INTO `t_model_version` VALUES ('c667f0ebd57917c58d9878004620f296', '测试模型', '0.0.1', 'http://127.0.0.1:8000/', NULL, 1, 0.3, 0, 1, 00000001024, 0, '2024-04-18 15:59:58', '测试模型，无意义');
+INSERT INTO `t_model_version` VALUES ('f4fd5c356c23163d5653a8e5cfeb0a71', 'InsectMk\'s LoRA', '0.0.1', 'http://127.0.0.1:8000/', NULL, 1, 0.3, 0, 1, 00000001024, 4892, '2024-04-09 13:59:32', 'InsectMk的微调模型');
 
 -- ----------------------------
 -- Table structure for t_system_log
@@ -281,6 +292,7 @@ INSERT INTO `t_system_log` VALUES ('f0b1d696050a05db699cca09358a2bd0', '127.0.0.
 INSERT INTO `t_system_log` VALUES ('f19b9622a5a1d4db508d2b12ce6afba7', '127.0.0.1', '3067836615@qq.com', '错误', '出错了：com.fasterxml.jackson.databind.exc.InvalidDefinitionException: No serializer found for class java.io.FileDescriptor and no properties discovered to create BeanSerializer (to avoid exception, disable SerializationFeature.FAIL_ON_EMPTY_BEANS) (through reference chain: org.springframework.web.multipart.support.StandardMultipartHttpServletRequest$StandardMultipartFile[\"part\"]->org.apache.catalina.core.ApplicationPart[\"fileItem\"]->org.apache.tomcat.util.http.fileupload.disk.DiskFileItem[\"inputStream\"]->java.io.FileInputStream[\"fd\"])', '2024-04-10 13:57:13');
 INSERT INTO `t_system_log` VALUES ('f1c5dcadcd5a325a248b8011f36c331e', '0:0:0:0:0:0:0:1', '未知', '警告', '过多请求：cn.insectmk.chatbotweb.controller.ChatMessageController.sendStream', '2024-04-18 11:01:12');
 INSERT INTO `t_system_log` VALUES ('f276db6c0cb09c84119094f33687751b', '127.0.0.1', '2514378105@qq.com', '警告', '业务异常：您不是root用户', '2024-04-10 18:58:17');
+INSERT INTO `t_system_log` VALUES ('f27dccbf5e85744c64cf90edd7994211', '127.0.0.1', '3067836615@qq.com', '错误', '出错了：com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Cannot add or update a child row: a foreign key constraint fails (`chatbot`.`t_chat_session`, CONSTRAINT `t_chat_session_ibfk_2` FOREIGN KEY (`model_version_id`) REFERENCES `t_model_version` (`id`))', '2024-04-18 16:08:34');
 INSERT INTO `t_system_log` VALUES ('f480c2c6fcc9496a9f3305589a94638c', '0:0:0:0:0:0:0:1', '未知', '警告', '过多请求：cn.insectmk.chatbotweb.controller.ChatMessageController.sendStream', '2024-04-18 11:01:01');
 INSERT INTO `t_system_log` VALUES ('f48862c2ac516cae517d56b259742ffa', '127.0.0.1', '3067836615@qq.com', '错误', '出错了：null', '2024-04-18 13:01:51');
 INSERT INTO `t_system_log` VALUES ('f6de06ddb709f6d6ba2c6c11d985cb22', '127.0.0.1', '3067836615@qq.com', '错误', '出错了：com.fasterxml.jackson.databind.exc.InvalidDefinitionException: Cannot construct instance of `org.springframework.web.multipart.MultipartFile` (no Creators, like default constructor, exist): abstract types either need to be mapped to concrete types, have custom deserializer, or contain additional type information\n at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 1, column: 350] (through reference chain: cn.insectmk.chatbotweb.controller.dto.UserDto[\"headImageFile\"])', '2024-04-10 12:55:09');
@@ -314,7 +326,7 @@ CREATE TABLE `t_user`  (
 -- ----------------------------
 INSERT INTO `t_user` VALUES ('092b43dd1b8633b76bbefaf04f0b5800', 'k1jughcEKNKBVoXzTb6kfQ==', 'POwY5p9xe5NMwvKMibQ17A==', 'N9RElUs4M5UlXr2+zdGVP6HXu6gOYSwqEXHBxTZnnQQ=', 'https://makun-ing-image-bed.oss-cn-chengdu.aliyuncs.com/chatbot-web/user-head/20240410163056-16cf6071-6278-4b7a-bcec-72953ca2dedf.jpg', 'ErHtOdDyR7nSNCZFxhhObrSFoA4DEzXyudasJsB2xjfCOphtfSejgrT/rU+ZYg4w', 10, 10000, '2024-04-10 16:30:08', '2024-04-10 16:30:08');
 INSERT INTO `t_user` VALUES ('2cbcb04456e5b0419e4a189cd27d8fc9', 'XVJx+cw6nRy5ge/DL3S/NA==', 'RwI/lv4Y2MBZ5CNeCMSgXg==', 'my/bnohoTSX+w4CNocpXCqHXu6gOYSwqEXHBxTZnnQQ=', 'https://makun-ing-image-bed.oss-cn-chengdu.aliyuncs.com/chatbot-web/user-head/20240410161722-1212a872-de5c-4abd-9704-8c0ddfb3043c.jpg', 'AvWDh1xxSqk2yjUr6je793HYEHwl+knqEBRCMuyvGULCOphtfSejgrT/rU+ZYg4w', 10, 10000, '2024-03-29 14:30:09', '2024-04-11 10:23:17');
-INSERT INTO `t_user` VALUES ('56439f0e310cd4dae5d9ed51f869d51d', 'u69DWYE27dZSV6Ez5AeFJQ==', 'Ksid7UvKEJgngAbAbz/sSw==', '1/jcYjVOKilFzYGhtZ1csqHXu6gOYSwqEXHBxTZnnQQ=', 'https://insectmk.cn/static/img/head/insectmk.png', 'YTwbQUEz3GH1QiRuAjxWAw457w0EwRwudmth4TQ2saHCOphtfSejgrT/rU+ZYg4w', 10, 99983603, '2024-03-29 13:30:50', '2024-04-11 10:28:09');
+INSERT INTO `t_user` VALUES ('56439f0e310cd4dae5d9ed51f869d51d', 'u69DWYE27dZSV6Ez5AeFJQ==', 'Ksid7UvKEJgngAbAbz/sSw==', '1/jcYjVOKilFzYGhtZ1csqHXu6gOYSwqEXHBxTZnnQQ=', 'https://insectmk.cn/static/img/head/insectmk.png', 'YTwbQUEz3GH1QiRuAjxWAw457w0EwRwudmth4TQ2saHCOphtfSejgrT/rU+ZYg4w', 10, 99983285, '2024-03-29 13:30:50', '2024-04-11 10:28:09');
 INSERT INTO `t_user` VALUES ('a036b08c189facd488d115954ca19f08', 'sxhZzTScVF8QKah1agmaoQ==', 'POwY5p9xe5NMwvKMibQ17A==', 'dHf4YG+tZUC2FRVLtubjJ6HXu6gOYSwqEXHBxTZnnQQ=', 'https://makun-ing-image-bed.oss-cn-chengdu.aliyuncs.com/chatbot-web/user-head/20240410161700-09304c89-e05b-4f87-8c09-fb5e3df1b32b.jpg', 'FWoWMt7dfIKOyA24aY+vwNxwSH0aFa/f4RnmxY8vQQPCOphtfSejgrT/rU+ZYg4w', 10, 10000, '2024-04-09 12:41:40', '2024-04-09 12:41:40');
 
 SET FOREIGN_KEY_CHECKS = 1;
