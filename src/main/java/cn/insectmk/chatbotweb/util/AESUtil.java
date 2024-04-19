@@ -1,154 +1,96 @@
 package cn.insectmk.chatbotweb.util;
 
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
-
+import org.springframework.stereotype.Component;
 import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 /**
  * @Description AES对称加密工具类
  * @Author makun
  * @Date 2024/2/26 17:37
+ * @Update 2024/4/19 10:41
  * @Version 1.0
  */
+@Component
+@Slf4j
 public class AESUtil {
-	private final String KEY_ALGORITHM = "AES";
-	// 默认的加密算法
-	private final String DEFAULT_CIPHER_ALGORITHM = "AES/ECB/PKCS5Padding";
-	@Value("${aes.key}")
-	private String key;
+	@Value("${aes.secret-key}")
+	private String secretKey;
+	@Value("${aes.init-vector}")
+	private String initVector;
+
+	@Autowired
+	private JsonUtil jsonUtil;
 
 	/**
-	 * 以默认密钥生成加密字符串
-	 * @param content
+	 * 将加密后的字符串解密为JSON字符串后再转为对象
+	 * @param value 需要解密的字符串
+	 * @param objectClass 需要转为的对象Class
 	 * @return
+	 * @param <T>
 	 */
-	public String encrypt(String content) {
-		return encrypt(content, key);
+	public <T> T decrypt(String value, Class<T> objectClass) {
+		return jsonUtil.toObject(decrypt(value), objectClass);
 	}
 
 	/**
-	 * 以默认密钥解密加密字符串
-	 * @param content
+	 * 将对象转为Json字符串再加密
+	 * @param value 需要加密的对象
 	 * @return
 	 */
-	public  String decrypt(String content) {
-		return decrypt(content, key);
+	public String encrypt(Object value) {
+		return encrypt(jsonUtil.toJson(value));
 	}
 
 	/**
-	 * 随机生成密钥
+	 * 加密
+	 * @param value 需要加密的数据
 	 * @return
 	 */
-	public String getAESRandomKey() {
-		SecureRandom random = new SecureRandom();
-		long randomKey = random.nextLong();
-		return String.valueOf(randomKey);
-	}
-
-	/**
-	 * AES 加密操作
-	 * @param content 待加密内容
-	 * @param key     加密密钥
-	 * @return 返回Base64转码后的加密数据
-	 */
-	public String encrypt(String content, String key) {
-		if (StringUtils.isBlank(key)) key = this.key;
+	public String encrypt(String value) {
 		try {
-			// 创建密码器
-			Cipher cipher = Cipher.getInstance(DEFAULT_CIPHER_ALGORITHM);
-			byte[] byteContent = content.getBytes("utf-8");
-			// 初始化为加密模式的密码器
-			cipher.init(Cipher.ENCRYPT_MODE, getSecretKey(key));
-			// 加密
-			byte[] result = cipher.doFinal(byteContent);
-			//通过Base64转码返回
-			return byte2Base64(result);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+			IvParameterSpec iv = new IvParameterSpec(initVector.getBytes(StandardCharsets.UTF_8));
+			SecretKeySpec skeySpec = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), "AES");
 
-		return null;
+			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+			cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
+
+			byte[] encrypted = cipher.doFinal(value.getBytes());
+			// 使用URL安全的Base64编码
+			return Base64.getUrlEncoder().withoutPadding().encodeToString(encrypted);
+		} catch (Exception e) {
+			// 在这里处理异常，例如记录错误
+			log.error("加密异常：", e);
+			return ""; // 返回空字符串作为默认值
+		}
 	}
 
 	/**
-	 * AES 解密操作
-	 * @param content
-	 * @param key
+	 * 解密
+	 * @param encrypted 需要解密的数据
 	 * @return
 	 */
-	public  String decrypt(String content, String key) {
-		content = content.replaceAll(" ", "+"); // 修复Web传输参数导致的空格
-		if (StringUtils.isBlank(key)) key = this.key;
+	public String decrypt(String encrypted) {
 		try {
-			//实例化
-			Cipher cipher = Cipher.getInstance(DEFAULT_CIPHER_ALGORITHM);
-			//使用密钥初始化，设置为解密模式
-			cipher.init(Cipher.DECRYPT_MODE, getSecretKey(key));
-			//执行操作
-			byte[] result = cipher.doFinal(base642Byte(content));
-			return new String(result, "utf-8");
-		} catch (Exception ex) {
-			ex.printStackTrace();
+			IvParameterSpec iv = new IvParameterSpec(initVector.getBytes(StandardCharsets.UTF_8));
+			SecretKeySpec skeySpec = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), "AES");
+
+			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+			cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
+
+			byte[] original = cipher.doFinal(Base64.getUrlDecoder().decode(encrypted));
+
+			return new String(original);
+		} catch (Exception e) {
+			// 在这里处理异常，例如记录错误
+			log.error("加密异常：", e);
+			return ""; // 返回空字符串作为默认值
 		}
-
-		return null;
-	}
-
-	/**
-	 * 生成加密秘钥
-	 * @return
-	 */
-	private SecretKeySpec getSecretKey(final String key) {
-		//返回生成指定算法密钥生成器的 KeyGenerator 对象
-		try {
-			KeyGenerator kg = KeyGenerator.getInstance(KEY_ALGORITHM);
-			// 此类提供加密的强随机数生成器 (RNG)，该实现在windows上每次生成的key都相同，但是在部分linux或solaris系统上则不同。
-			// SecureRandom random = new SecureRandom(key.getBytes());
-			// 指定算法名称，不同的系统上生成的key是相同的。
-			SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
-			random.setSeed(key.getBytes());
-			//AES 要求密钥长度为 128
-			kg.init(128, random);
-			//生成一个密钥
-			SecretKey secretKey = kg.generateKey();
-			// 转换为AES专用密钥
-			return new SecretKeySpec(secretKey.getEncoded(), KEY_ALGORITHM);
-		} catch (NoSuchAlgorithmException ex) {
-			ex.printStackTrace();
-		}
-		return null;
-	}
-
-	/**
-	 * 字节数组转Base64编码
-	 *
-	 * @param bytes
-	 * @return
-	 */
-	public String byte2Base64(byte[] bytes) {
-		BASE64Encoder encoder = new BASE64Encoder();
-		return encoder.encode(bytes);
-	}
-
-	/**
-	 * Base64编码转字节数组
-	 *
-	 * @param base64Key
-	 * @return
-	 * @throws IOException
-	 */
-	public byte[] base642Byte(String base64Key) throws IOException {
-		BASE64Decoder decoder = new BASE64Decoder();
-		return decoder.decodeBuffer(base64Key);
 	}
 }
-

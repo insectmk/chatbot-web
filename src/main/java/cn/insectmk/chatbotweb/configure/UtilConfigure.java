@@ -28,19 +28,4 @@ public class UtilConfigure {
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
         return builder.build();
     }
-
-    @Bean
-    public JsonUtil jsonUtil() {
-        return new JsonUtil();
-    }
-
-    @Bean
-    public EmailUtil emailUtil() {
-        return new EmailUtil();
-    }
-
-    @Bean
-    public JWTUtil jwtUtil() {
-        return new JWTUtil();
-    }
 }

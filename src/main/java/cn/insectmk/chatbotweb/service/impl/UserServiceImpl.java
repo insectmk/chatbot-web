@@ -2,7 +2,7 @@ package cn.insectmk.chatbotweb.service.impl;
 
 import cn.insectmk.chatbotweb.common.QueryPageBean;
 import cn.insectmk.chatbotweb.configure.value.AliyunOSSConfigValue;
-import cn.insectmk.chatbotweb.configure.value.CustomerSystemConfigValue;
+import cn.insectmk.chatbotweb.configure.value.SystemValue;
 import cn.insectmk.chatbotweb.controller.dto.UserDto;
 import cn.insectmk.chatbotweb.entity.ChatSession;
 import cn.insectmk.chatbotweb.entity.SystemLog;
@@ -13,17 +13,13 @@ import cn.insectmk.chatbotweb.mapper.UserMapper;
 import cn.insectmk.chatbotweb.service.ChatSessionService;
 import cn.insectmk.chatbotweb.service.SystemLogService;
 import cn.insectmk.chatbotweb.service.UserService;
-import cn.insectmk.chatbotweb.util.AliyunOSSUtil;
-import cn.insectmk.chatbotweb.util.EmailUtil;
-import cn.insectmk.chatbotweb.util.FileUrlCatchUtil;
-import cn.insectmk.chatbotweb.util.JWTUtil;
+import cn.insectmk.chatbotweb.util.*;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
@@ -40,11 +36,6 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
-    @Value(("${system.address}"))
-    private String ip;
-    @Value("${server.port}")
-    private String port;
-
     @Autowired
     private JWTUtil jwtUtil;
     @Autowired
@@ -62,7 +53,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Autowired
     private HttpServletRequest httpServletRequest;
     @Autowired
-    private CustomerSystemConfigValue customerSystemConfigValue;
+    private SystemValue systemValue;
+    @Autowired
+    private AESUtil aesUtil;
 
     @Override
     public boolean updateOne(UserDto userDto) {
@@ -109,7 +102,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             userDto.setPassword(userDto.getPassword());
         } else {
             // 默认密码
-            userDto.setPassword(customerSystemConfigValue.getDefaultPassword());
+            userDto.setPassword(systemValue.getDefaultPassword());
         }
         // 判断是否上传了头像
         if (!Objects.isNull(userDto.getIsUploadHead()) && userDto.getIsUploadHead()) {
@@ -163,22 +156,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public User register(String key) {
-        // 解析key，（用户名+邮箱+密码+失效时间）
-        String[] split = key.split("\\\\");
+        // 解析key
+        UserDto userDto = aesUtil.decrypt(key, UserDto.class);
         // 判断是否失效
-        if (System.currentTimeMillis() > Long.parseLong(split[3])) {
+        if (System.currentTimeMillis() > userDto.getExpiration()) {
             throw new BizException("该注册链接已失效！");
         }
         // 创建用户
-        User user = new User();
-        user.setHead(customerSystemConfigValue.getDefaultHead());
-        user.setUsername(split[0]);
-        user.setEmail(split[1]);
-        user.setPassword(split[2]);
-        baseMapper.insert(user);
+        userDto.setHead(systemValue.getDefaultHead());
+        baseMapper.insert(userDto);
         // 生成APIKey
-        this.getApiKey(user.getId());
-        return user;
+        this.getApiKey(userDto.getId());
+        return userDto;
     }
 
     @Override
@@ -187,10 +176,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (!Objects.isNull(baseMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getEmail, userDto.getEmail())))) {
             throw new BizException("该邮箱已注册，请返回登录！");
         }
-        // 拼接参数（用户名+邮箱+密码+失效时间）
-        String source = userDto.getUsername() + "\\" + userDto.getEmail() + "\\" + userDto.getPassword() + "\\" + (System.currentTimeMillis() + (5 * 60 * 1000));
+        // 设置失效时间
+        userDto.setExpiration(System.currentTimeMillis() + (5 * 60 * 1000));
         // 加密
-        String url = "http://" + ip + ":" + port + "/user/register" + "?key=" + source;
+        String url = systemValue.getUrl() + "/user/register" + "?key=" + aesUtil.encrypt(userDto);
         // 发送邮件
         emailUtil.sendHtmlMail(userDto.getEmail(),
                 "智能聊天机器人注册链接",
@@ -219,7 +208,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         chatSessionMapper.insert(chatSession);
         // 生成key
         String key = chatSession.getId();
-        user.setApiKey(key);
+        user.setApiKey(aesUtil.encrypt(key));
         baseMapper.updateById(user);
 
         return key;
@@ -271,7 +260,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public boolean isTokenRoot(String token) {
         if (isTokenEffective(token)) {
             User user = baseMapper.selectById(jwtUtil.checkJWT(token).get("userId").toString());
-            return customerSystemConfigValue.getRootEmail().contains(user.getEmail());
+            return systemValue.getRootEmail().contains(user.getEmail());
         }
         return false;
     }

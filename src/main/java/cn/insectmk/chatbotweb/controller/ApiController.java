@@ -3,12 +3,13 @@ package cn.insectmk.chatbotweb.controller;
 import cn.insectmk.chatbotweb.common.Result;
 import cn.insectmk.chatbotweb.common.annotation.RequestLimit;
 import cn.insectmk.chatbotweb.configure.SseEmitterUTF8;
+import cn.insectmk.chatbotweb.configure.value.SystemValue;
 import cn.insectmk.chatbotweb.entity.ChatMessage;
 import cn.insectmk.chatbotweb.exception.BizException;
 import cn.insectmk.chatbotweb.service.ChatMessageService;
 import cn.insectmk.chatbotweb.service.ChatSessionService;
+import cn.insectmk.chatbotweb.util.AESUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import java.util.Objects;
@@ -23,15 +24,14 @@ import java.util.Objects;
 @RequestMapping("/api")
 @RequestLimit(maxCount = 1,second = 5)
 public class ApiController {
-    @Value(("${system.address}"))
-    private String ip;
-    @Value("${server.port}")
-    private String port;
-
     @Autowired
     private ChatMessageService chatMessageService;
     @Autowired
     private ChatSessionService chatSessionService;
+    @Autowired
+    private AESUtil aesUtil;
+    @Autowired
+    private SystemValue systemValue;
 
     /**
      * 获取API说明
@@ -43,7 +43,9 @@ public class ApiController {
 
         markdown.append("## 发送消息\n\n");
         markdown.append("### 普通对话\n\n");
-        markdown.append("- 接口地址：`" + "http://").append(ip).append(":").append(port).append("/api/send?key={你的API密钥}`\n");
+        markdown.append("- 接口地址：`");
+        markdown.append(systemValue.getUrl());
+        markdown.append("/api/send?key={你的API密钥}`\n");
         markdown.append("- 请求类型：`POST`\n");
         markdown.append("- 请求数据格式：\n");
         markdown.append("  ```json\n");
@@ -52,7 +54,9 @@ public class ApiController {
         markdown.append("  }\n");
         markdown.append("  ```\n\n");
         markdown.append("### 流式对话\n\n");
-        markdown.append("- 接口地址：`" + "http://").append(ip).append(":").append(port).append("/api/send/stream?key={你的API密钥}`\n");
+        markdown.append("- 接口地址：`");
+        markdown.append(systemValue.getUrl());
+        markdown.append("/api/send/stream?key={你的API密钥}`\n");
         markdown.append("- 请求类型：`POST`\n");
         markdown.append("- 请求数据格式：\n");
         markdown.append("  ```json\n");
@@ -61,7 +65,9 @@ public class ApiController {
         markdown.append("  }\n");
         markdown.append("  ```\n\n");
         markdown.append("## 对话历史\n\n");
-        markdown.append("- 接口地址：`" + "http://" + ip + ":" + port + "/api?key={你的API密钥}`\n");
+        markdown.append("- 接口地址：`");
+        markdown.append(systemValue.getUrl());
+        markdown.append("/api?key={你的API密钥}`\n");
         markdown.append("- 请求类型：`GET`\n\n");
         markdown.append("## 注意\n\n");
         markdown.append("1. 每位用户只能同时拥有一个API密钥\n");
@@ -78,7 +84,7 @@ public class ApiController {
      */
     @PostMapping("/send/stream")
     public SseEmitter sendStream(String key, @RequestBody ChatMessage chatMessage) {
-        String sessionId = key;
+        String sessionId = aesUtil.decrypt(key);
         // 判断会话是否存在
         if (Objects.isNull(chatSessionService.getById(sessionId))) {
             throw new BizException("该接口已失效");
@@ -98,7 +104,7 @@ public class ApiController {
      */
     @GetMapping
     public Result findAllMessage(String key) {
-        String sessionId = key;
+        String sessionId = aesUtil.decrypt(key);
         // 判断会话是否存在
         if (Objects.isNull(chatSessionService.getById(sessionId))) {
             throw new BizException("该接口已失效");
@@ -115,7 +121,7 @@ public class ApiController {
      */
     @PostMapping("/send")
     public Result send(String key, @RequestBody ChatMessage chatMessage) {
-        String sessionId = key;
+        String sessionId = aesUtil.decrypt(key);
         // 判断会话是否存在
         if (Objects.isNull(chatSessionService.getById(sessionId))) {
             throw new BizException("该接口已失效");

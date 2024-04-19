@@ -14,9 +14,11 @@ import java.util.List;
 @Data
 @Configuration
 @ConfigurationProperties("system")
-public class CustomerSystemConfigValue {
+public class SystemValue {
     private String address;
     private List<String> rootEmail;
     private String defaultPassword;
     private String defaultHead;
+    private String frontEndUrl;
+    private String url;
 }

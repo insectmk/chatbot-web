@@ -3,6 +3,7 @@ package cn.insectmk.chatbotweb.controller;
 import cn.insectmk.chatbotweb.common.Result;
 import cn.insectmk.chatbotweb.common.annotation.BizLog;
 import cn.insectmk.chatbotweb.common.annotation.RequestLimit;
+import cn.insectmk.chatbotweb.configure.value.SystemValue;
 import cn.insectmk.chatbotweb.controller.dto.UserDto;
 import cn.insectmk.chatbotweb.entity.SystemLog;
 import cn.insectmk.chatbotweb.entity.User;
@@ -10,9 +11,9 @@ import cn.insectmk.chatbotweb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Objects;
 
 /**
  * @Description 用户功能控制器
@@ -28,6 +29,8 @@ public class UserController {
     private UserService userService;
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
+    @Autowired
+    private SystemValue systemValue;
 
     /**
      * 修改用户密码
@@ -73,10 +76,9 @@ public class UserController {
      */
     @GetMapping("/register")
     @BizLog(level = SystemLog.LEVEL_INFO, message = "用户注册")
-    public Result register(String key) {
-        User user = userService.register(key);
-        return Objects.isNull(user) ? Result.buildFail("注册失败") :
-                Result.buildSuccess("请返回登录界面完成登录", null);
+    public RedirectView register(String key) {
+        userService.register(key);
+        return new RedirectView(systemValue.getFrontEndUrl());
     }
 
     /**
