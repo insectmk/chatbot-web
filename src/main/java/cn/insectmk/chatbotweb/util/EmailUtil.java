@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-
+import org.springframework.stereotype.Component;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
@@ -17,6 +17,7 @@ import javax.mail.internet.MimeMessage;
  * @Version 1.0
  */
 @Log4j2
+@Component
 public class EmailUtil {
     @Value("${spring.mail.username}")
     private String username;

@@ -1,10 +1,9 @@
 package cn.insectmk.chatbotweb.common.aspect;
 
-import cn.insectmk.chatbotweb.configure.value.CustomerSystemConfigValue;
+import cn.insectmk.chatbotweb.configure.value.SystemValue;
 import cn.insectmk.chatbotweb.entity.User;
 import cn.insectmk.chatbotweb.exception.BizException;
 import cn.insectmk.chatbotweb.service.UserService;
-import cn.insectmk.chatbotweb.util.AESUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -27,17 +26,15 @@ public class AuthorityAspect {
     @Autowired
     private HttpServletRequest httpServletRequest;
     @Autowired
-    private CustomerSystemConfigValue customerSystemConfigValue;
+    private SystemValue systemValue;
     @Autowired
     private UserService userService;
-    @Autowired
-    private AESUtil aesUtil;
 
     @Around("execution(* cn.insectmk.chatbotweb.controller.ConsoleController.*(..))")
     @Transactional
     public Object aroundExecution(ProceedingJoinPoint joinPoint) throws Throwable  {
         User user = userService.getById(httpServletRequest.getAttribute("userId").toString());
-        if (customerSystemConfigValue.getRootEmail().contains(aesUtil.decrypt(user.getEmail()))) {
+        if (systemValue.getRootEmail().contains(user.getEmail())) {
             return joinPoint.proceed();
         }
         throw new BizException("您不是root用户");

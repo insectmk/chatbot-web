@@ -1,5 +1,6 @@
 package cn.insectmk.chatbotweb.util;
 
+import cn.insectmk.chatbotweb.common.EChartsPieDate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,18 +11,28 @@ class AESUtilTest {
     private AESUtil aesUtil;
 
     @Test
-    void encrypt() throws Exception {
-        String content = "bdcbaddba6c97171726cf56b8dd1d4e1";
-        String key = "";
-        System.out.println("原文=" + content);
-        String s1 = aesUtil.encrypt(content, key);
-        System.out.println("加密结果=" + s1);
-        System.out.println("解密结果="+aesUtil.decrypt(s1, key));
+    void encrypt() {
+        String encrypt = aesUtil.encrypt("你好啊，这是我的第一条数据");
+        System.out.println(encrypt);
+        String decrypt = aesUtil.decrypt(encrypt);
+        System.out.println(decrypt);
     }
 
     @Test
     void decrypt() {
-        String content = "RwI/lv4Y2MBZ5CNeCMSgXg==";
-        System.out.println(aesUtil.decrypt(content));
     }
+
+    @Test
+    void testDecrypt() {
+        EChartsPieDate eChartsPieDate = new EChartsPieDate("测试", 999L);
+        String encrypt = aesUtil.encrypt(eChartsPieDate);
+        System.out.println(encrypt);
+        EChartsPieDate decrypt = aesUtil.decrypt(encrypt, EChartsPieDate.class);
+        System.out.println(decrypt);
+    }
+
+    @Test
+    void testEncrypt() {
+    }
+
 }

@@ -20,24 +20,32 @@
 
 ## 安装教程
 
-1. 查看[本机搭建RWKV语言模型（最低只需2G显存）](https://insectmk.cn/2024/03/04/tutorial/rwkv-build/)，部署RWKV轻量语言模型。
+1. 查看[本机搭建RWKV语言模型（最低只需2G显存）](https://insectmk.cn/2024/03/04/tutorial/rwkv-build/)，部署RWKV轻量语言模型（[官方说明文档](https://github.com/josStorer/RWKV-Runner/blob/master/README_ZH.md)）。
 2. 使用最新的`/resource/chatbot-xxxx-xx-xx.sql`sql脚本构建数据库
 3. 在`/src/main/resources`目录下新建`application-dev.yml`配置文件，写入以下内容（根据自己的信息进行替换）：
 
    ```yaml
+   # 应用服务 WEB 访问端口
+   server:
+     port: 9001
    spring:
      # 数据源配置
      datasource:
        url: jdbc:mysql://127.0.0.1:3307/chatbot?useSSL=false
-       username: xxxxxxx
-       password: xxxxxxx
+       username: xxxx
+       password: xxxx
        driver-class-name: com.mysql.jdbc.Driver
+     # 配置redis数据库连接参数
+     redis: # redis数据库配置
+       host: 127.0.0.1  # ip
+       port: 6379  # 默认端口
+       password: xxxxx # 密码
      # 邮件发送配置
      mail:
        host: smtp.qq.com # QQ邮件服务器的SMTP地址
        port: 465 # 邮件服务器的SMTP端口，465端口通常用于SSL加密的SMTP服务
        username: xxxxxxx@qq.com # 用于发送邮件的邮箱账户用户名
-       password: kvsulpnwofbadfie # 申请的16位授权码
+       password: xxxxxxxx # 申请的16位授权码
        properties:
          mail.smtp.auth: true # 是否需要SMTP验证，通常设置为true
          mail.smtp.starttls.enable: true # 是否启用TLS加密，通常设置为true以提高安全性
@@ -50,95 +58,58 @@
      # 签发人
      subject: xxxxxxx
      # 加密密钥
-     secret: xxxxxxx
+     secret: xxxxx
      # 令牌前缀
-     prefix: xxxxxxx
+     prefix: xxxxx
      # 过期时间（ms）
-     expire: xxxxxxx
+     expire: 604800000
    
    # AES加密
    aes:
-     key: xxxxxxx
-   
-   # openAI格式API
-   openai:
-     api-host: http://127.0.0.1:8000/
-     api-key: ""
-     max-token: 1024
+     # 密钥
+     secret-key: xxxxxxx
+     # 初始化向量(16位)
+     init-vector: xxxxxxx
    
    # 系统设置
    system:
+     # 管理员用户邮箱
      root-email:
-       - xxxxxxx@qq.com
+       - xxxxx@qq.com
+     # 项目IP地址
+     address: 127.0.0.1
+     default-password: xxxxxxxxxxxxxx
+     # 默认头像
+     default-head: xxxxxxx.png
+     # 前端地址
+     front-end-url: http://127.0.0.1:8080
+     # 本项目地址
+     url: http://127.0.0.1:9001
+   
+   # 阿里云OSS相关配置
+   aliyun:
+     oss:
+       endpoint: 'https://oss-cn-chengdu.aliyuncs.com'
+       access-key-id: 'xxxxxxxxx'
+       access-key-secret: 'xxxxxxxxxx'
+       bucket-name: 'xxxxxxxx'
+       url: 'https://xxxxxxxx.oss-cn-chengdu.aliyuncs.com/'
+       path-user-head: 'chatbot-web/user-head/'
+   
+   # Slf4j配置
+   logging:
+     level:
+       root: info  #基础日志级别 TRACE < DEBUG < INFO < WARN < ERROR < FATAL
+       cn:
+         insectmk:
+           chatbotweb:
+             controller: info     # controller包下的类使用info级别
+             service.impl: info    # impl包下的类使用debug级别
+   
    
    ```
 
 4. 运行项目。
-
-## 使用的第三方包
-
-```xml
-<dependency><!-- 用于访问OpenAI格式的API -->
-    <groupId>com.github.plexpt</groupId>
-    <artifactId>chatgpt</artifactId>
-    <version>4.0.7</version>
-</dependency>
-
-<dependency><!-- 图形验证码 -->
-    <groupId>cn.hutool</groupId>
-    <artifactId>hutool-all</artifactId>
-    <version>5.8.16</version>
-</dependency>
-
-<dependency><!--跨域身份验证解决⽅案 Json web token-->
-    <groupId>io.jsonwebtoken</groupId>
-    <artifactId>jjwt</artifactId>
-    <version>0.7.0</version>
-</dependency>
-
-<dependency><!-- 发送WebSocket请求 -->
-    <groupId>org.java-websocket</groupId>
-    <artifactId>Java-WebSocket</artifactId>
-    <version>1.5.1</version>
-</dependency>
-
-<dependency><!-- 发送HTTP请求 -->
-    <groupId>commons-httpclient</groupId>
-    <artifactId>commons-httpclient</artifactId>
-    <version>3.1</version>
-</dependency>
-
-<dependency><!--发送邮件-->
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-mail</artifactId>
-</dependency>
-
-<dependency><!--boot整合mybatis所需要的包-->
-    <groupId>org.mybatis.spring.boot</groupId>
-    <artifactId>mybatis-spring-boot-starter</artifactId>
-    <version>2.2.2</version>
-</dependency>
-
-<dependency><!-- mysql  驱动-->
-    <groupId>mysql</groupId>
-    <artifactId>mysql-connector-java</artifactId>
-    <version>5.1.26</version>
-</dependency>
-
-<dependency><!--mybatisplus起步依赖-->
-    <groupId>com.baomidou</groupId>
-    <artifactId>mybatis-plus-boot-starter</artifactId>
-    <version>3.4.0</version>
-</dependency>
-
-<dependency><!-- lombok  ,自动生成get,Set 方法-->
-    <groupId>org.projectlombok</groupId>
-    <artifactId>lombok</artifactId>
-    <optional>true</optional>
-</dependency>
-```
-
-
 
 ## 解决的问题
 

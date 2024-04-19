@@ -2,7 +2,7 @@
 
 ### 普通对话
 
-- 接口地址：`http://localhost:9001/api/send?key={你的API密钥}`
+- 接口地址：`{{url}}/api/send?key={你的API密钥}`
 
 - 请求类型：`POST`
 
@@ -17,7 +17,7 @@
 
 ### 流式对话
 
-- 接口地址：`http://localhost:9001/api/send/stream?key={你的API密钥}`
+- 接口地址：`{{url}}/api/send/stream?key={你的API密钥}`
 
 - 请求类型：`POST`
 
@@ -31,7 +31,7 @@
 
 ## 对话历史
 
-- 接口地址：`http://localhost:9001/api?key={你的API密钥}`
+- 接口地址：`{{url}}/api?key={你的API密钥}`
 - 请求类型：`GET`
 
 ## 注意

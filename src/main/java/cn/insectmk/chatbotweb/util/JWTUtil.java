@@ -5,6 +5,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import java.util.Date;
 
 /**
@@ -13,6 +15,7 @@ import java.util.Date;
  * @Date 2023/10/8 15:55
  * @Version 1.0
  */
+@Component
 public class JWTUtil {
     @Value("${jwt.subject}")
     private String subject;
@@ -33,7 +36,7 @@ public class JWTUtil {
                 // 设置主题
                 .setSubject(subject)
                 // 设置负载信息
-                .claim("id",user.getId())
+                .claim("userId",user.getId())
                 // 设置发布时间
                 .setIssuedAt(new Date())
                 // 设置过期时间
