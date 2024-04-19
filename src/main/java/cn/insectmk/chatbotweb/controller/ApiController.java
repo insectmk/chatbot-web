@@ -7,7 +7,6 @@ import cn.insectmk.chatbotweb.entity.ChatMessage;
 import cn.insectmk.chatbotweb.exception.BizException;
 import cn.insectmk.chatbotweb.service.ChatMessageService;
 import cn.insectmk.chatbotweb.service.ChatSessionService;
-import cn.insectmk.chatbotweb.util.AESUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -33,8 +32,6 @@ public class ApiController {
     private ChatMessageService chatMessageService;
     @Autowired
     private ChatSessionService chatSessionService;
-    @Autowired
-    private AESUtil aesUtil;
 
     /**
      * 获取API说明
@@ -81,7 +78,7 @@ public class ApiController {
      */
     @PostMapping("/send/stream")
     public SseEmitter sendStream(String key, @RequestBody ChatMessage chatMessage) {
-        String sessionId = aesUtil.decrypt(key.replaceAll(" ", "+"));
+        String sessionId = key;
         // 判断会话是否存在
         if (Objects.isNull(chatSessionService.getById(sessionId))) {
             throw new BizException("该接口已失效");
@@ -101,7 +98,7 @@ public class ApiController {
      */
     @GetMapping
     public Result findAllMessage(String key) {
-        String sessionId = aesUtil.decrypt(key.replaceAll(" ", "+"));
+        String sessionId = key;
         // 判断会话是否存在
         if (Objects.isNull(chatSessionService.getById(sessionId))) {
             throw new BizException("该接口已失效");
@@ -118,7 +115,7 @@ public class ApiController {
      */
     @PostMapping("/send")
     public Result send(String key, @RequestBody ChatMessage chatMessage) {
-        String sessionId = aesUtil.decrypt(key.replaceAll(" ", "+"));
+        String sessionId = key;
         // 判断会话是否存在
         if (Objects.isNull(chatSessionService.getById(sessionId))) {
             throw new BizException("该接口已失效");

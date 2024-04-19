@@ -37,8 +37,6 @@ public class LoginInterceptor implements HandlerInterceptor {
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        log.info("SessionId:" + request.getSession().getId());
-
         try {
             String token = request.getHeader("token");
             if (token == null) {
@@ -51,7 +49,7 @@ public class LoginInterceptor implements HandlerInterceptor {
                     sendJsonMsg(response, Result.buildFail("登录失败，请重新登录！"));
                     return false;
                 } else {
-                    request.setAttribute("userId", claims.get("id"));
+                    request.setAttribute("userId", claims.get("userId"));
                     return true;
                 }
             }

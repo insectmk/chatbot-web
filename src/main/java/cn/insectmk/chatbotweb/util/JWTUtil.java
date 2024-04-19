@@ -33,7 +33,7 @@ public class JWTUtil {
                 // 设置主题
                 .setSubject(subject)
                 // 设置负载信息
-                .claim("id",user.getId())
+                .claim("userId",user.getId())
                 // 设置发布时间
                 .setIssuedAt(new Date())
                 // 设置过期时间

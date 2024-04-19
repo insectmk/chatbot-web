@@ -17,4 +17,6 @@ import java.util.List;
 public class CustomerSystemConfigValue {
     private String address;
     private List<String> rootEmail;
+    private String defaultPassword;
+    private String defaultHead;
 }

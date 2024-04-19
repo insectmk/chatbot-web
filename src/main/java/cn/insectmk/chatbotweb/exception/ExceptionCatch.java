@@ -28,8 +28,9 @@ public class ExceptionCatch {
      * @return
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Result sqlException(MethodArgumentNotValidException ex, HttpServletRequest request, HttpServletResponse response) {
+    public Result methodArgumentNotValidException(MethodArgumentNotValidException ex, HttpServletRequest request, HttpServletResponse response) {
         setHeader(request, response);
+        log.info("数据校验失败：", ex);
         // 消息
         String message = "数据校验失败：" + ex.getBindingResult()
                 .getAllErrors()
@@ -54,6 +55,7 @@ public class ExceptionCatch {
     @ExceptionHandler(SQLException.class)
     public Result sqlException(SQLException ex, HttpServletRequest request, HttpServletResponse response) {
         setHeader(request, response);
+        log.error("数据不符合规范：", ex);
         // 消息
         String message = "数据不符合规范：" + ex.getCause();
         // 写入日志
@@ -74,8 +76,7 @@ public class ExceptionCatch {
     @ExceptionHandler(BizException.class)
     public Result bizEx(BizException ex, HttpServletRequest request, HttpServletResponse response) {
         setHeader(request, response);
-
-        log.error("出现了业务异常 ==> "+ ex);
+        log.info("业务异常：", ex);
 
         // 消息
         String message = "业务异常：" + ex.getMessage();
@@ -91,7 +92,7 @@ public class ExceptionCatch {
     @ExceptionHandler(RuntimeException.class)
     public Result runtimeEx(RuntimeException ex, HttpServletRequest request, HttpServletResponse response){
         setHeader(request, response);
-        log.error("出现了RuntimeException ==> "+ ex);
+        log.error("运行时异常：", ex);
         // 消息
         String message = "出错了：" + ex.getCause();
         // 写入日志
@@ -106,7 +107,7 @@ public class ExceptionCatch {
     @ExceptionHandler(NullPointerException.class)
     public Result runtimeEx(NullPointerException ex, HttpServletRequest request, HttpServletResponse response){
         setHeader(request, response);
-        log.error("出现了NullPointerException ==> "+ ex);
+        log.error("空指针异常：", ex);
         // 消息
         String message = "非法数据：" + ex.getMessage();
         // 写入日志
@@ -121,7 +122,7 @@ public class ExceptionCatch {
     @ExceptionHandler(Exception.class)
     public Result runtimeEx(Exception ex, HttpServletRequest request, HttpServletResponse response){
         setHeader(request, response);
-        log.error("出现了Exception ==> "+ ex);
+        log.error("Exception：", ex);
         // 消息
         String message = "服务器出错：" + ex.getMessage();
         // 写入日志

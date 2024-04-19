@@ -13,16 +13,17 @@ import cn.insectmk.chatbotweb.mapper.UserMapper;
 import cn.insectmk.chatbotweb.service.ChatSessionService;
 import cn.insectmk.chatbotweb.service.SystemLogService;
 import cn.insectmk.chatbotweb.service.UserService;
-import cn.insectmk.chatbotweb.util.*;
+import cn.insectmk.chatbotweb.util.AliyunOSSUtil;
+import cn.insectmk.chatbotweb.util.EmailUtil;
+import cn.insectmk.chatbotweb.util.FileUrlCatchUtil;
+import cn.insectmk.chatbotweb.util.JWTUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
@@ -44,8 +45,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Value("${server.port}")
     private String port;
 
-    @Autowired
-    private AESUtil aesUtil;
     @Autowired
     private JWTUtil jwtUtil;
     @Autowired
@@ -69,13 +68,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public boolean updateOne(UserDto userDto) {
         // 更新信息
         if (StringUtils.isNotBlank(userDto.getEmail())) {
-            userDto.setEmail(aesUtil.encrypt(userDto.getEmail()));
+            userDto.setEmail(userDto.getEmail());
         }
         if (StringUtils.isNotBlank(userDto.getUsername())) {
-            userDto.setUsername(aesUtil.encrypt(userDto.getUsername()));
+            userDto.setUsername(userDto.getUsername());
         }
         if (StringUtils.isNotBlank(userDto.getPassword())) {
-            userDto.setPassword(aesUtil.encrypt(userDto.getPassword()));
+            userDto.setPassword(userDto.getPassword());
         }
         // 判断是否上传了头像
         if (!Objects.isNull(userDto.getIsUploadHead()) && userDto.getIsUploadHead()) {
@@ -103,14 +102,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public boolean addOne(UserDto userDto) {
         // 创建用户
-        userDto.setUsername(aesUtil.encrypt(userDto.getUsername()));
-        userDto.setEmail(aesUtil.encrypt(userDto.getEmail()));
+        userDto.setUsername(userDto.getUsername());
+        userDto.setEmail(userDto.getEmail());
         // 判断密码是否为空
         if (StringUtils.isNotBlank(userDto.getPassword())) {
-            userDto.setPassword(aesUtil.encrypt(userDto.getPassword()));
+            userDto.setPassword(userDto.getPassword());
         } else {
             // 默认密码
-            userDto.setPassword(aesUtil.encrypt("&123456InsectMk"));
+            userDto.setPassword(customerSystemConfigValue.getDefaultPassword());
         }
         // 判断是否上传了头像
         if (!Objects.isNull(userDto.getIsUploadHead()) && userDto.getIsUploadHead()) {
@@ -129,11 +128,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public boolean updatePassword(String userId, String password) {
         User user = baseMapper.selectById(userId);
-        if (aesUtil.decrypt(user.getPassword()).equals(password)) {
+        if (user.getPassword().equals(password)) {
             // 如果重复则报错
             throw new BizException("新密码不能与旧密码相同");
         }
-        user.setPassword(aesUtil.encrypt(password));
+        user.setPassword(password);
         return 1 == baseMapper.updateById(user);
     }
 
@@ -155,8 +154,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public User getUserInfo(String userId) {
         User user = baseMapper.selectById(userId);
         user.setId(null);
-        user.setUsername(aesUtil.decrypt(user.getUsername()));
-        user.setEmail(aesUtil.decrypt(user.getEmail()));
+        user.setUsername(user.getUsername());
+        user.setEmail(user.getEmail());
         user.setPassword(null);
         user.setApiKey(user.getApiKey());
         return user;
@@ -165,17 +164,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public User register(String key) {
         // 解析key，（用户名+邮箱+密码+失效时间）
-        String[] split = aesUtil.decrypt(key).split("\\\\");
+        String[] split = key.split("\\\\");
         // 判断是否失效
         if (System.currentTimeMillis() > Long.parseLong(split[3])) {
             throw new BizException("该注册链接已失效！");
         }
         // 创建用户
         User user = new User();
-        user.setHead("https://insectmk.cn/static/img/head/insectmk.png");
-        user.setUsername(aesUtil.encrypt(split[0]));
-        user.setEmail(aesUtil.encrypt(split[1]));
-        user.setPassword(aesUtil.encrypt(split[2]));
+        user.setHead(customerSystemConfigValue.getDefaultHead());
+        user.setUsername(split[0]);
+        user.setEmail(split[1]);
+        user.setPassword(split[2]);
         baseMapper.insert(user);
         // 生成APIKey
         this.getApiKey(user.getId());
@@ -185,13 +184,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public boolean sendRegisterUrl(UserDto userDto) {
         // 查询邮箱是否注册
-        if (!Objects.isNull(baseMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getEmail, aesUtil.encrypt(userDto.getEmail()))))) {
+        if (!Objects.isNull(baseMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getEmail, userDto.getEmail())))) {
             throw new BizException("该邮箱已注册，请返回登录！");
         }
         // 拼接参数（用户名+邮箱+密码+失效时间）
         String source = userDto.getUsername() + "\\" + userDto.getEmail() + "\\" + userDto.getPassword() + "\\" + (System.currentTimeMillis() + (5 * 60 * 1000));
         // 加密
-        String url = "http://" + ip + ":" + port + "/user/register" + "?key=" + aesUtil.encrypt(source);
+        String url = "http://" + ip + ":" + port + "/user/register" + "?key=" + source;
         // 发送邮件
         emailUtil.sendHtmlMail(userDto.getEmail(),
                 "智能聊天机器人注册链接",
@@ -207,19 +206,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 如果生成过APIKey则删除会话
         if (StringUtils.isNotBlank(user.getApiKey())) {
             // 解密APIKey
-            String sessionId = aesUtil.decrypt(user.getApiKey());
+            String sessionId = user.getApiKey();
             // 删除会话内容
             chatSessionService.deleteById(sessionId);
         }
         // 创建一个会话
         ChatSession chatSession = new ChatSession(
                 null, userId, null,
-                "[" + aesUtil.decrypt(user.getUsername()) + "]的API",
+                "[" + user.getUsername() + "]的API",
                 null, null
         );
         chatSessionMapper.insert(chatSession);
         // 生成key
-        String key = aesUtil.encrypt(chatSession.getId());
+        String key = chatSession.getId();
         user.setApiKey(key);
         baseMapper.updateById(user);
 
@@ -228,14 +227,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public boolean isTokenEffective(String token) {
-        return !Objects.isNull(jwtUtil.checkJWT(token));
+        if (Objects.isNull(jwtUtil.checkJWT(token))) return false;
+        Object userId = jwtUtil.checkJWT(token).get("userId");
+        return !Objects.isNull(userId) && !Objects.isNull(baseMapper.selectById(userId.toString()));
     }
 
     @Override
     public String login(String email, String password) {
         User user = baseMapper.selectOne(new LambdaQueryWrapper<User>()
-                .eq(User::getEmail, aesUtil.encrypt(email))
-                .eq(User::getPassword, aesUtil.encrypt(password)));
+                .eq(User::getEmail, email)
+                .eq(User::getPassword, password));
         // 邮箱与密码是否匹配
         if (Objects.isNull(user)) {
             return null;
@@ -254,27 +255,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 查询条件
         if (StringUtils.isNotBlank(queryString)) {
             userQueryWrapper = new LambdaQueryWrapper<User>()
-                    // 判断用户名是否等于
-                    .eq(User::getUsername, aesUtil.encrypt(queryString))
+                    // 判断用户名是否模糊匹配
+                    .like(User::getUsername, queryString)
                     .or()
-                    // 判断邮箱是否等于
-                    .eq(User::getEmail, aesUtil.encrypt(queryString));
+                    // 判断邮箱是否模糊匹配
+                    .like(User::getEmail, queryString);
         }
         // 查询
-        Page<User> userPage = baseMapper.selectPage(
+        return baseMapper.selectPage(
                 new Page<>(userQueryPageBean.getCurrentPage(), userQueryPageBean.getPageSize()),
                 userQueryWrapper);
-        // 解密数据
-        userPage.getRecords().forEach(user -> {
-            user.setEmail(aesUtil.decrypt(user.getEmail()));
-            user.setUsername(aesUtil.decrypt(user.getUsername()));
-        });
-        return userPage;
     }
 
     @Override
     public boolean isTokenRoot(String token) {
-        User user = baseMapper.selectById(jwtUtil.checkJWT(token).get("id").toString());
-        return customerSystemConfigValue.getRootEmail().contains(aesUtil.decrypt(user.getEmail()));
+        if (isTokenEffective(token)) {
+            User user = baseMapper.selectById(jwtUtil.checkJWT(token).get("userId").toString());
+            return customerSystemConfigValue.getRootEmail().contains(user.getEmail());
+        }
+        return false;
     }
 }

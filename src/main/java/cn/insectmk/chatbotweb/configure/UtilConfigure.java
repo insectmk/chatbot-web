@@ -30,11 +30,6 @@ public class UtilConfigure {
     }
 
     @Bean
-    public AESUtil aesUtil() {
-        return new AESUtil();
-    }
-
-    @Bean
     public JsonUtil jsonUtil() {
         return new JsonUtil();
     }

@@ -5,7 +5,6 @@ import cn.insectmk.chatbotweb.entity.SystemLog;
 import cn.insectmk.chatbotweb.mapper.SystemLogMapper;
 import cn.insectmk.chatbotweb.mapper.UserMapper;
 import cn.insectmk.chatbotweb.service.SystemLogService;
-import cn.insectmk.chatbotweb.util.AESUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
@@ -14,7 +13,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 
@@ -31,8 +29,6 @@ public class SystemLogServiceImpl extends ServiceImpl<SystemLogMapper, SystemLog
     private HttpServletRequest httpServletRequest;
     @Autowired
     private UserMapper userMapper;
-    @Autowired
-    private AESUtil aesUtil;
 
     @Override
     public boolean addOne(SystemLog systemLog) {
@@ -40,7 +36,7 @@ public class SystemLogServiceImpl extends ServiceImpl<SystemLogMapper, SystemLog
         Object userId = httpServletRequest.getAttribute("userId");
         String opEmail = "未知";
         if (!Objects.isNull(userId) && StringUtils.isNotBlank(userId.toString())) {
-            opEmail = aesUtil.decrypt(userMapper.selectById(userId.toString()).getEmail());
+            opEmail = userMapper.selectById(userId.toString()).getEmail();
         }
         systemLog.setOpEmail(opEmail);
         // 设置IP地址
