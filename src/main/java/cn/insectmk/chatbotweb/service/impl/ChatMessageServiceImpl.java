@@ -12,6 +12,7 @@ import cn.insectmk.chatbotweb.mapper.UserMapper;
 import cn.insectmk.chatbotweb.service.ChatMessageService;
 import cn.insectmk.chatbotweb.service.ChatSessionService;
 import cn.insectmk.chatbotweb.service.OpenaiApiService;
+import cn.insectmk.chatbotweb.util.URLUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.plexpt.chatgpt.ChatGPTStream;
 import com.plexpt.chatgpt.entity.chat.ChatCompletion;
@@ -22,6 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
+import java.net.ConnectException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -44,6 +47,8 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper, ChatM
     private ChatSessionMapper chatSessionMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private URLUtil urlUtil;
 
     @Override
     public void sendStream(ChatMessage chatMessage, SseEmitter sseEmitter) {
@@ -57,7 +62,11 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper, ChatM
         }
         // 查询模型信息
         ModelVersion modelVersion = modelVersionMapper.selectById(chatSession.getModelVersionId());
-
+        // 查看模型在线状态
+        if (!urlUtil.isUrlOnline(modelVersion.getApiHost() + "/status")) {
+            // 不在线就抛出异常
+            throw new BizException("模型不在线");
+        }
         // 进行对话
         // 设置监听器
         SseStreamListener listener = new SseStreamListener(sseEmitter);

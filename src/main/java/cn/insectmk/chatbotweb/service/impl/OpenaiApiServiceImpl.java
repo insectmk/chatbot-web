@@ -9,6 +9,7 @@ import cn.insectmk.chatbotweb.mapper.ChatSessionMapper;
 import cn.insectmk.chatbotweb.mapper.ModelVersionMapper;
 import cn.insectmk.chatbotweb.mapper.UserMapper;
 import cn.insectmk.chatbotweb.service.OpenaiApiService;
+import cn.insectmk.chatbotweb.util.URLUtil;
 import com.plexpt.chatgpt.ChatGPT;
 import com.plexpt.chatgpt.entity.chat.ChatCompletion;
 import com.plexpt.chatgpt.entity.chat.ChatCompletionResponse;
@@ -34,6 +35,8 @@ public class OpenaiApiServiceImpl implements OpenaiApiService {
     private ChatSessionMapper chatSessionMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private URLUtil urlUtil;
 
     @Override
     public String send(ChatMessage chatMessage) {
@@ -47,6 +50,11 @@ public class OpenaiApiServiceImpl implements OpenaiApiService {
         }
         // 查询模型信息
         ModelVersion modelVersion = modelVersionMapper.selectById(chatSession.getModelVersionId());
+        // 查看模型在线状态
+        if (!urlUtil.isUrlOnline(modelVersion.getApiHost() + "/status")) {
+            // 不在线就抛出异常
+            throw new BizException("模型不在线");
+        }
         // 装载历史对话
         List<Message> messages = chatSessionMapper.selectHistoryMsg(chatMessage.getSessionId());
         // 中文引导（紧急处理方案）
