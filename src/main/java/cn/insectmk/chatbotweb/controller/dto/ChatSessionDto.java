@@ -15,4 +15,5 @@ import lombok.EqualsAndHashCode;
 @Data
 public class ChatSessionDto extends ChatSession {
     private ModelVersion modelVersion;
+    private String partnerId;
 }
