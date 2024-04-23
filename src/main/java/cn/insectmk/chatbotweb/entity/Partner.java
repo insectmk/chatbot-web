@@ -21,5 +21,5 @@ public class Partner {
     protected String prompt;
     protected String head;
     protected Boolean isPublic;
-    protected Date creatTime;
+    protected Date createTime;
 }
