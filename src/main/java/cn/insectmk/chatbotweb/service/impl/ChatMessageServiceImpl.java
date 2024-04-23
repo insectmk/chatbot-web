@@ -1,5 +1,6 @@
 package cn.insectmk.chatbotweb.service.impl;
 
+import cn.insectmk.chatbotweb.common.listener.GPTEventSourceListener;
 import cn.insectmk.chatbotweb.entity.ChatMessage;
 import cn.insectmk.chatbotweb.entity.ChatSession;
 import cn.insectmk.chatbotweb.entity.ModelVersion;
@@ -17,15 +18,11 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.plexpt.chatgpt.ChatGPTStream;
 import com.plexpt.chatgpt.entity.chat.ChatCompletion;
 import com.plexpt.chatgpt.entity.chat.Message;
-import com.plexpt.chatgpt.listener.SseStreamListener;
 import com.unfbx.chatgpt.utils.TikTokensUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-
-import java.net.ConnectException;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -69,7 +66,7 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper, ChatM
         }
         // 进行对话
         // 设置监听器
-        SseStreamListener listener = new SseStreamListener(sseEmitter);
+        GPTEventSourceListener listener = new GPTEventSourceListener(sseEmitter);
         // 装载历史对话
         List<Message> messages = chatSessionMapper.selectHistoryMsg(chatMessage.getSessionId());
         // 中文引导（紧急处理方案）
@@ -98,7 +95,7 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper, ChatM
         chatGPTStream.streamChatCompletion(chatCompletion, listener);
         //回答完成，可以做一些事情
         listener.setOnComplate((msg) -> {
-            sseEmitter.complete(); // 结束流
+            //sseEmitter.complete(); // 结束流
 
             // 存储用户新对话
             ChatMessage userChatMessage = new ChatMessage(null, chatSession.getId(),
