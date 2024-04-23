@@ -5,16 +5,19 @@ import cn.insectmk.chatbotweb.configure.value.AliyunOSSConfigValue;
 import cn.insectmk.chatbotweb.configure.value.SystemValue;
 import cn.insectmk.chatbotweb.controller.dto.UserDto;
 import cn.insectmk.chatbotweb.entity.ChatSession;
+import cn.insectmk.chatbotweb.entity.ModelVersion;
 import cn.insectmk.chatbotweb.entity.SystemLog;
 import cn.insectmk.chatbotweb.entity.User;
 import cn.insectmk.chatbotweb.exception.BizException;
 import cn.insectmk.chatbotweb.mapper.ChatSessionMapper;
+import cn.insectmk.chatbotweb.mapper.ModelVersionMapper;
 import cn.insectmk.chatbotweb.mapper.UserMapper;
 import cn.insectmk.chatbotweb.service.ChatSessionService;
 import cn.insectmk.chatbotweb.service.SystemLogService;
 import cn.insectmk.chatbotweb.service.UserService;
 import cn.insectmk.chatbotweb.util.*;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -56,6 +59,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private SystemValue systemValue;
     @Autowired
     private AESUtil aesUtil;
+    @Autowired
+    private ModelVersionMapper modelVersionMapper;
 
     @Override
     public boolean updateOne(UserDto userDto) {
@@ -199,12 +204,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             // 删除会话内容
             chatSessionService.deleteById(sessionId);
         }
+        // 找到第一个模型
+        ModelVersion modelVersion = modelVersionMapper
+                .selectOne(new QueryWrapper<ModelVersion>()
+                        .last("LIMIT 1"));
         // 创建一个会话
-        ChatSession chatSession = new ChatSession(
-                null, userId, null,
-                "[" + user.getUsername() + "]的API",
-                null, null
-        );
+        ChatSession chatSession = new ChatSession();
+        chatSession.setUserId(userId);
+        chatSession.setModelVersionId(modelVersion.getId());
+        chatSession.setRemark("[" + user.getUsername() + "]的API");
         chatSessionMapper.insert(chatSession);
         // 生成key
         String key = chatSession.getId();

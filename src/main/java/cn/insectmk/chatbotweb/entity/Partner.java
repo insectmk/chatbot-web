@@ -6,20 +6,20 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 /**
- * @Description 会话
+ * @Description 搭档实体类
  * @Author makun
- * @Date 2024/2/25 15:39
+ * @Date 2024/4/23 9:31
  * @Version 1.0
  */
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class ChatSession {
+public class Partner {
     protected String id;
     protected String userId;
-    protected String partnerId;
-    protected String modelVersionId;
-    protected String remark;
-    protected Date startTime;
-    protected Date endTime;
+    protected String name;
+    protected String prompt;
+    protected String head;
+    protected Boolean isPublic;
+    protected Date creatTime;
 }

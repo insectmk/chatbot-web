@@ -33,8 +33,6 @@ import java.util.List;
 public class ModelVersionServiceImpl extends ServiceImpl<ModelVersionMapper, ModelVersion> implements ModelVersionService {
     @Autowired
     private ChatSessionMapper chatSessionMapper;
-    @Autowired
-    private ModelVersionMapper modelVersionMapper;
 
     @Override
     public List<ModelVersion> getAll() {
@@ -74,7 +72,7 @@ public class ModelVersionServiceImpl extends ServiceImpl<ModelVersionMapper, Mod
     public boolean deleteOne(String id) {
         try {
             // 找到数据库中第一个模型
-            ModelVersion modelVersion = modelVersionMapper
+            ModelVersion modelVersion = baseMapper
                     .selectOne(new QueryWrapper<ModelVersion>()
                             .last("LIMIT 1"));
             // 更新被影响的会话到新模型
