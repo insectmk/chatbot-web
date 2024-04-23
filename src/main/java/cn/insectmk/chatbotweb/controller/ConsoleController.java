@@ -6,10 +6,7 @@ import cn.insectmk.chatbotweb.common.annotation.BizLog;
 import cn.insectmk.chatbotweb.controller.dto.ModelVersionDto;
 import cn.insectmk.chatbotweb.controller.dto.UserDto;
 import cn.insectmk.chatbotweb.entity.SystemLog;
-import cn.insectmk.chatbotweb.service.ConsoleService;
-import cn.insectmk.chatbotweb.service.ModelVersionService;
-import cn.insectmk.chatbotweb.service.SystemLogService;
-import cn.insectmk.chatbotweb.service.UserService;
+import cn.insectmk.chatbotweb.service.*;
 import cn.insectmk.chatbotweb.util.AliyunOSSUtil;
 import cn.insectmk.chatbotweb.util.FileUrlCatchUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +36,18 @@ public class ConsoleController {
     private ConsoleService consoleService;
     @Autowired
     private AliyunOSSUtil aliyunOSSUtil;
+    @Autowired
+    private PartnerService partnerService;
+
+    /**
+     * 分页条件查询搭档
+     * @param queryPageBean
+     * @return
+     */
+    @GetMapping("/partner")
+    public Result findPartner(QueryPageBean queryPageBean) {
+        return Result.buildSuccess(partnerService.findPartnersPage(queryPageBean));
+    }
 
     /**
      * 用户头像上传
@@ -47,7 +56,7 @@ public class ConsoleController {
      */
     @PostMapping("/user/head")
     public Result userHeadUpload(MultipartFile file, HttpServletRequest httpServletRequest) {
-        String url = aliyunOSSUtil.upload(file, "chatbot-web/user-head/");
+        String url = aliyunOSSUtil.upload(file, aliyunOSSUtil.getPathUserHead());
         // 确保文件不为空
         if (file.isEmpty()) {
             return Result.buildFail("文件不能为空");
@@ -170,7 +179,7 @@ public class ConsoleController {
      */
     @GetMapping("/systemLog")
     public Result findSystemLogs(QueryPageBean queryPageBean) {
-        return Result.buildSuccess(systemLogService.findUsersPage(queryPageBean));
+        return Result.buildSuccess(systemLogService.findSystemLogsPage(queryPageBean));
     }
 
     /**

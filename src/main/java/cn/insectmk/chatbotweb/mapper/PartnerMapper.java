@@ -2,7 +2,6 @@ package cn.insectmk.chatbotweb.mapper;
 
 import cn.insectmk.chatbotweb.entity.Partner;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-
 /**
  * @Description 搭档持久层访问
  * @Author makun
@@ -10,4 +9,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @Version 1.0
  */
 public interface PartnerMapper extends BaseMapper<Partner> {
+
 }

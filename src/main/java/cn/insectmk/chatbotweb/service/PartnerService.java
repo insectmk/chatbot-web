@@ -1,7 +1,9 @@
 package cn.insectmk.chatbotweb.service;
 
+import cn.insectmk.chatbotweb.common.QueryPageBean;
 import cn.insectmk.chatbotweb.controller.dto.PartnerDto;
 import cn.insectmk.chatbotweb.entity.Partner;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -41,4 +43,11 @@ public interface PartnerService extends IService<Partner> {
      * @return
      */
     boolean updateOneByUserId(PartnerDto partnerDto, String userId);
+
+    /**
+     * 分页查询搭档
+     * @param queryPageBean
+     * @return
+     */
+    IPage<Partner> findPartnersPage(QueryPageBean queryPageBean);
 }
