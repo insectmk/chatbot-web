@@ -18,4 +18,10 @@ public interface PartnerService extends IService<Partner> {
      * @return
      */
     List<Partner> getUserPartners(String userId);
+
+    /**
+     * 获取所有的公共搭档
+     * @return
+     */
+    List<Partner> getPublicPartners();
 }

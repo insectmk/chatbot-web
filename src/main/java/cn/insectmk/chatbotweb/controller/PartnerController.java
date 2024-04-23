@@ -22,6 +22,15 @@ public class PartnerController {
     private PartnerService partnerService;
 
     /**
+     * 获取公共的搭档
+     * @return
+     */
+    @GetMapping("/public")
+    public Result getPublicPartner() {
+        return Result.buildSuccess(partnerService.getPublicPartners());
+    }
+
+    /**
      * 根据用户ID获取该用户所有的搭档
      * @param request
      * @return

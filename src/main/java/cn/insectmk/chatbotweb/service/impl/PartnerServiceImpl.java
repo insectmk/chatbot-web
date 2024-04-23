@@ -22,4 +22,10 @@ public class PartnerServiceImpl extends ServiceImpl<PartnerMapper, Partner> impl
         return baseMapper.selectList(new LambdaQueryWrapper<Partner>()
                 .eq(Partner::getUserId, userId));
     }
+
+    @Override
+    public List<Partner> getPublicPartners() {
+        return baseMapper.selectList(new LambdaQueryWrapper<Partner>()
+                .eq(Partner::getIsPublic, true));
+    }
 }
