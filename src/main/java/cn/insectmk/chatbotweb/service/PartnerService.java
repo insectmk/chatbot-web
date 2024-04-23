@@ -1,5 +1,6 @@
 package cn.insectmk.chatbotweb.service;
 
+import cn.insectmk.chatbotweb.controller.dto.PartnerDto;
 import cn.insectmk.chatbotweb.entity.Partner;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -32,4 +33,12 @@ public interface PartnerService extends IService<Partner> {
      * @return
      */
     boolean deleteOneByUserId(String partnerId, String userId);
+
+    /**
+     * 更新搭档信息
+     * @param partnerDto
+     * @param userId
+     * @return
+     */
+    boolean updateOneByUserId(PartnerDto partnerDto, String userId);
 }

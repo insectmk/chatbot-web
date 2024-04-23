@@ -1,5 +1,6 @@
 package cn.insectmk.chatbotweb.service.impl;
 
+import cn.insectmk.chatbotweb.controller.dto.PartnerDto;
 import cn.insectmk.chatbotweb.entity.Partner;
 import cn.insectmk.chatbotweb.mapper.PartnerMapper;
 import cn.insectmk.chatbotweb.service.PartnerService;
@@ -34,5 +35,15 @@ public class PartnerServiceImpl extends ServiceImpl<PartnerMapper, Partner> impl
         return baseMapper.delete(new LambdaQueryWrapper<Partner>()
                 .eq(Partner::getId, partnerId)
                 .eq(Partner::getUserId, userId)) == 1;
+    }
+
+    @Override
+    public boolean updateOneByUserId(PartnerDto partnerDto, String userId) {
+        Partner partner = baseMapper.selectById(partnerDto.getId());
+        if (!partner.getUserId().equals(userId)) {
+            return false;
+        }
+        partnerDto.setUserId(null);
+        return baseMapper.updateById(partnerDto) == 1;
     }
 }

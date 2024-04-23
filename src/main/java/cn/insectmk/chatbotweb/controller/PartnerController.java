@@ -20,6 +20,19 @@ public class PartnerController {
     private PartnerService partnerService;
 
     /**
+     * 更新搭档信息
+     * @param partnerDto
+     * @param request
+     * @return
+     */
+    @PutMapping
+    public Result updatePartner(@RequestBody PartnerDto partnerDto, HttpServletRequest request) {
+        return partnerService.updateOneByUserId(partnerDto, request.getAttribute("userId").toString()) ?
+                Result.buildSuccess("更新成功！", null) :
+                Result.buildFail("更新失败");
+    }
+
+    /**
      * 删除搭档
      * @param id
      * @param request
