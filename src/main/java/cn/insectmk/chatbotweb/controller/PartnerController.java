@@ -1,12 +1,10 @@
 package cn.insectmk.chatbotweb.controller;
 
 import cn.insectmk.chatbotweb.common.Result;
+import cn.insectmk.chatbotweb.controller.dto.PartnerDto;
 import cn.insectmk.chatbotweb.service.PartnerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -20,6 +18,22 @@ import javax.servlet.http.HttpServletRequest;
 public class PartnerController {
     @Autowired
     private PartnerService partnerService;
+
+    /**
+     * 新增搭档
+     * @param partnerDto
+     * @param request
+     * @return
+     */
+    @PostMapping
+    public Result savePartner(@RequestBody PartnerDto partnerDto, HttpServletRequest request) {
+        // 设置用户ID
+        partnerDto.setUserId(request.getAttribute("userId").toString());
+        // 插入数据
+        return partnerService.save(partnerDto) ?
+                Result.buildSuccess("新增成功！" , null) :
+                Result.buildFail("新增失败！");
+    }
 
     /**
      * 获取公共的搭档
