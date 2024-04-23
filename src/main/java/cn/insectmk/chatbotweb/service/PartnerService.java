@@ -24,4 +24,12 @@ public interface PartnerService extends IService<Partner> {
      * @return
      */
     List<Partner> getPublicPartners();
+
+    /**
+     * 判断搭档是否为该用户的，如果是则删除
+     * @param partnerId
+     * @param userId
+     * @return
+     */
+    boolean deleteOneByUserId(String partnerId, String userId);
 }

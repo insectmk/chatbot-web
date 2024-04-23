@@ -17,7 +17,6 @@ import java.util.Date;
 public class ChatSession {
     protected String id;
     protected String userId;
-    protected String partnerId;
     protected String modelVersionId;
     protected String remark;
     protected Date startTime;

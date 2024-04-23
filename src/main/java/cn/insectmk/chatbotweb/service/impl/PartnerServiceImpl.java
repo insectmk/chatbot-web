@@ -28,4 +28,11 @@ public class PartnerServiceImpl extends ServiceImpl<PartnerMapper, Partner> impl
         return baseMapper.selectList(new LambdaQueryWrapper<Partner>()
                 .eq(Partner::getIsPublic, true));
     }
+
+    @Override
+    public boolean deleteOneByUserId(String partnerId, String userId) {
+        return baseMapper.delete(new LambdaQueryWrapper<Partner>()
+                .eq(Partner::getId, partnerId)
+                .eq(Partner::getUserId, userId)) == 1;
+    }
 }

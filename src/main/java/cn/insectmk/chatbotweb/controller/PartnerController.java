@@ -20,6 +20,19 @@ public class PartnerController {
     private PartnerService partnerService;
 
     /**
+     * 删除搭档
+     * @param id
+     * @param request
+     * @return
+     */
+    @DeleteMapping
+    public Result deletePartner(String id, HttpServletRequest request) {
+        return partnerService.deleteOneByUserId(id, request.getAttribute("userId").toString()) ?
+                Result.buildSuccess("删除成功！", null) :
+                Result.buildFail("删除失败");
+    }
+
+    /**
      * 新增搭档
      * @param partnerDto
      * @param request
