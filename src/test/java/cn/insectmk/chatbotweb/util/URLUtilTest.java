@@ -11,7 +11,7 @@ class URLUtilTest {
 
     @Test
     void isUrlOnline() {
-        boolean urlOnline = urlUtil.isUrlOnline("http://127.0.0.1:8000/status");
+        boolean urlOnline = urlUtil.isUrlOnline("http://rwkv.frp.insectmk.top");
         System.out.println(urlOnline);
     }
 }

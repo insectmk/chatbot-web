@@ -1,5 +1,6 @@
 package cn.insectmk.chatbotweb.service;
 
+import cn.insectmk.chatbotweb.controller.dto.ChatSessionDto;
 import cn.insectmk.chatbotweb.entity.ChatSession;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.plexpt.chatgpt.entity.chat.Message;
@@ -36,8 +37,8 @@ public interface ChatSessionService extends IService<ChatSession> {
 
     /**
      * 添加一个会话
-     * @param chatSession
+     * @param chatSessionDto
      * @return
      */
-    boolean addOne(ChatSession chatSession);
+    boolean addOne(ChatSessionDto chatSessionDto);
 }

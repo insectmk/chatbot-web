@@ -24,5 +24,5 @@ public interface SystemLogService extends IService<SystemLog> {
      * @param queryPageBean
      * @return
      */
-    IPage<SystemLog> findUsersPage(QueryPageBean queryPageBean);
+    IPage<SystemLog> findSystemLogsPage(QueryPageBean queryPageBean);
 }

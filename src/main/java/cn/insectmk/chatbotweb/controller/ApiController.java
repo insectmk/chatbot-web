@@ -2,7 +2,6 @@ package cn.insectmk.chatbotweb.controller;
 
 import cn.insectmk.chatbotweb.common.Result;
 import cn.insectmk.chatbotweb.common.annotation.RequestLimit;
-import cn.insectmk.chatbotweb.configure.SseEmitterUTF8;
 import cn.insectmk.chatbotweb.configure.value.SystemValue;
 import cn.insectmk.chatbotweb.entity.ChatMessage;
 import cn.insectmk.chatbotweb.exception.BizException;
@@ -92,10 +91,10 @@ public class ApiController {
         }
         // 发送消息
         chatMessage.setSessionId(sessionId);
-        SseEmitterUTF8 sseEmitterUTF8 = new SseEmitterUTF8(-1L);
-        chatMessageService.sendStream(chatMessage, sseEmitterUTF8);
+        SseEmitter sseEmitter = new SseEmitter(-1L);
+        chatMessageService.sendStream(chatMessage, sseEmitter);
 
-        return sseEmitterUTF8;
+        return sseEmitter;
     }
 
     /**

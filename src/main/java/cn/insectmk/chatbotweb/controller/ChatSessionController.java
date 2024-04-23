@@ -81,17 +81,9 @@ public class ChatSessionController {
     @PostMapping
     public Result create(HttpServletRequest request,
                          @RequestBody ChatSessionDto chatSessionDto) {
-        String userId = request.getAttribute("userId").toString();
-
-        ChatSession chatSession = new ChatSession(
-                null,
-                userId,
-                chatSessionDto.getModelVersionId(),
-                chatSessionDto.getRemark(),
-                null,
-                null
-        );
-
-        return chatSessionService.addOne(chatSession) ? Result.buildSuccess(chatSession) : Result.buildFail();
+        // 查询用户ID
+        chatSessionDto.setUserId(request.getAttribute("userId").toString());
+        // 增加会话
+        return chatSessionService.addOne(chatSessionDto) ? Result.buildSuccess(chatSessionDto) : Result.buildFail();
     }
 }

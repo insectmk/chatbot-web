@@ -46,7 +46,7 @@ public class SystemLogServiceImpl extends ServiceImpl<SystemLogMapper, SystemLog
     }
 
     @Override
-    public IPage<SystemLog> findUsersPage(QueryPageBean queryPageBean) {
+    public IPage<SystemLog> findSystemLogsPage(QueryPageBean queryPageBean) {
         String queryString = queryPageBean.getQueryString();
         LambdaQueryWrapper<SystemLog> systemLogLambdaQueryWrapper = null;
         // 查询条件
