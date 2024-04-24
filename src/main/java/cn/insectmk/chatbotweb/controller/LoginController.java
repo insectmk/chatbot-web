@@ -34,6 +34,16 @@ public class LoginController {
     private RedisTemplate<String, String> redisTemplate;
 
     /**
+     * 判断用户是谁的接口
+     * @param token
+     * @return
+     */
+    @GetMapping("/isWho")
+    public Result isWho(String token) {
+        return Result.buildSuccess(userService.isWho(token));
+    }
+
+    /**
      * 判断是否为root
      * @param token
      * @return
@@ -69,7 +79,7 @@ public class LoginController {
     @RequestLimit(maxCount = 1,second = 1)
     public void captcha(HttpServletResponse response, HttpServletRequest httpServletRequest) throws IOException {
         // 定义图形验证码的长、宽、验证码字符数、干扰线宽度
-        ShearCaptcha captcha = CaptchaUtil.createShearCaptcha(200, 100, 4, 4);
+        ShearCaptcha captcha = CaptchaUtil.createShearCaptcha(120,48,4,5);
         // 将验证码装到Redis中（5分钟失效）
         redisTemplate.opsForValue().set(captcha.getCode().toUpperCase(), httpServletRequest.getRemoteAddr(), 5, TimeUnit.MINUTES);
         httpServletRequest.getSession().setAttribute("captcha", captcha.getCode());

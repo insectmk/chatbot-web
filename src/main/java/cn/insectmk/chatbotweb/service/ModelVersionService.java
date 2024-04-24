@@ -48,4 +48,11 @@ public interface ModelVersionService extends IService<ModelVersion> {
      * @return
      */
     boolean deleteOne(String id);
+
+    /**
+     * 根据会话ID获取模型信息
+     * @param sessionId
+     * @return
+     */
+    ModelVersion getBySessionId(String sessionId);
 }

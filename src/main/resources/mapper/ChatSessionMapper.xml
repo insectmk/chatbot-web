@@ -17,4 +17,18 @@
             sender_type = 'user' DESC,
             sender_type = 'assistant' DESC;
     </select>
+
+    <select id="selectHistoryMsgDetail" resultType="cn.insectmk.chatbotweb.entity.ChatMessage">
+        SELECT
+            *
+        FROM
+            t_chat_message
+        WHERE
+            session_id = #{sessionId}
+        ORDER BY
+        sent_time ASC,
+        sender_type = 'system' DESC,
+        sender_type = 'user' DESC,
+        sender_type = 'assistant' DESC;
+    </select>
 </mapper>

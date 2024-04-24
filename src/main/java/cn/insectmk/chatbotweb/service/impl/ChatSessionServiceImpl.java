@@ -36,6 +36,11 @@ public class ChatSessionServiceImpl extends ServiceImpl<ChatSessionMapper, ChatS
     private PartnerMapper partnerMapper;
 
     @Override
+    public List<ChatMessage> getHistoryMsgDetail(String sessionId) {
+        return baseMapper.selectHistoryMsgDetail(sessionId);
+    }
+
+    @Override
     public List<Message> getHistoryMsg(String sessionId) {
         return baseMapper.selectHistoryMsg(sessionId);
     }
@@ -76,5 +81,14 @@ public class ChatSessionServiceImpl extends ServiceImpl<ChatSessionMapper, ChatS
         chatMessage.setMessageContent(partner.getPrompt());
         chatMessageMapper.insert(chatMessage);
         return true;
+    }
+
+    @Override
+    public ChatMessage getNewestBotMsg(String sessionId) {
+        return chatMessageMapper.selectOne(new LambdaQueryWrapper<ChatMessage>()
+                .eq(ChatMessage::getSessionId, sessionId)
+                .eq(ChatMessage::getSenderType, ChatMessage.SENDER_TYPE_ASSISTANT)
+                .orderByDesc(ChatMessage::getSentTime)
+                .last("limit 1"));
     }
 }

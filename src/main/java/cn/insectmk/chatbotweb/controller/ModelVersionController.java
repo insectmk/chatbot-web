@@ -22,6 +22,16 @@ public class ModelVersionController {
     private ModelVersionService modelVersionService;
 
     /**
+     * 根据会话ID获取模型信息
+     * @param sessionId
+     * @return
+     */
+    @GetMapping("/session")
+    public Result getBySession(String sessionId) {
+        return Result.buildSuccess(modelVersionService.getBySessionId(sessionId));
+    }
+
+    /**
      * 获取所有的模型
      * @return
      */

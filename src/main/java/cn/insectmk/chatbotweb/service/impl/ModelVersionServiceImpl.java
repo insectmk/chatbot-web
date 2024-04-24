@@ -3,10 +3,12 @@ package cn.insectmk.chatbotweb.service.impl;
 import cn.insectmk.chatbotweb.common.QueryPageBean;
 import cn.insectmk.chatbotweb.controller.dto.ModelVersionDto;
 import cn.insectmk.chatbotweb.entity.ChatSession;
+import cn.insectmk.chatbotweb.entity.ModelRate;
 import cn.insectmk.chatbotweb.entity.ModelVersion;
 import cn.insectmk.chatbotweb.entity.SystemLog;
 import cn.insectmk.chatbotweb.exception.BizException;
 import cn.insectmk.chatbotweb.mapper.ChatSessionMapper;
+import cn.insectmk.chatbotweb.mapper.ModelRateMapper;
 import cn.insectmk.chatbotweb.mapper.ModelVersionMapper;
 import cn.insectmk.chatbotweb.service.ChatSessionService;
 import cn.insectmk.chatbotweb.service.ModelVersionService;
@@ -33,6 +35,8 @@ import java.util.List;
 public class ModelVersionServiceImpl extends ServiceImpl<ModelVersionMapper, ModelVersion> implements ModelVersionService {
     @Autowired
     private ChatSessionMapper chatSessionMapper;
+    @Autowired
+    private ModelRateMapper modelRateMapper;
 
     @Override
     public List<ModelVersion> getAll() {
@@ -71,6 +75,9 @@ public class ModelVersionServiceImpl extends ServiceImpl<ModelVersionMapper, Mod
     @Override
     public boolean deleteOne(String id) {
         try {
+            // 删除该模型下的评价
+            modelRateMapper.delete(new LambdaQueryWrapper<ModelRate>()
+                    .eq(ModelRate::getModelVersionId, id));
             // 找到数据库中第一个模型
             ModelVersion modelVersion = baseMapper
                     .selectOne(new QueryWrapper<ModelVersion>()
@@ -85,5 +92,10 @@ public class ModelVersionServiceImpl extends ServiceImpl<ModelVersionMapper, Mod
         } catch (Exception e) {
             throw new BizException("该模型为默认模型，无法删除！");
         }
+    }
+
+    @Override
+    public ModelVersion getBySessionId(String sessionId) {
+        return baseMapper.selectById(chatSessionMapper.selectById(sessionId).getModelVersionId());
     }
 }

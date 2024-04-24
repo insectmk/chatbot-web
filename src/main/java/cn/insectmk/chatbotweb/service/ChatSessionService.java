@@ -1,6 +1,7 @@
 package cn.insectmk.chatbotweb.service;
 
 import cn.insectmk.chatbotweb.controller.dto.ChatSessionDto;
+import cn.insectmk.chatbotweb.entity.ChatMessage;
 import cn.insectmk.chatbotweb.entity.ChatSession;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.plexpt.chatgpt.entity.chat.Message;
@@ -15,7 +16,14 @@ import java.util.List;
  */
 public interface ChatSessionService extends IService<ChatSession> {
     /**
-     * 获取对话的历史消息
+     * 获取详细的对话历史
+     * @param sessionId
+     * @return
+     */
+    List<ChatMessage> getHistoryMsgDetail(String sessionId);
+
+    /**
+     * 获取对话的历史消息（简略）
      * @param sessionId
      * @return
      */
@@ -41,4 +49,11 @@ public interface ChatSessionService extends IService<ChatSession> {
      * @return
      */
     boolean addOne(ChatSessionDto chatSessionDto);
+
+    /**
+     * 获取会话最新的机器人消息
+     * @param sessionId
+     * @return
+     */
+    ChatMessage getNewestBotMsg(String sessionId);
 }
