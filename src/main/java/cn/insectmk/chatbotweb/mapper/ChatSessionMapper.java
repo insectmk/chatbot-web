@@ -1,5 +1,6 @@
 package cn.insectmk.chatbotweb.mapper;
 
+import cn.insectmk.chatbotweb.entity.ChatMessage;
 import cn.insectmk.chatbotweb.entity.ChatSession;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.plexpt.chatgpt.entity.chat.Message;
@@ -20,4 +21,11 @@ public interface ChatSessionMapper extends BaseMapper<ChatSession> {
       * @return
       */
      List<Message> selectHistoryMsg(@Param("sessionId") String sessionId);
+
+     /**
+      * 获取详细的历史对话
+      * @param sessionId
+      * @return
+      */
+     List<ChatMessage> selectHistoryMsgDetail(String sessionId);
 }

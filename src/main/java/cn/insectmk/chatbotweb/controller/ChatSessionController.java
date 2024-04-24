@@ -93,7 +93,7 @@ public class ChatSessionController {
                 .eq(ChatSession::getUserId, request.getAttribute("userId").toString())))) {
             throw new BizException("您无权访问此会话");
         }
-        return Result.buildSuccess(chatSessionService.getHistoryMsg(sessionId));
+        return Result.buildSuccess(chatSessionService.getHistoryMsgDetail(sessionId));
     }
 
     /**

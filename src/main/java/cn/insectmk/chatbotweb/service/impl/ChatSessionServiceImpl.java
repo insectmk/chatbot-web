@@ -36,6 +36,11 @@ public class ChatSessionServiceImpl extends ServiceImpl<ChatSessionMapper, ChatS
     private PartnerMapper partnerMapper;
 
     @Override
+    public List<ChatMessage> getHistoryMsgDetail(String sessionId) {
+        return baseMapper.selectHistoryMsgDetail(sessionId);
+    }
+
+    @Override
     public List<Message> getHistoryMsg(String sessionId) {
         return baseMapper.selectHistoryMsg(sessionId);
     }
