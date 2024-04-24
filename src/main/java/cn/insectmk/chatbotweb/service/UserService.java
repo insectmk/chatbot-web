@@ -13,6 +13,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @Version 1.0
  */
 public interface UserService extends IService<User> {
+
+
     /**
      * 更新用户
      * @param userDto
@@ -98,4 +100,11 @@ public interface UserService extends IService<User> {
      * @return
      */
     boolean isTokenRoot(String token);
+
+    /**
+     * 判断用户是谁（nobody，user，root）
+     * @param token
+     * @return
+     */
+    String isWho(String token);
 }

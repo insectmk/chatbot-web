@@ -34,6 +34,16 @@ public class LoginController {
     private RedisTemplate<String, String> redisTemplate;
 
     /**
+     * 判断用户是谁的接口
+     * @param token
+     * @return
+     */
+    @GetMapping("/isWho")
+    public Result isWho(String token) {
+        return Result.buildSuccess(userService.isWho(token));
+    }
+
+    /**
      * 判断是否为root
      * @param token
      * @return

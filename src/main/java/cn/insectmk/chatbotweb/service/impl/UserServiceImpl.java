@@ -272,4 +272,25 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         return false;
     }
+
+    @Override
+    public String isWho(String token) {
+
+        if (StringUtils.isBlank(token) || Objects.isNull(jwtUtil.checkJWT(token))) {
+            return "nobody";
+        }
+        Object userId = jwtUtil.checkJWT(token).get("userId");
+        if (Objects.isNull(userId)) {
+            return "nobody";
+        }
+        User user = baseMapper.selectById(userId.toString());
+        if (Objects.isNull(user)) {
+            return "nobody";
+        }
+        if (systemValue.getRootEmail().contains(user.getEmail())) {
+            return "root";
+        }
+
+        return "user";
+    }
 }
