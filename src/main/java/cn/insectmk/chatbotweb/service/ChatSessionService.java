@@ -49,4 +49,11 @@ public interface ChatSessionService extends IService<ChatSession> {
      * @return
      */
     boolean addOne(ChatSessionDto chatSessionDto);
+
+    /**
+     * 获取会话最新的机器人消息
+     * @param sessionId
+     * @return
+     */
+    ChatMessage getNewestBotMsg(String sessionId);
 }

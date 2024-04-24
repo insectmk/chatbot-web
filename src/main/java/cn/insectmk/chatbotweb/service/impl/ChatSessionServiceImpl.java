@@ -82,4 +82,13 @@ public class ChatSessionServiceImpl extends ServiceImpl<ChatSessionMapper, ChatS
         chatMessageMapper.insert(chatMessage);
         return true;
     }
+
+    @Override
+    public ChatMessage getNewestBotMsg(String sessionId) {
+        return chatMessageMapper.selectOne(new LambdaQueryWrapper<ChatMessage>()
+                .eq(ChatMessage::getSessionId, sessionId)
+                .eq(ChatMessage::getSenderType, ChatMessage.SENDER_TYPE_ASSISTANT)
+                .orderByDesc(ChatMessage::getSentTime)
+                .last("limit 1"));
+    }
 }

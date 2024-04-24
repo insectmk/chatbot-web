@@ -26,6 +26,22 @@ public class ChatSessionController {
     private ChatSessionService chatSessionService;
 
     /**
+     * 获取会话最新的机器人消息
+     * @param request
+     * @param sessionId
+     * @return
+     */
+    @GetMapping("/newest")
+    public Result getNewestBotMsg(HttpServletRequest request, String sessionId) {
+        if (Objects.isNull(chatSessionService.getOne(new LambdaQueryWrapper<ChatSession>()
+                .eq(ChatSession::getId, sessionId)
+                .eq(ChatSession::getUserId, request.getAttribute("userId").toString())))) {
+            throw new BizException("您无权访问此会话");
+        }
+        return Result.buildSuccess(chatSessionService.getNewestBotMsg(sessionId));
+    }
+
+    /**
      * 更新会话
      * @param request
      * @param chatSessionDto
