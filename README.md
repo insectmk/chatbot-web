@@ -2,6 +2,14 @@
 
 ## 介绍
 
+对接ChatGPT格式API的对话模型，并提供扩展功能：
+
+1. 对话的存储
+2. 模型的管理（可对接多个模型API）
+3. 搭档功能（可自定义角色）
+4. 评分系统（支持用户对模型、搭档、机器人回复内容进行评分）
+5. 用户Tokens的管理，可限制用户的Tokens
+
 语言模型基于[RWKV-Runner](https://github.com/josStorer/RWKV-Runner)，使用方法详见[本机搭建RWKV语言模型（最低只需2G显存）](https://insectmk.cn/2024/03/04/tutorial/rwkv-build/)。
 
 本项目使用SpringBoot2.6+MyBatisPlus框架，采用MVC设计模式实现。
@@ -12,11 +20,15 @@
 
 **主页面**
 
-![image-20240313162656724](README.assets/image-20240313162656724.png)
+![image-20240424190447459](README.assets/image-20240424190447459.png)
+
+**搭档管理页面**
+
+![image-20240424191003130](README.assets/image-20240424191003130.png)
 
 **登录页面**
 
-![image-20240313171736416](README.assets/image-20240313171736416.png)
+![image-20240424190509241](README.assets/image-20240424190509241.png)
 
 ## 安装教程
 
@@ -154,3 +166,9 @@ docker images
 # 保存镜像（镜像名:tag）
 docker save -o chatbot.tar chatbot:latest
 ```
+
+## 待开发
+
+- [x] 对话页面随意更换会话的模型
+- [ ] 对话的导入导出
+- [ ] 后台增加对搭档的管理
