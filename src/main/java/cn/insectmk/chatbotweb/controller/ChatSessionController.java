@@ -26,6 +26,30 @@ public class ChatSessionController {
     private ChatSessionService chatSessionService;
 
     /**
+     * 更新会话
+     * @param request
+     * @param chatSessionDto
+     * @return
+     */
+    @PutMapping
+    public Result edit(HttpServletRequest request,
+                       @RequestBody ChatSessionDto chatSessionDto) {
+        if (Objects.isNull(chatSessionService.getOne(new LambdaQueryWrapper<ChatSession>()
+                .eq(ChatSession::getId, chatSessionDto.getId())
+                .eq(ChatSession::getUserId, request.getAttribute("userId").toString())))) {
+            throw new BizException("您无权访问此会话");
+        }
+        // 清洗数据
+        ChatSession chatSession = new ChatSession();
+        chatSession.setId(chatSessionDto.getId());
+        chatSession.setModelVersionId(chatSessionDto.getModelVersionId());
+        chatSession.setRemark(chatSessionDto.getRemark());
+        return chatSessionService.updateById(chatSession) ?
+                Result.buildSuccess("会话更新成功！") :
+                Result.buildFail("会话更新失败！");
+    }
+
+    /**
      * 删除会话
      * @param request
      * @param sessionId
@@ -64,11 +88,11 @@ public class ChatSessionController {
      */
     @GetMapping
     public Result findAllMessage(HttpServletRequest request, String sessionId) {
-        /*if (Objects.isNull(chatSessionService.getOne(new LambdaQueryWrapper<ChatSession>()
+        if (Objects.isNull(chatSessionService.getOne(new LambdaQueryWrapper<ChatSession>()
                 .eq(ChatSession::getId, sessionId)
                 .eq(ChatSession::getUserId, request.getAttribute("userId").toString())))) {
             throw new BizException("您无权访问此会话");
-        }*/
+        }
         return Result.buildSuccess(chatSessionService.getHistoryMsg(sessionId));
     }
 
