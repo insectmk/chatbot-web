@@ -1,5 +1,6 @@
 package cn.insectmk.chatbotweb.service;
 
+import cn.insectmk.chatbotweb.controller.dto.PartnerRateDto;
 import cn.insectmk.chatbotweb.entity.PartnerRate;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -10,4 +11,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @Version 1.0
  */
 public interface PartnerRateService extends IService<PartnerRate> {
+    /**
+     * 新增一个搭档评价
+     * @param partnerRateDto
+     * @return
+     */
+    boolean saveOne(PartnerRateDto partnerRateDto);
 }

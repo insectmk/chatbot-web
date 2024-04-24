@@ -18,6 +18,7 @@ import java.util.Date;
 public class PartnerRate {
     protected String id;
     protected String userId;
+    protected String username;
     protected String partnerId;
     protected Integer rate;
     protected String comment;

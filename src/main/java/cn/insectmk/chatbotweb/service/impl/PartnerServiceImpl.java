@@ -4,13 +4,16 @@ import cn.insectmk.chatbotweb.common.QueryPageBean;
 import cn.insectmk.chatbotweb.controller.dto.PartnerDto;
 import cn.insectmk.chatbotweb.entity.ModelVersion;
 import cn.insectmk.chatbotweb.entity.Partner;
+import cn.insectmk.chatbotweb.entity.PartnerRate;
 import cn.insectmk.chatbotweb.mapper.PartnerMapper;
+import cn.insectmk.chatbotweb.mapper.PartnerRateMapper;
 import cn.insectmk.chatbotweb.service.PartnerService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +26,9 @@ import java.util.List;
  */
 @Service
 public class PartnerServiceImpl extends ServiceImpl<PartnerMapper, Partner> implements PartnerService {
+    @Autowired
+    private PartnerRateMapper partnerRateMapper;
+
     @Override
     public List<Partner> getUserPartners(String userId) {
         return baseMapper.selectList(new LambdaQueryWrapper<Partner>()
@@ -37,6 +43,10 @@ public class PartnerServiceImpl extends ServiceImpl<PartnerMapper, Partner> impl
 
     @Override
     public boolean deleteOneByUserId(String partnerId, String userId) {
+        // 删除该搭档地所有评分
+        partnerRateMapper.delete(new LambdaQueryWrapper<PartnerRate>()
+                .eq(PartnerRate::getPartnerId, partnerId));
+        // 删除搭档
         return baseMapper.delete(new LambdaQueryWrapper<Partner>()
                 .eq(Partner::getId, partnerId)
                 .eq(Partner::getUserId, userId)) == 1;

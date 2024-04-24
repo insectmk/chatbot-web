@@ -18,6 +18,7 @@ import java.util.Date;
 public class ModelRate {
     protected String id;
     protected String userId;
+    protected String userName;
     protected String modelVersionId;
     protected Integer rate;
     protected String comment;
