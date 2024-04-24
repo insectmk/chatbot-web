@@ -86,4 +86,9 @@ public class ModelVersionServiceImpl extends ServiceImpl<ModelVersionMapper, Mod
             throw new BizException("该模型为默认模型，无法删除！");
         }
     }
+
+    @Override
+    public ModelVersion getBySessionId(String sessionId) {
+        return baseMapper.selectById(chatSessionMapper.selectById(sessionId).getModelVersionId());
+    }
 }
