@@ -24,5 +24,10 @@ public class ChatMessage {
     protected String senderType;
     protected String messageId;
     protected String messageContent;
+    protected Boolean isLike;
+    protected Long wordCount;
+    protected Long tokens;
+    protected String modelVersionId;
+    protected String modelVersionName;
     protected Date sentTime;
 }
