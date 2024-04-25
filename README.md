@@ -2,20 +2,23 @@
 
 ## 介绍
 
-对接ChatGPT格式API的对话模型，并提供扩展功能：
-
-1. 对话的存储
-2. 模型的管理（可对接多个模型API）
-3. 搭档功能（可自定义角色）
-4. 评分系统（支持用户对模型、搭档、机器人回复内容进行评分）
-5. 用户Tokens的管理，可限制用户的Tokens
-6. 后台统计图
+对接ChatGPT格式API的对话模型，并提供扩展功能。
 
 语言模型基于[RWKV-Runner](https://github.com/josStorer/RWKV-Runner)，使用方法详见[本机搭建RWKV语言模型（最低只需2G显存）](https://insectmk.cn/2024/03/04/tutorial/rwkv-build/)。
 
 本项目使用SpringBoot2.6+MyBatisPlus框架，采用MVC设计模式实现。
 
 前端见[智能聊天机器人前端页面](https://gitee.com/makuning/chatbot-web-ui)。
+
+## 特点
+
+- [x] 对话的存储
+- [x] 模型的管理（可对接多个模型API）
+- [x] 搭档功能（可自定义角色）
+- [x] 评分系统（支持用户对模型、搭档、机器人回复内容进行评分）
+- [x] 用户Tokens的管理，可限制用户的Tokens
+- [x] 后台统计图
+- [x] 对话消息的导入导出
 
 ## 截图
 
@@ -26,6 +29,10 @@
 **搭档管理页面**
 
 ![image-20240424191003130](README.assets/image-20240424191003130.png)
+
+**导出消息**
+
+![image-20240425161859858](README.assets/image-20240425161859858.png)
 
 **后台页面**
 

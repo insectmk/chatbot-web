@@ -5,6 +5,7 @@ import cn.insectmk.chatbotweb.entity.ChatMessage;
 import cn.insectmk.chatbotweb.entity.ChatSession;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.plexpt.chatgpt.entity.chat.Message;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -56,4 +57,12 @@ public interface ChatSessionService extends IService<ChatSession> {
      * @return
      */
     ChatMessage getNewestBotMsg(String sessionId);
+
+    /**
+     * 通过对话文件创建会话
+     * @param file
+     * @param userId
+     * @return
+     */
+    String createByDialogFile(MultipartFile file, String userId);
 }
