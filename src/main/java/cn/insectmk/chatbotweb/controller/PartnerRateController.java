@@ -33,8 +33,7 @@ public class PartnerRateController {
     @PostMapping
     public Result save(@RequestBody PartnerRateDto partnerRateDto,
                        HttpServletRequest request) {
-        partnerRateDto.setUserId(request.getAttribute("userId").toString());
-        return partnerRateService.saveOne(partnerRateDto) ?
+        return partnerRateService.saveOne(partnerRateDto, request.getAttribute("userId").toString()) ?
                 Result.buildSuccess("评价成功！", null) :
                 Result.buildFail("评价失败！");
     }

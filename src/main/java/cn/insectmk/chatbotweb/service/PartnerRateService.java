@@ -14,7 +14,8 @@ public interface PartnerRateService extends IService<PartnerRate> {
     /**
      * 新增一个搭档评价
      * @param partnerRateDto
+     * @param userId
      * @return
      */
-    boolean saveOne(PartnerRateDto partnerRateDto);
+    boolean saveOne(PartnerRateDto partnerRateDto, String userId);
 }
