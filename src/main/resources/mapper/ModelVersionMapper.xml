@@ -4,4 +4,14 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.insectmk.chatbotweb.mapper.ModelVersionMapper">
 
+    <select id="getModelRateByDay" resultType="java.lang.Float">
+        SELECT
+            ROUND(SUM(rate) / COUNT(*), 2) AS avgRate
+        FROM
+            t_model_rate
+        WHERE
+            model_version_id = #{modelId}
+            AND
+            DATE(create_time) &lt;= DATE(#{date})
+    </select>
 </mapper>

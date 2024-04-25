@@ -1,6 +1,6 @@
 package cn.insectmk.chatbotweb.util;
 
-import cn.insectmk.chatbotweb.common.EChartsPieDate;
+import cn.insectmk.chatbotweb.common.echarts.PieData;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,10 +24,10 @@ class AESUtilTest {
 
     @Test
     void testDecrypt() {
-        EChartsPieDate eChartsPieDate = new EChartsPieDate("测试", 999L);
-        String encrypt = aesUtil.encrypt(eChartsPieDate);
+        PieData eChartsPieData = new PieData("测试", 999L);
+        String encrypt = aesUtil.encrypt(eChartsPieData);
         System.out.println(encrypt);
-        EChartsPieDate decrypt = aesUtil.decrypt(encrypt, EChartsPieDate.class);
+        PieData decrypt = aesUtil.decrypt(encrypt, PieData.class);
         System.out.println(decrypt);
     }
 
