@@ -6,10 +6,17 @@ import cn.insectmk.chatbotweb.controller.dto.ChatSessionDto;
 import cn.insectmk.chatbotweb.entity.ChatSession;
 import cn.insectmk.chatbotweb.exception.BizException;
 import cn.insectmk.chatbotweb.service.ChatSessionService;
+import cn.insectmk.chatbotweb.util.FileUrlCatchUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Objects;
 
 /**
@@ -24,6 +31,20 @@ import java.util.Objects;
 public class ChatSessionController {
     @Autowired
     private ChatSessionService chatSessionService;
+
+    /**
+     * 对话txt导入为会话
+     * @param file
+     * @return
+     */
+    @PostMapping("/upload")
+    public Result userHeadUpload(MultipartFile file, HttpServletRequest httpServletRequest) {
+        // 确保文件不为空
+        if (file.isEmpty()) {
+            return Result.buildFail("文件不能为空");
+        }
+        return Result.buildSuccess("上传成功", chatSessionService.createByDialogFile(file,httpServletRequest.getAttribute("userId").toString()));
+    }
 
     /**
      * 获取会话最新的机器人消息

@@ -16,6 +16,12 @@ import java.util.List;
  */
 public interface ModelVersionService extends IService<ModelVersion> {
     /**
+     * 获取默认模型
+     * @return
+     */
+    ModelVersion getDefaultModel();
+
+    /**
      * 获取所有的模型
      * @return
      */

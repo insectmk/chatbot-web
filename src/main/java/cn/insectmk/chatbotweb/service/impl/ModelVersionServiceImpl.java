@@ -39,6 +39,14 @@ public class ModelVersionServiceImpl extends ServiceImpl<ModelVersionMapper, Mod
     private ModelRateMapper modelRateMapper;
 
     @Override
+    public ModelVersion getDefaultModel() {
+        // 找到数据库中第一个模型
+        return baseMapper
+                .selectOne(new QueryWrapper<ModelVersion>()
+                        .last("LIMIT 1"));
+    }
+
+    @Override
     public List<ModelVersion> getAll() {
         return baseMapper.selectList(null);
     }
