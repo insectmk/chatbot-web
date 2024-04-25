@@ -9,6 +9,7 @@
 3. 搭档功能（可自定义角色）
 4. 评分系统（支持用户对模型、搭档、机器人回复内容进行评分）
 5. 用户Tokens的管理，可限制用户的Tokens
+6. 后台统计图
 
 语言模型基于[RWKV-Runner](https://github.com/josStorer/RWKV-Runner)，使用方法详见[本机搭建RWKV语言模型（最低只需2G显存）](https://insectmk.cn/2024/03/04/tutorial/rwkv-build/)。
 
@@ -16,7 +17,7 @@
 
 前端见[智能聊天机器人前端页面](https://gitee.com/makuning/chatbot-web-ui)。
 
-## 项目演示
+## 截图
 
 **主页面**
 
@@ -25,6 +26,10 @@
 **搭档管理页面**
 
 ![image-20240424191003130](README.assets/image-20240424191003130.png)
+
+**后台页面**
+
+![image-20240425132902695](README.assets/image-20240425132902695.png)
 
 **登录页面**
 
