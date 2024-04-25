@@ -15,4 +15,10 @@ public interface ConsoleService {
      * @return
      */
     Map<String, List<?>> getModelUsageStatistic();
+
+    /**
+     * 获取模型最近7天的评分情况，按天结算
+     * @return
+     */
+    Map<String, List<?>> getModelRateStatistic();
 }

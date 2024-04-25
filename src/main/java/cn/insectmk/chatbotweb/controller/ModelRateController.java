@@ -31,8 +31,7 @@ public class ModelRateController {
     @PostMapping
     public Result save(@RequestBody ModelRateDto modelRateDto,
                        HttpServletRequest request) {
-        modelRateDto.setUserId(request.getAttribute("userId").toString());
-        return modelRateService.save(modelRateDto) ?
+        return modelRateService.saveOne(modelRateDto, request.getAttribute("userId").toString()) ?
                 Result.buildSuccess("评价成功！", null) :
                 Result.buildFail("评价失败！");
     }

@@ -40,6 +40,16 @@ public class ConsoleController {
     private PartnerService partnerService;
 
     /**
+     * 获取模型评分统计
+     * @return
+     */
+    @GetMapping("/statistic/modelRate")
+    public Result statisticModelRate() {
+        Map<String, List<?>> result = consoleService.getModelRateStatistic();
+        return Result.buildSuccess(result);
+    }
+
+    /**
      * 分页条件查询搭档
      * @param queryPageBean
      * @return

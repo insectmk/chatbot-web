@@ -1,4 +1,4 @@
-package cn.insectmk.chatbotweb.common;
+package cn.insectmk.chatbotweb.common.echarts;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class EChartsPieDate {
+public class PieData {
     private String name;
     private Long value;
 }
