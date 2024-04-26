@@ -17,6 +17,7 @@ import java.util.Date;
 public class Partner {
     protected String id;
     protected String userId;
+    protected String username;
     protected String name;
     protected String prompt;
     protected String head;

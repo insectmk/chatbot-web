@@ -50,4 +50,12 @@ public interface PartnerService extends IService<Partner> {
      * @return
      */
     IPage<Partner> findPartnersPage(QueryPageBean queryPageBean);
+
+    /**
+     * 新增搭档
+     * @param partnerDto
+     * @param userId
+     * @return
+     */
+    boolean saveOne(PartnerDto partnerDto, String userId);
 }

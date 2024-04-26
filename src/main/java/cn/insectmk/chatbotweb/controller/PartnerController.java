@@ -53,10 +53,8 @@ public class PartnerController {
      */
     @PostMapping
     public Result savePartner(@RequestBody PartnerDto partnerDto, HttpServletRequest request) {
-        // 设置用户ID
-        partnerDto.setUserId(request.getAttribute("userId").toString());
         // 插入数据
-        return partnerService.save(partnerDto) ?
+        return partnerService.saveOne(partnerDto, request.getAttribute("userId").toString()) ?
                 Result.buildSuccess("新增成功！" , null) :
                 Result.buildFail("新增失败！");
     }

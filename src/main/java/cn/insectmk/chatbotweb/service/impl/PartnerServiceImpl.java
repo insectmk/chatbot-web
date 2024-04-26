@@ -5,8 +5,10 @@ import cn.insectmk.chatbotweb.controller.dto.PartnerDto;
 import cn.insectmk.chatbotweb.entity.ModelVersion;
 import cn.insectmk.chatbotweb.entity.Partner;
 import cn.insectmk.chatbotweb.entity.PartnerRate;
+import cn.insectmk.chatbotweb.entity.User;
 import cn.insectmk.chatbotweb.mapper.PartnerMapper;
 import cn.insectmk.chatbotweb.mapper.PartnerRateMapper;
+import cn.insectmk.chatbotweb.mapper.UserMapper;
 import cn.insectmk.chatbotweb.service.PartnerService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -28,6 +30,8 @@ import java.util.List;
 public class PartnerServiceImpl extends ServiceImpl<PartnerMapper, Partner> implements PartnerService {
     @Autowired
     private PartnerRateMapper partnerRateMapper;
+    @Autowired
+    private UserMapper userMapper;
 
     @Override
     public List<Partner> getUserPartners(String userId) {
@@ -43,7 +47,7 @@ public class PartnerServiceImpl extends ServiceImpl<PartnerMapper, Partner> impl
 
     @Override
     public boolean deleteOneByUserId(String partnerId, String userId) {
-        // 删除该搭档地所有评分
+        // 删除该搭档的所有评分
         partnerRateMapper.delete(new LambdaQueryWrapper<PartnerRate>()
                 .eq(PartnerRate::getPartnerId, partnerId));
         // 删除搭档
@@ -76,5 +80,12 @@ public class PartnerServiceImpl extends ServiceImpl<PartnerMapper, Partner> impl
         return baseMapper.selectPage(
                 new Page<>(queryPageBean.getCurrentPage(), queryPageBean.getPageSize()),
                 partnerLambdaQueryWrapper);
+    }
+
+    @Override
+    public boolean saveOne(PartnerDto partnerDto, String userId) {
+        partnerDto.setUserId(userId);
+        partnerDto.setUsername(userMapper.selectById(userId).getUsername());
+        return save(partnerDto);
     }
 }
