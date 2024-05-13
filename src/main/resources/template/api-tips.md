@@ -13,6 +13,20 @@
       "messageContent": "你好"
   }
   ```
+  
+- 响应数据类型：`application/json`
+
+- 响应数据格式：
+
+  ```json
+  {
+      "flag": true,
+      "message": "执行成功",
+      "data": " 你好！有什么我能帮你的吗？"
+  }
+  ```
+
+  
 
 
 ### 流式对话
@@ -28,11 +42,49 @@
       "messageContent": "你好"
   }
   ```
+  
+- 响应数据类型：`text/event-stream`
+
+- 响应数据格式（多段）：
+
+  ```json
+  {
+      "role": null,
+      "content": "你"
+  }
+  ```
+
+  ```json
+  {
+      "role": null,
+      "content": "好"
+  }
+  ```
 
 ## 对话历史
 
 - 接口地址：`{{url}}/api?key={你的API密钥}`
 - 请求类型：`GET`
+- 响应数据类型：`application/json`
+- 响应数据：
+
+  ```json
+  {
+      "flag": true,
+      "message": "执行成功",
+      "data": [
+          {
+              "role": "user",
+              "content": "你好"
+          },
+          {
+              "role": "assistant",
+              "content": " 你好！有什么我能帮你的吗？"
+          }
+      ]
+  }
+  ```
+  
 
 ## 注意
 
