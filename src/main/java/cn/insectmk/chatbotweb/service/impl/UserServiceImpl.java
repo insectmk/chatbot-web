@@ -200,7 +200,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 如果生成过APIKey则删除会话
         if (StringUtils.isNotBlank(user.getApiKey())) {
             // 解密APIKey
-            String sessionId = user.getApiKey();
+            String sessionId = aesUtil.decrypt(user.getApiKey());
             // 删除会话内容
             chatSessionService.deleteById(sessionId);
         }
@@ -219,7 +219,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setApiKey(aesUtil.encrypt(key));
         baseMapper.updateById(user);
 
-        return key;
+        return user.getApiKey();
     }
 
     @Override
