@@ -164,7 +164,7 @@ public class ConsoleController {
      * @return
      */
     @PutMapping("/user")
-    public Result updateUser(@Valid @RequestBody UserDto userDto) {
+    public Result updateUser(@RequestBody UserDto userDto) {
         return userService.updateOne(userDto) ?
                 Result.buildSuccess("更新成功！", null) :
                 Result.buildFail("更新失败！");

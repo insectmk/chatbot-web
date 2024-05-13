@@ -73,6 +73,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         if (StringUtils.isNotBlank(userDto.getPassword())) {
             userDto.setPassword(aesUtil.encrypt(userDto.getPassword()));
+        } else {
+            userDto.setPassword(null);
         }
         // 判断是否上传了头像
         if (!Objects.isNull(userDto.getIsUploadHead()) && userDto.getIsUploadHead()) {
