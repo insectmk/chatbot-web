@@ -167,9 +167,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (System.currentTimeMillis() > userDto.getExpiration()) {
             throw new BizException("该注册链接已失效！");
         }
-        // 创建用户
+        // 设置用户信息
         userDto.setHead(systemValue.getDefaultHead());
-        userDto.setUsername(aesUtil.encrypt(userDto.getPassword())); // 加密密码
+        userDto.setPassword(aesUtil.encrypt(userDto.getPassword()));// 加密密码
         baseMapper.insert(userDto);
         // 生成APIKey
         this.getApiKey(userDto.getId());
