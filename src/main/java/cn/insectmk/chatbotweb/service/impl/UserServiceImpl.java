@@ -72,7 +72,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             userDto.setUsername(userDto.getUsername());
         }
         if (StringUtils.isNotBlank(userDto.getPassword())) {
-            userDto.setPassword(userDto.getPassword());
+            userDto.setPassword(aesUtil.encrypt(userDto.getPassword()));
         }
         // 判断是否上传了头像
         if (!Objects.isNull(userDto.getIsUploadHead()) && userDto.getIsUploadHead()) {
@@ -104,10 +104,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         userDto.setEmail(userDto.getEmail());
         // 判断密码是否为空
         if (StringUtils.isNotBlank(userDto.getPassword())) {
-            userDto.setPassword(userDto.getPassword());
+            userDto.setPassword(aesUtil.encrypt(userDto.getPassword()));
         } else {
-            // 默认密码
-            userDto.setPassword(systemValue.getDefaultPassword());
+            // 默认密码（加密）
+            userDto.setPassword(aesUtil.encrypt(systemValue.getDefaultPassword()));
         }
         // 判断是否上传了头像
         if (!Objects.isNull(userDto.getIsUploadHead()) && userDto.getIsUploadHead()) {
@@ -126,11 +126,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public boolean updatePassword(String userId, String password) {
         User user = baseMapper.selectById(userId);
-        if (user.getPassword().equals(password)) {
+        if (aesUtil.decrypt(user.getPassword()).equals(password)) {
             // 如果重复则报错
             throw new BizException("新密码不能与旧密码相同");
         }
-        user.setPassword(password);
+        user.setPassword(aesUtil.encrypt(password)); // 加密密码
         return 1 == baseMapper.updateById(user);
     }
 
@@ -169,6 +169,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         // 创建用户
         userDto.setHead(systemValue.getDefaultHead());
+        userDto.setUsername(aesUtil.encrypt(userDto.getPassword())); // 加密密码
         baseMapper.insert(userDto);
         // 生成APIKey
         this.getApiKey(userDto.getId());
@@ -233,7 +234,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public String login(String email, String password) {
         User user = baseMapper.selectOne(new LambdaQueryWrapper<User>()
                 .eq(User::getEmail, email)
-                .eq(User::getPassword, password));
+                .eq(User::getPassword, aesUtil.encrypt(password)));
         // 邮箱与密码是否匹配
         if (Objects.isNull(user)) {
             return null;
