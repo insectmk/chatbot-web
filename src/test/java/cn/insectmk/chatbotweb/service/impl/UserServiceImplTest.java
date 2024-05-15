@@ -33,7 +33,7 @@ class UserServiceImplTest {
 
     @Test
     void deleteOne() {
-        Assertions.assertTrue(userService.deleteOne("e53088b2036638eb2297002a4659cfdd"));
+        Assertions.assertTrue(userService.deleteOne("55817a38481f67d549902722ed7f66eb"));
     }
 
     @Test
