@@ -22,7 +22,7 @@ public class PartnerRateServiceImpl extends ServiceImpl<PartnerRateMapper, Partn
 
     @Override
     public boolean saveOne(PartnerRateDto partnerRateDto, String userId) {
-        partnerRateDto.setUsername(userMapper.selectById(partnerRateDto.getUserId()).getUsername());
+        partnerRateDto.setUsername(userMapper.selectById(userId).getUsername());
         partnerRateDto.setUserId(userId);
         return save(partnerRateDto);
     }

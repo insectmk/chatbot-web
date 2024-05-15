@@ -72,7 +72,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             userDto.setUsername(userDto.getUsername());
         }
         if (StringUtils.isNotBlank(userDto.getPassword())) {
-            userDto.setPassword(userDto.getPassword());
+            userDto.setPassword(aesUtil.encrypt(userDto.getPassword()));
+        } else {
+            userDto.setPassword(null);
         }
         // 判断是否上传了头像
         if (!Objects.isNull(userDto.getIsUploadHead()) && userDto.getIsUploadHead()) {
@@ -104,10 +106,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         userDto.setEmail(userDto.getEmail());
         // 判断密码是否为空
         if (StringUtils.isNotBlank(userDto.getPassword())) {
-            userDto.setPassword(userDto.getPassword());
+            userDto.setPassword(aesUtil.encrypt(userDto.getPassword()));
         } else {
-            // 默认密码
-            userDto.setPassword(systemValue.getDefaultPassword());
+            // 默认密码（加密）
+            userDto.setPassword(aesUtil.encrypt(systemValue.getDefaultPassword()));
         }
         // 判断是否上传了头像
         if (!Objects.isNull(userDto.getIsUploadHead()) && userDto.getIsUploadHead()) {
@@ -126,11 +128,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public boolean updatePassword(String userId, String password) {
         User user = baseMapper.selectById(userId);
-        if (user.getPassword().equals(password)) {
+        if (aesUtil.decrypt(user.getPassword()).equals(password)) {
             // 如果重复则报错
             throw new BizException("新密码不能与旧密码相同");
         }
-        user.setPassword(password);
+        user.setPassword(aesUtil.encrypt(password)); // 加密密码
         return 1 == baseMapper.updateById(user);
     }
 
@@ -167,8 +169,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (System.currentTimeMillis() > userDto.getExpiration()) {
             throw new BizException("该注册链接已失效！");
         }
-        // 创建用户
+        // 设置用户信息
         userDto.setHead(systemValue.getDefaultHead());
+        userDto.setPassword(aesUtil.encrypt(userDto.getPassword()));// 加密密码
         baseMapper.insert(userDto);
         // 生成APIKey
         this.getApiKey(userDto.getId());
@@ -200,7 +203,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 如果生成过APIKey则删除会话
         if (StringUtils.isNotBlank(user.getApiKey())) {
             // 解密APIKey
-            String sessionId = user.getApiKey();
+            String sessionId = aesUtil.decrypt(user.getApiKey());
             // 删除会话内容
             chatSessionService.deleteById(sessionId);
         }
@@ -219,7 +222,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setApiKey(aesUtil.encrypt(key));
         baseMapper.updateById(user);
 
-        return key;
+        return user.getApiKey();
     }
 
     @Override
@@ -233,7 +236,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public String login(String email, String password) {
         User user = baseMapper.selectOne(new LambdaQueryWrapper<User>()
                 .eq(User::getEmail, email)
-                .eq(User::getPassword, password));
+                .eq(User::getPassword, aesUtil.encrypt(password)));
         // 邮箱与密码是否匹配
         if (Objects.isNull(user)) {
             return null;

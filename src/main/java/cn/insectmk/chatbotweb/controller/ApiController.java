@@ -122,6 +122,7 @@ public class ApiController {
     @PostMapping("/send")
     public Result send(String key, @RequestBody ChatMessage chatMessage) {
         String sessionId = aesUtil.decrypt(key);
+        //String sessionId = key;
         // 判断会话是否存在
         if (Objects.isNull(chatSessionService.getById(sessionId))) {
             throw new BizException("该接口已失效");
