@@ -185,3 +185,5 @@ docker save -o chatbot.tar chatbot:latest
 - [x] 对话的导入导出
 - [ ] 后台增加对搭档的管理
 - [ ] 后台增加对API文档的在线编辑
+- [ ] 智能话题推荐
+- [ ] 用户消息缓存
