@@ -4,7 +4,7 @@
 
 对接ChatGPT格式API的对话模型，并提供扩展功能。
 
-语言模型基于[RWKV-Runner](https://github.com/josStorer/RWKV-Runner)，使用方法详见[本机搭建RWKV语言模型（最低只需2G显存）](https://insectmk.cn/2024/03/04/tutorial/rwkv-build/)。
+语言模型基于[RWKV-Runner](https://github.com/josStorer/RWKV-Runner)，使用方法详见[本机搭建RWKV语言模型（最低只需2G显存）](https://insectmk.cn/posts/33af235c/)。
 
 本项目使用SpringBoot2.6+MyBatisPlus框架，采用MVC设计模式实现。
 
