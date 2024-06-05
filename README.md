@@ -2,7 +2,7 @@
 
 ## 介绍
 
-对接ChatGPT格式API的对话模型，并提供扩展功能。
+对接OpenAI API格式的对话API，并提供扩展功能。
 
 语言模型基于[RWKV-Runner](https://github.com/josStorer/RWKV-Runner)，使用方法详见[本机搭建RWKV语言模型（最低只需2G显存）](https://insectmk.cn/posts/33af235c/)。
 
